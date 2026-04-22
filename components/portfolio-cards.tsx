@@ -149,24 +149,35 @@ function GridProjectCard({
       <div
         ref={mediaRef}
         className={cn(
-          "relative overflow-hidden rounded-2xl bg-muted/20 shadow-none transition-[opacity,border-radius] duration-[1100ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
-          isExpanded ? "order-2 mt-3 aspect-[16/10] mx-auto w-full max-w-[64%]" : "order-1 -mx-6 -mt-6 mb-6 aspect-video rounded-none"
+          "relative overflow-hidden rounded-2xl shadow-none transition-[opacity,border-radius] duration-[1100ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
+          isExpanded
+            ? "order-2 mt-3 mx-auto aspect-[16/10] w-full max-w-[64%] bg-transparent"
+            : "order-1 -mx-6 -mt-6 mb-6 aspect-square rounded-none bg-muted/20"
         )}
       >
         <Image
           src={isExpanded ? (figures[activeFigure]?.src ?? project.image) : project.image}
           alt={isExpanded ? (figures[activeFigure]?.alt ?? project.title) : project.title}
           fill
-          className="object-cover opacity-80 transition-all duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)] group-hover:opacity-100"
+          className={cn(
+            "opacity-80 transition-all duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)] group-hover:opacity-100",
+            isExpanded ? "object-contain" : "object-cover"
+          )}
         />
       </div>
 
-      <div className={cn("order-2 space-y-3", isExpanded && "order-1 text-center")}>
-        <CardHeader title={project.title} github={project.github} url={project.url} expanded={isExpanded} />
+      <div className={cn("order-2 flex flex-1 flex-col", isExpanded && "order-1 text-center")}>
+        <CardHeader
+          title={project.title}
+          subtitle={project.subtitle}
+          github={project.github}
+          url={project.url}
+          expanded={isExpanded}
+        />
         <div
           className={cn(
             "overflow-hidden transition-all duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
-            isExpanded ? "max-h-[760px] opacity-100" : "max-h-40 opacity-100"
+            isExpanded ? "mt-0 max-h-[760px] opacity-100" : "mt-4 max-h-40 opacity-100"
           )}
         >
           {isExpanded ? (
@@ -181,12 +192,12 @@ function GridProjectCard({
               </p>
             </div>
           ) : (
-            <p className="text-sm leading-relaxed text-muted-foreground">
+            <p className="text-base leading-relaxed text-muted-foreground">
               {project.description}
             </p>
           )}
         </div>
-        <TagList tags={project.tags} />
+        <TagList tags={project.tags} centered={false} className={cn(!isExpanded && "mt-auto pt-4", isExpanded && "pt-2")} />
       </div>
     </div>
   );
@@ -217,28 +228,37 @@ function StackProjectCard({
       <div
         ref={mediaRef}
         className={cn(
-          "relative overflow-hidden rounded-xl bg-muted/20 transition-[border-radius,box-shadow,width] duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
+          "relative overflow-hidden rounded-xl transition-[border-radius,box-shadow,width] duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
           isExpanded
-            ? "order-2 mx-auto aspect-[16/10] w-full max-w-[64%] rounded-[24px]"
-            : "order-1 aspect-video md:row-span-2"
+            ? "order-2 mx-auto aspect-[16/10] w-full max-w-[64%] rounded-[24px] bg-transparent"
+            : "order-1 aspect-square md:row-span-2 bg-muted/20"
         )}
       >
         <Image
           src={isExpanded ? (figures[activeFigure]?.src ?? project.image) : project.image}
           alt={isExpanded ? (figures[activeFigure]?.alt ?? project.title) : project.title}
           fill
-          className="object-cover opacity-80 transition-all duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)] group-hover:opacity-100"
+          className={cn(
+            "opacity-80 transition-all duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)] group-hover:opacity-100",
+            isExpanded ? "object-contain" : "object-cover"
+          )}
         />
       </div>
 
-      <div className={cn("space-y-3", isExpanded ? "order-1 text-center" : "order-2")}>
-        <CardHeader title={project.title} github={project.github} url={project.url} expanded={isExpanded} />
+      <div className={cn("space-y-2", isExpanded ? "order-1 text-center" : "order-2")}>
+        <CardHeader
+          title={project.title}
+          subtitle={project.subtitle}
+          github={project.github}
+          url={project.url}
+          expanded={isExpanded}
+        />
       </div>
 
       <div
         className={cn(
           "overflow-hidden transition-all duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
-          isExpanded ? "order-3 max-h-[820px] opacity-100" : "order-3 max-h-56 opacity-100"
+          isExpanded ? "order-3 max-h-[820px] opacity-100" : "order-3 mt-1 max-h-56 opacity-100"
         )}
       >
         {isExpanded ? (
@@ -254,9 +274,9 @@ function StackProjectCard({
             <TagList tags={project.tags} />
           </div>
         ) : (
-          <div className="space-y-3">
-            <p className="leading-relaxed text-muted-foreground">{project.description}</p>
-            <TagList tags={project.tags} />
+          <div className="flex min-h-full flex-col">
+            <p className="text-base leading-relaxed text-muted-foreground">{project.description}</p>
+            <TagList tags={project.tags} centered={false} className="mt-auto pt-6" />
           </div>
         )}
       </div>
@@ -311,11 +331,13 @@ function useFlipAnimation<T extends HTMLElement>(trigger: boolean) {
 
 function CardHeader({
   title,
+  subtitle,
   github,
   url,
   expanded = false,
 }: {
   title: string;
+  subtitle?: string;
   github: string;
   url: string;
   expanded?: boolean;
@@ -327,14 +349,26 @@ function CardHeader({
         expanded ? "relative flex justify-center pt-1" : "flex items-start justify-between"
       )}
     >
-      <h3
-        className={cn(
-          "font-medium text-foreground transition-colors group-hover:text-primary group-focus-within:text-primary",
-          expanded ? "text-center text-lg font-semibold tracking-tight md:text-2xl" : "text-lg"
+      <div className={cn(expanded && "text-center")}>
+        <h3
+          className={cn(
+            "font-medium text-foreground transition-colors group-hover:text-primary group-focus-within:text-primary",
+            expanded ? "text-center text-lg font-semibold tracking-tight md:text-2xl" : "text-xl md:text-2xl"
+          )}
+        >
+          {title}
+        </h3>
+        {subtitle && (
+          <p
+            className={cn(
+              "mt-1 text-sm leading-relaxed text-muted-foreground",
+              expanded ? "text-center md:text-base" : "md:text-base"
+            )}
+          >
+            {subtitle}
+          </p>
         )}
-      >
-        {title}
-      </h3>
+      </div>
       <div
         className={cn(
           "flex items-center gap-2",
@@ -368,9 +402,17 @@ function CardHeader({
   );
 }
 
-function TagList({ tags }: { tags: string[] }) {
+function TagList({
+  tags,
+  centered = true,
+  className,
+}: {
+  tags: string[];
+  centered?: boolean;
+  className?: string;
+}) {
   return (
-    <div className="flex flex-wrap gap-2 pt-2 justify-center">
+    <div className={cn("flex flex-wrap gap-2 pt-2", centered ? "justify-center" : "justify-start", className)}>
       {tags.map((tag) => (
         <Badge
           key={tag}

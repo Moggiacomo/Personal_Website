@@ -42,9 +42,9 @@ export default function HomePage() {
 
   return (
     <PageLayout>
-      <section className="py-12 lg:py-24 px-6 lg:px-12">
+      <section className="pt-8 pb-12 lg:pt-12 lg:pb-24 px-6 lg:px-12">
         <div className="max-w-full mx-auto w-full">
-          <h2 className="text-xs uppercase tracking-widest text-muted-foreground mb-8 flex items-center gap-4">
+          <h2 className="text-xs uppercase tracking-widest leading-none text-muted-foreground mb-8 flex items-center gap-4">
             <span className="h-px w-8 bg-muted-foreground" />
             About Me
           </h2>
@@ -92,7 +92,7 @@ export default function HomePage() {
 
           {/* Skills Section */}
           <div className="mt-16">
-            <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-6 flex items-center gap-4">
+            <h3 className="text-xs uppercase tracking-widest leading-none text-muted-foreground mb-6 flex items-center gap-4">
               <span className="h-px w-8 bg-muted-foreground" />
               Core Skills
             </h3>
@@ -117,7 +117,7 @@ export default function HomePage() {
 
           {/* Cover Flow Showcase */}
           <div className="mt-16">
-            <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-6 flex items-center gap-4">
+            <h3 className="text-xs uppercase tracking-widest leading-none text-muted-foreground mb-6 flex items-center gap-4">
               <span className="h-px w-8 bg-muted-foreground" />
               Featured Projects
             </h3>

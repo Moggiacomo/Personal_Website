@@ -5,6 +5,7 @@ export interface ProjectFigure {
 
 export interface Project {
   title: string;
+  subtitle?: string;
   description: string;
   image: string;
   figures?: ProjectFigure[];
@@ -17,6 +18,7 @@ export interface Project {
 export const projects: Project[] = [
   {
     title: "E-Commerce Platform",
+    subtitle: "Commerce Systems and Checkout Design",
     description:
       "A full-stack e-commerce solution with real-time inventory management, payment processing, and an intuitive admin dashboard.",
     image: "/project-ecommerce-1.png",
@@ -33,6 +35,14 @@ export const projects: Project[] = [
         src: "/project-ecommerce-3.png",
         alt: "E-Commerce Platform alternate figure three",
       },
+      {
+        src: "/project-ecommerce-test-square.svg",
+        alt: "E-Commerce Platform blue square test figure",
+      },
+      {
+        src: "/project-ecommerce-test-tall.svg",
+        alt: "E-Commerce Platform tall rectangle test figure",
+      },
     ],
     url: "https://example.com",
     github: "https://github.com",
@@ -41,6 +51,7 @@ export const projects: Project[] = [
   },
   {
     title: "Analytics Dashboard",
+    subtitle: "Data Visualization and KPI Monitoring",
     description:
       "Real-time analytics dashboard for tracking user behavior and business metrics with interactive visualizations.",
     image: "/project-analytics-1.png",

@@ -11,9 +11,9 @@ export const metadata = {
 export default function ContactPage() {
   return (
     <PageLayout>
-      <section className="py-12 lg:py-24 px-6 lg:px-12">
+      <section className="pt-8 pb-12 lg:pt-12 lg:pb-24 px-6 lg:px-12">
         <div className="max-w-2xl">
-          <h2 className="text-xs uppercase tracking-widest text-muted-foreground mb-12 flex items-center gap-4">
+          <h2 className="text-xs uppercase tracking-widest leading-none text-muted-foreground mb-12 flex items-center gap-4">
             <span className="h-px w-8 bg-muted-foreground" />
             Contact
           </h2>
