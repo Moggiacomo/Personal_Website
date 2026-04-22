@@ -25,7 +25,7 @@ export function Sidebar() {
 
   return (
     <aside className="w-full bg-background border-b border-border p-6 lg:p-8">
-      <div className="max-w-6xl">
+      <div className="max-w-full mx-auto w-full">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           {/* Name and Title */}
           <div className="flex-1">

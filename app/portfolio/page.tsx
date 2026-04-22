@@ -53,7 +53,7 @@ export default function PortfolioPage() {
   return (
     <PageLayout>
       <section className="py-12 lg:py-24 px-6 lg:px-12">
-        <div className="max-w-4xl">
+        <div className="max-w-full mx-auto w-full">
           <h2 className="text-xs uppercase tracking-widest text-muted-foreground mb-12 flex items-center gap-4">
             <span className="h-px w-8 bg-muted-foreground" />
             Selected Work

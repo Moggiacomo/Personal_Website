@@ -3,9 +3,9 @@ import { Footer } from "@/components/contact-section";
 
 export function PageLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen min-w-screen flex flex-col">
       <Sidebar />
-      <main className="flex-1">
+      <main className="flex-1 w-full">
         <div className="min-h-screen flex flex-col">
           <div className="flex-1">{children}</div>
           <Footer />

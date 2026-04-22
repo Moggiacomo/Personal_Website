@@ -15,7 +15,9 @@ interface TimelineItem {
   type: ExperienceType;
   period: string;
   startYear: number;
+  startMonth?: number;
   endYear: number;
+  endMonth?: number;
   title: string;
   organization: string;
   url?: string;
@@ -197,17 +199,27 @@ const typeConfig: Record<ExperienceType, { label: string; color: string; bgColor
   },
 };
 
+const YEAR_HEIGHT = 80; // pixels per year
+const MONTH_HEIGHT = YEAR_HEIGHT / 12;
+
+const getStartMonth = (item: TimelineItem) => item.startMonth ?? 1;
+const getEndMonth = (item: TimelineItem) => item.endMonth ?? 12;
+const getMonthIndex = (year: number, month: number) => year * 12 + (month - 1);
+const getItemStartIndex = (item: TimelineItem) => getMonthIndex(item.startYear, getStartMonth(item));
+const getItemEndIndex = (item: TimelineItem) => getMonthIndex(item.endYear, getEndMonth(item));
+
 // Calculate column positions for overlapping items
 function calculateColumns(items: TimelineItem[]): Map<string, number> {
   const columns = new Map<string, number>();
-  const sortedItems = [...items].sort((a, b) => a.startYear - b.startYear);
+  const sortedItems = [...items].sort((a, b) => getItemStartIndex(a) - getItemStartIndex(b));
   
-  const columnEndYears: number[] = [];
+  const columnEndIndexes: number[] = [];
   
   for (const item of sortedItems) {
     let column = 0;
-    for (let i = 0; i < columnEndYears.length; i++) {
-      if (columnEndYears[i] < item.startYear) {
+    const startIndex = getItemStartIndex(item);
+    for (let i = 0; i < columnEndIndexes.length; i++) {
+      if (columnEndIndexes[i] < startIndex) {
         column = i;
         break;
       }
@@ -215,13 +227,12 @@ function calculateColumns(items: TimelineItem[]): Map<string, number> {
     }
     
     columns.set(item.id, column);
-    columnEndYears[column] = item.endYear;
+    columnEndIndexes[column] = getItemEndIndex(item);
   }
   
   return columns;
 }
 
-const YEAR_HEIGHT = 80; // pixels per year
 const BAR_WIDTH = 14;
 const BAR_GAP = 20;
 
@@ -235,7 +246,7 @@ export default function CVPage() {
   const filteredItems = useMemo(() => {
     return timelineItems
       .filter((item) => filter === "all" || item.type === filter)
-      .sort((a, b) => b.startYear - a.startYear);
+      .sort((a, b) => getItemStartIndex(b) - getItemStartIndex(a));
   }, [filter]);
 
   const minYear = Math.min(...timelineItems.map(i => i.startYear));
@@ -317,7 +328,7 @@ export default function CVPage() {
   return (
     <PageLayout>
       <section className="py-12 lg:py-24 px-6 lg:px-12">
-        <div className="max-w-6xl">
+        <div className="max-w-full mx-auto w-full">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
             <h2 className="text-xs uppercase tracking-widest text-muted-foreground flex items-center gap-4">
@@ -416,8 +427,10 @@ export default function CVPage() {
               >
                 {filteredItems.map((item) => {
                   const config = typeConfig[item.type];
-                  const topPx = (maxYear - item.endYear) * YEAR_HEIGHT;
-                  const heightPx = (item.endYear - item.startYear + 1) * YEAR_HEIGHT;
+                  const endIndex = getItemEndIndex(item);
+                  const startIndex = getItemStartIndex(item);
+                  const topPx = ((maxYear - item.endYear) * YEAR_HEIGHT) + ((12 - getEndMonth(item)) * MONTH_HEIGHT);
+                  const heightPx = (endIndex - startIndex + 1) * MONTH_HEIGHT;
                   const column = columnPositions.get(item.id) || 0;
                   
                   return (

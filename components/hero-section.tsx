@@ -6,7 +6,7 @@ import Link from "next/link";
 export function HeroSection() {
   return (
     <section className="min-h-screen flex flex-col justify-center px-6 lg:px-0">
-      <div className="max-w-6xl mx-auto w-full grid lg:grid-cols-2 gap-12 lg:gap-24 items-start">
+      <div className="max-w-full mx-auto w-full grid lg:grid-cols-2 gap-12 lg:gap-24 items-start">
         {/* Left Column - Name and Navigation */}
         <div className="lg:sticky lg:top-24 space-y-8">
           <div>
