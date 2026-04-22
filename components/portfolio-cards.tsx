@@ -29,6 +29,7 @@ export function PortfolioCards({
   const leaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const isGrid = layout === "grid";
+  const currentExpandedId = expandedIdOverride ?? expandedId;
 
   useEffect(() => {
     return () => {
@@ -39,6 +40,9 @@ export function PortfolioCards({
 
   const openCard = (cardId: string) => {
     onInteractionStart?.();
+    if (currentExpandedId === cardId) {
+      return;
+    }
     if (enterTimeoutRef.current) {
       clearTimeout(enterTimeoutRef.current);
     }
@@ -60,6 +64,10 @@ export function PortfolioCards({
     }
     leaveTimeoutRef.current = setTimeout(() => {
       setExpandedId((current) => (current === cardId ? null : current));
+      setActiveFigures((current) => ({
+        ...current,
+        [cardId]: 0,
+      }));
       leaveTimeoutRef.current = null;
     }, 140);
   };
@@ -72,7 +80,7 @@ export function PortfolioCards({
           ? project.figures
           : [{ src: project.image, alt: project.title }];
         const activeFigure = activeFigures[cardId] ?? 0;
-        const isExpanded = (expandedIdOverride ?? expandedId) === cardId;
+        const isExpanded = currentExpandedId === cardId;
 
         return (
           <article
