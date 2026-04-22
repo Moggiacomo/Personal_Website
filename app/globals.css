@@ -102,3 +102,7 @@
     @apply border-border outline-ring/50;
   }
 }
+
+.about-coverflow .absolute.bottom-8 {
+  display: none;
+}

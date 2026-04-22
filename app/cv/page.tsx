@@ -166,7 +166,7 @@ const chalk_palette = {
   mint: "#96c8c5",
 };
 
-const typeConfig: Record<ExperienceType, { label: string; color: string; bgColor: string; borderColor: string; lineColor: string; cardBg: string; cardHover: string }> = {
+const typeConfig: Record<ExperienceType, { label: string; color: string; bgColor: string; borderColor: string; lineColor: string; cardBg: string; cardHover: string; skillBg: string }> = {
   work: {
     label: "Work",
     color: "text-[#d990a3]",

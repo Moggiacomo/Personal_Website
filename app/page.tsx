@@ -3,51 +3,9 @@
 import { PageLayout } from "@/components/page-layout";
 import { EditableText } from "@/components/editable-text";
 import { CoverFlow, type CoverFlowItem } from "@ashishgogula/coverflow";
+import { projects } from "@/lib/projects";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-
-const projects = [
-  {
-    title: "E-Commerce Platform",
-    description:
-      "A full-stack e-commerce solution with real-time inventory management, payment processing, and an intuitive admin dashboard.",
-    image: "/placeholder-project-1.svg",
-    url: "https://example.com",
-    github: "https://github.com",
-    tags: ["Next.js", "Stripe", "Prisma", "PostgreSQL"],
-    featured: true,
-  },
-  {
-    title: "Analytics Dashboard",
-    description:
-      "Real-time analytics dashboard for tracking user behavior and business metrics with interactive visualizations.",
-    image: "/placeholder-project-2.svg",
-    url: "https://example.com",
-    github: "https://github.com",
-    tags: ["React", "D3.js", "Node.js", "MongoDB"],
-    featured: true,
-  },
-  {
-    title: "Task Management App",
-    description:
-      "A collaborative task management application with real-time updates, drag-and-drop functionality, and team features.",
-    image: "/placeholder-project-3.svg",
-    url: "https://example.com",
-    github: "https://github.com",
-    tags: ["Vue.js", "Firebase", "Tailwind CSS"],
-    featured: false,
-  },
-  {
-    title: "AI Content Generator",
-    description:
-      "An AI-powered content generation tool that helps marketers create engaging copy for various platforms.",
-    image: "/placeholder-project-4.svg",
-    url: "https://example.com",
-    github: "https://github.com",
-    tags: ["Python", "OpenAI", "FastAPI", "React"],
-    featured: false,
-  },
-];
 
 const coverFlowItems: CoverFlowItem[] = projects.map((project, index) => ({
   id: index,
@@ -59,6 +17,7 @@ const coverFlowItems: CoverFlowItem[] = projects.map((project, index) => ({
 export default function HomePage() {
   const router = useRouter();
   const [itemWidth, setItemWidth] = useState(260);
+  const [activeProjectIndex, setActiveProjectIndex] = useState(0);
 
   useEffect(() => {
     const updateItemWidth = () => {
@@ -162,19 +121,29 @@ export default function HomePage() {
               <span className="h-px w-8 bg-muted-foreground" />
               Featured Projects
             </h3>
-            <div className="h-[900px] w-full">
-              <CoverFlow
-                items={coverFlowItems}
-                itemWidth={itemWidth}
-                itemHeight={itemWidth}
-                initialIndex={0}
-                enableReflection={false}
-                enableClickToSnap={true}
-                enableScroll={true}
-                scrollThreshold={100}
-                onItemClick={handleItemClick}
-                className="w-full"
-              />
+            <div className="w-full">
+              <div className="h-[820px] w-full">
+                <CoverFlow
+                  items={coverFlowItems}
+                  itemWidth={itemWidth}
+                  itemHeight={itemWidth}
+                  initialIndex={0}
+                  enableReflection={false}
+                  enableClickToSnap={true}
+                  enableScroll={true}
+                  onItemClick={handleItemClick}
+                  onIndexChange={setActiveProjectIndex}
+                  className="about-coverflow w-full"
+                />
+              </div>
+              <div className="mt-4 text-center">
+                <h4 className="text-xl font-semibold tracking-tight text-foreground md:text-2xl">
+                  {coverFlowItems[activeProjectIndex]?.title}
+                </h4>
+                <p className="mt-2 text-sm font-medium tracking-wide text-muted-foreground">
+                  {coverFlowItems[activeProjectIndex]?.subtitle}
+                </p>
+              </div>
             </div>
           </div>
 
