@@ -61,7 +61,7 @@ export default function PortfolioPage() {
           
           <div className="space-y-8">
             {projects.map((project, index) => (
-              <ProjectCard key={index} {...project} />
+              <ProjectCard key={index} id={`project-${index}`} {...project} />
             ))}
           </div>
         </div>
@@ -71,6 +71,7 @@ export default function PortfolioPage() {
 }
 
 function ProjectCard({
+  id,
   title,
   description,
   image,
@@ -78,6 +79,7 @@ function ProjectCard({
   github,
   tags,
 }: {
+  id?: string;
   title: string;
   description: string;
   image: string;
@@ -87,7 +89,7 @@ function ProjectCard({
   featured?: boolean;
 }) {
   return (
-    <div className="group flex flex-col md:flex-row gap-6 p-6 rounded-lg hover:bg-secondary/30 transition-colors -mx-6">
+    <div id={id} className="group flex flex-col md:flex-row gap-6 p-6 rounded-lg hover:bg-secondary/30 transition-colors -mx-6">
       <div className="md:w-64 shrink-0">
         <div className="aspect-video relative bg-muted/20 rounded-lg overflow-hidden">
           <Image

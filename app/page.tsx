@@ -1,7 +1,67 @@
+"use client";
+
 import { PageLayout } from "@/components/page-layout";
 import { EditableText } from "@/components/editable-text";
+import { CoverFlow, type CoverFlowItem } from "@ashishgogula/coverflow";
+import { useRouter } from "next/navigation";
+
+const projects = [
+  {
+    title: "E-Commerce Platform",
+    description:
+      "A full-stack e-commerce solution with real-time inventory management, payment processing, and an intuitive admin dashboard.",
+    image: "/placeholder-project-1.svg",
+    url: "https://example.com",
+    github: "https://github.com",
+    tags: ["Next.js", "Stripe", "Prisma", "PostgreSQL"],
+    featured: true,
+  },
+  {
+    title: "Analytics Dashboard",
+    description:
+      "Real-time analytics dashboard for tracking user behavior and business metrics with interactive visualizations.",
+    image: "/placeholder-project-2.svg",
+    url: "https://example.com",
+    github: "https://github.com",
+    tags: ["React", "D3.js", "Node.js", "MongoDB"],
+    featured: true,
+  },
+  {
+    title: "Task Management App",
+    description:
+      "A collaborative task management application with real-time updates, drag-and-drop functionality, and team features.",
+    image: "/placeholder-project-3.svg",
+    url: "https://example.com",
+    github: "https://github.com",
+    tags: ["Vue.js", "Firebase", "Tailwind CSS"],
+    featured: false,
+  },
+  {
+    title: "AI Content Generator",
+    description:
+      "An AI-powered content generation tool that helps marketers create engaging copy for various platforms.",
+    image: "/placeholder-project-4.svg",
+    url: "https://example.com",
+    github: "https://github.com",
+    tags: ["Python", "OpenAI", "FastAPI", "React"],
+    featured: false,
+  },
+];
+
+const coverFlowItems: CoverFlowItem[] = projects.map((project, index) => ({
+  id: index,
+  image: project.image,
+  title: project.title,
+  subtitle: project.tags.slice(0, 2).join(", "),
+}));
 
 export default function HomePage() {
+  const router = useRouter();
+
+  const handleItemClick = (item: CoverFlowItem, index: number) => {
+    router.push(`/portfolio#project-${index}`);
+  };
+
   return (
     <PageLayout>
       <section className="py-12 lg:py-24 px-6 lg:px-12">
@@ -77,6 +137,27 @@ export default function HomePage() {
             </div>
           </div>
 
+          {/* Cover Flow Showcase */}
+          <div className="mt-16">
+            <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-6 flex items-center gap-4">
+              <span className="h-px w-8 bg-muted-foreground" />
+              Featured Projects
+            </h3>
+            <div className="h-[420px] w-full">
+              <CoverFlow
+                items={coverFlowItems}
+                itemWidth={260}
+                itemHeight={260}
+                initialIndex={0}
+                enableReflection={true}
+                enableClickToSnap={true}
+                enableScroll={true}
+                scrollThreshold={100}
+                onItemClick={handleItemClick}
+                className="w-full"
+              />
+            </div>
+          </div>
 
         </div>
       </section>
