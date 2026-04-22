@@ -33,12 +33,7 @@ export default function PortfolioPage() {
             projects={projects}
             layout="stack"
             idPrefix="project"
-            expandedIdOverride={expandedFromHash}
-            onInteractionStart={() => {
-              if (expandedFromHash) {
-                setExpandedFromHash(null);
-              }
-            }}
+            initialExpandedId={expandedFromHash}
           />
         </div>
       </section>

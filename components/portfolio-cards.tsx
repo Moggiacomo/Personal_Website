@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react";
@@ -12,56 +12,45 @@ interface PortfolioCardsProps {
   projects: Project[];
   layout?: "grid" | "stack";
   idPrefix?: string;
-  expandedIdOverride?: string | null;
-  onInteractionStart?: () => void;
+  initialExpandedId?: string | null;
 }
 
 export function PortfolioCards({
   projects,
   layout = "grid",
   idPrefix,
-  expandedIdOverride,
-  onInteractionStart,
+  initialExpandedId,
 }: PortfolioCardsProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [activeFigures, setActiveFigures] = useState<Record<string, number>>({});
-  const enterTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const leaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const isGrid = layout === "grid";
-  const currentExpandedId = expandedIdOverride ?? expandedId;
 
   useEffect(() => {
     return () => {
-      if (enterTimeoutRef.current) clearTimeout(enterTimeoutRef.current);
       if (leaveTimeoutRef.current) clearTimeout(leaveTimeoutRef.current);
     };
   }, []);
 
-  const openCard = (cardId: string) => {
-    onInteractionStart?.();
-    if (currentExpandedId === cardId) {
-      return;
+  useEffect(() => {
+    if (initialExpandedId) {
+      setExpandedId(initialExpandedId);
     }
-    if (enterTimeoutRef.current) {
-      clearTimeout(enterTimeoutRef.current);
+  }, [initialExpandedId]);
+
+  const openCard = (cardId: string) => {
+    if (expandedId === cardId) {
+      return;
     }
     if (leaveTimeoutRef.current) {
       clearTimeout(leaveTimeoutRef.current);
       leaveTimeoutRef.current = null;
     }
-    enterTimeoutRef.current = setTimeout(() => {
-      setExpandedId(cardId);
-      enterTimeoutRef.current = null;
-    }, 420);
+    setExpandedId(cardId);
   };
 
   const closeCard = (cardId: string) => {
-    onInteractionStart?.();
-    if (enterTimeoutRef.current) {
-      clearTimeout(enterTimeoutRef.current);
-      enterTimeoutRef.current = null;
-    }
     leaveTimeoutRef.current = setTimeout(() => {
       setExpandedId((current) => (current === cardId ? null : current));
       setActiveFigures((current) => ({
@@ -72,6 +61,14 @@ export function PortfolioCards({
     }, 140);
   };
 
+  const handleCardClick = (cardId: string, event: ReactMouseEvent<HTMLElement>) => {
+    const target = event.target;
+    if (target instanceof HTMLElement && target.closest("a,button")) {
+      return;
+    }
+    openCard(cardId);
+  };
+
   return (
     <div className={cn(isGrid ? "grid gap-6 md:grid-cols-2" : "space-y-6")}>
       {projects.map((project, index) => {
@@ -80,15 +77,14 @@ export function PortfolioCards({
           ? project.figures
           : [{ src: project.image, alt: project.title }];
         const activeFigure = activeFigures[cardId] ?? 0;
-        const isExpanded = currentExpandedId === cardId;
+        const isExpanded = expandedId === cardId;
 
         return (
           <article
             key={cardId}
             id={cardId}
-            onMouseEnter={() => openCard(cardId)}
+            onClick={(event) => handleCardClick(cardId, event)}
             onMouseLeave={() => closeCard(cardId)}
-            onFocus={() => openCard(cardId)}
             onBlur={(event) => {
               if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
                 closeCard(cardId);
@@ -99,6 +95,7 @@ export function PortfolioCards({
               isGrid
                 ? "relative overflow-hidden rounded-lg border border-border/50 bg-secondary/50 hover:border-primary/30 hover:bg-secondary/75 hover:shadow-[0_24px_80px_-36px_rgba(0,0,0,0.55)]"
                 : "rounded-lg hover:bg-secondary/30",
+              isExpanded ? "cursor-default" : "cursor-pointer",
               isExpanded && (isGrid ? "scale-[1.01]" : "bg-secondary/30"),
               !isGrid && "-mx-6"
             )}
