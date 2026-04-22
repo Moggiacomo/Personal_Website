@@ -168,7 +168,7 @@ export default function HomePage() {
                 itemWidth={itemWidth}
                 itemHeight={260}
                 initialIndex={0}
-                enableReflection={true}
+                enableReflection={false}
                 enableClickToSnap={true}
                 enableScroll={true}
                 scrollThreshold={100}
