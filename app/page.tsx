@@ -64,11 +64,11 @@ export default function HomePage() {
     const updateItemWidth = () => {
       const width = window.innerWidth;
       if (width < 640) {
-        setItemWidth(200); // Mobile
+        setItemWidth(280); // Mobile - square 280x280
       } else if (width < 1024) {
-        setItemWidth(240); // Tablet
+        setItemWidth(320); // Tablet - square 320x320
       } else {
-        setItemWidth(260); // Desktop
+        setItemWidth(350); // Desktop - square 350x350
       }
     };
 
@@ -162,11 +162,11 @@ export default function HomePage() {
               <span className="h-px w-8 bg-muted-foreground" />
               Featured Projects
             </h3>
-            <div className="h-[420px] w-full">
+            <div className="h-[520px] w-full">
               <CoverFlow
                 items={coverFlowItems}
                 itemWidth={itemWidth}
-                itemHeight={260}
+                itemHeight={itemWidth}
                 initialIndex={0}
                 enableReflection={false}
                 enableClickToSnap={true}
