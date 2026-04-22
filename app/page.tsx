@@ -4,6 +4,7 @@ import { PageLayout } from "@/components/page-layout";
 import { EditableText } from "@/components/editable-text";
 import { CoverFlow, type CoverFlowItem } from "@ashishgogula/coverflow";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 const projects = [
   {
@@ -57,6 +58,24 @@ const coverFlowItems: CoverFlowItem[] = projects.map((project, index) => ({
 
 export default function HomePage() {
   const router = useRouter();
+  const [itemWidth, setItemWidth] = useState(260);
+
+  useEffect(() => {
+    const updateItemWidth = () => {
+      const width = window.innerWidth;
+      if (width < 640) {
+        setItemWidth(200); // Mobile
+      } else if (width < 1024) {
+        setItemWidth(240); // Tablet
+      } else {
+        setItemWidth(260); // Desktop
+      }
+    };
+
+    updateItemWidth();
+    window.addEventListener('resize', updateItemWidth);
+    return () => window.removeEventListener('resize', updateItemWidth);
+  }, []);
 
   const handleItemClick = (item: CoverFlowItem, index: number) => {
     router.push(`/portfolio#project-${index}`);
@@ -146,7 +165,7 @@ export default function HomePage() {
             <div className="h-[420px] w-full">
               <CoverFlow
                 items={coverFlowItems}
-                itemWidth={260}
+                itemWidth={itemWidth}
                 itemHeight={260}
                 initialIndex={0}
                 enableReflection={true}
