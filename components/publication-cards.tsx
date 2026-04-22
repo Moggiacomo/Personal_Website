@@ -47,7 +47,7 @@ export function PublicationCards({
         [cardId]: 0,
       }));
       leaveTimeoutRef.current = null;
-    }, 140);
+    }, 240);
   };
 
   const handleCardClick = (cardId: string, event: ReactMouseEvent<HTMLElement>) => {

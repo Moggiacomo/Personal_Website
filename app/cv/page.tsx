@@ -521,7 +521,7 @@ export default function CVPage() {
                       onMouseEnter={() => setExpandedId(item.id)}
                       onMouseLeave={() => setExpandedId(null)}
                       className={cn(
-                        "rounded-lg border-2 transition-all cursor-pointer text-black",
+                        "rounded-lg border-2 transition-all text-black",
                         config.borderColor,
                         config.cardBg
                       )}
