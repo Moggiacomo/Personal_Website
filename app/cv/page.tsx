@@ -88,9 +88,11 @@ const timelineItems: TimelineItem[] = [
   {
     id: "4",
     type: "work",
-    period: "2018 — 2020",
+    period: "08/2018 - 03/2020",
     startYear: 2018,
+    startMonth: 8,
     endYear: 2020,
+    endMonth: 3,
     title: "Junior Developer",
     organization: "Agency Name",
     url: "https://example.com",
@@ -386,7 +388,7 @@ export default function CVPage() {
               {/* Year Labels */}
               <div className="relative w-10 flex-shrink-0">
                 {yearLabels.map((year, index) => {
-                  const topPx = index * YEAR_HEIGHT;
+                  const topPx = index * YEAR_HEIGHT + YEAR_HEIGHT / 2;
                   return (
                     <div
                       key={year}
