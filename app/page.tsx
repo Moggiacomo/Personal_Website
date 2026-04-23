@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { useRouter } from "next/navigation";
 import { CoverFlow, type CoverFlowItem } from "@ashishgogula/coverflow";
 import initialSiteContent from "@/content/site-content.json";
+import { AboutPublicationStack } from "@/components/about-publication-stack";
 import { PageLayout } from "@/components/page-layout";
 import { PageIntro } from "@/components/page-intro";
 import { useSiteContent } from "@/hooks/use-site-content";
+import { FEATURED_IN_ABOUT_TAG } from "@/lib/publications";
 import { cn } from "@/lib/utils";
 import type { SiteContent } from "@/lib/content-types";
 
@@ -24,12 +26,16 @@ export default function HomePage() {
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
   const [skillStates, setSkillStates] = useState<Record<string, SkillHoverState>>({});
   const { content } = useSiteContent(initialSiteContent as SiteContent);
+  const featuredPublications = content.publications.flatMap((publication, index) =>
+    publication.tags.includes(FEATURED_IN_ABOUT_TAG)
+      ? [{ publication, href: `/publications#publication-${index}` }]
+      : []
+  );
 
   const coverFlowItems: CoverFlowItem[] = content.portfolio.map((project, index) => ({
     id: index,
     image: project.image,
     title: project.title,
-    subtitle: project.tags.slice(0, 2).join(", "),
   }));
 
   useEffect(() => {
@@ -111,11 +117,18 @@ export default function HomePage() {
                     }}
                   >
                     {isHovered && skillState ? (
-                      <span
-                        key={`${skill}-${skillState.pulseKey}`}
-                        className="pointer-events-none absolute inset-0 -z-10 rounded-xl skill-wave"
-                        style={{ backgroundColor: color }}
-                      />
+                      <>
+                        <span
+                          key={`${skill}-${skillState.pulseKey}-glow`}
+                          className="pointer-events-none absolute inset-[-6px] z-[1] rounded-[0.95rem] skill-wave-glow"
+                          style={{ color } as CSSProperties}
+                        />
+                        <span
+                          key={`${skill}-${skillState.pulseKey}-ring`}
+                          className="pointer-events-none absolute inset-[-2px] z-[2] rounded-[0.85rem] skill-wave-ring"
+                          style={{ color } as CSSProperties}
+                        />
+                      </>
                     ) : null}
                     <span className="relative z-10">{skill}</span>
                   </div>
@@ -123,6 +136,16 @@ export default function HomePage() {
               })}
             </div>
           </div>
+
+          {featuredPublications.length ? (
+            <div className="mt-16">
+                <h3 className="text-xs uppercase tracking-widest leading-none text-muted-foreground mb-6 flex items-center gap-4">
+                  <span className="h-px w-8 bg-muted-foreground" />
+                  {content.site.headers.featuredPublications}
+                </h3>
+                <AboutPublicationStack items={featuredPublications} />
+            </div>
+          ) : null}
 
           <div className="mt-16">
             <h3 className="text-xs uppercase tracking-widest leading-none text-muted-foreground mb-6 flex items-center gap-4">
@@ -148,9 +171,6 @@ export default function HomePage() {
                 <h4 className="text-xl font-semibold tracking-tight text-foreground md:text-2xl">
                   {coverFlowItems[activeProjectIndex]?.title}
                 </h4>
-                <p className="mt-2 text-sm font-medium tracking-wide text-muted-foreground">
-                  {coverFlowItems[activeProjectIndex]?.subtitle}
-                </p>
               </div>
             </div>
           </div>

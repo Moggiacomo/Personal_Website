@@ -12,18 +12,32 @@ interface PublicationCardsProps {
   publications: Publication[];
   layout?: "grid" | "stack";
   idPrefix?: string;
+  initialExpandedId?: string | null;
 }
 
 const expandedViewportStyle = {
   "--expanded-viewport-gap": "clamp(1.5rem, 4vw, 3rem)",
 } as React.CSSProperties;
 
+const expandedStackCardStyle = {
+  ...expandedViewportStyle,
+  width: "calc(100vw - (var(--expanded-viewport-gap) * 2))",
+  maxWidth: "calc(100vw - (var(--expanded-viewport-gap) * 2))",
+  marginTop: "var(--expanded-viewport-gap)",
+  marginBottom: "var(--expanded-viewport-gap)",
+  marginLeft: "auto",
+  marginRight: "auto",
+} as React.CSSProperties;
+
 export function PublicationCards({
   publications,
   layout = "grid",
   idPrefix,
+  initialExpandedId,
 }: PublicationCardsProps) {
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(
+    initialExpandedId ?? null
+  );
   const [activeFigures, setActiveFigures] = useState<Record<string, number>>({});
   const leaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const articleRefs = useRef(new Map<string, HTMLElement>());
@@ -36,6 +50,10 @@ export function PublicationCards({
   }, []);
 
   useEffect(() => {
+    setExpandedId(initialExpandedId ?? null);
+  }, [initialExpandedId]);
+
+  useEffect(() => {
     if (!expandedId) return;
 
     const target = articleRefs.current.get(expandedId);
@@ -44,11 +62,10 @@ export function PublicationCards({
     const timeoutId = window.setTimeout(() => {
       const rect = target.getBoundingClientRect();
       const styles = window.getComputedStyle(target);
-      const marginTop = Number.parseFloat(styles.marginTop) || 0;
-      const marginBottom = Number.parseFloat(styles.marginBottom) || 0;
-      const totalHeight = rect.height + marginTop + marginBottom;
-      const targetTop =
-        window.scrollY + rect.top - marginTop - (window.innerHeight - totalHeight) / 2;
+      const viewportGapValue =
+        styles.getPropertyValue("--expanded-viewport-gap").trim() || "24px";
+      const resolvedGap = Number.parseFloat(viewportGapValue) || 24;
+      const targetTop = window.scrollY + rect.top - resolvedGap;
 
       window.scrollTo({
         top: Math.max(0, targetTop),
@@ -129,20 +146,7 @@ export function PublicationCards({
                   : "flex items-center bg-secondary/30"),
               !isGrid && !isExpanded && "-mx-6"
             )}
-            style={
-              !isGrid && isExpanded
-                ? {
-                    ...expandedViewportStyle,
-                    width: "calc(100vw - (var(--expanded-viewport-gap) * 2))",
-                    maxWidth: "calc(100vw - (var(--expanded-viewport-gap) * 2))",
-                    marginTop: "var(--expanded-viewport-gap)",
-                    marginBottom: "var(--expanded-viewport-gap)",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    minHeight: "calc(100svh - (var(--expanded-viewport-gap) * 2))",
-                  }
-                : undefined
-            }
+            style={!isGrid && isExpanded ? expandedStackCardStyle : undefined}
           >
             {isGrid ? (
               <GridPublicationCard

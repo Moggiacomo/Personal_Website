@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import initialSiteContent from "@/content/site-content.json";
 import { PageIntro } from "@/components/page-intro";
 import { PublicationCards } from "@/components/publication-cards";
@@ -7,7 +8,20 @@ import { useSiteContent } from "@/hooks/use-site-content";
 import type { SiteContent } from "@/lib/content-types";
 
 export function PublicationsPageClient() {
+  const [expandedFromHash, setExpandedFromHash] = useState<string | null>(null);
   const { content } = useSiteContent(initialSiteContent as SiteContent);
+
+  useEffect(() => {
+    const syncExpandedFromHash = () => {
+      const hash = window.location.hash.replace("#", "");
+      setExpandedFromHash(hash || null);
+    };
+
+    syncExpandedFromHash();
+    window.addEventListener("hashchange", syncExpandedFromHash);
+
+    return () => window.removeEventListener("hashchange", syncExpandedFromHash);
+  }, []);
 
   return (
     <>
@@ -25,6 +39,7 @@ export function PublicationsPageClient() {
         publications={content.publications}
         layout="stack"
         idPrefix="publication"
+        initialExpandedId={expandedFromHash}
       />
     </>
   );

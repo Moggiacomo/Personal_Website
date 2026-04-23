@@ -17,6 +17,8 @@ export interface Publication {
   tags: string[];
 }
 
+export const FEATURED_IN_ABOUT_TAG = "Featured in About";
+
 export const publications: Publication[] = [
   {
     slug: "building-scalable-react-applications",
@@ -39,7 +41,7 @@ export const publications: Publication[] = [
         alt: "Publication detail figure for scalable React applications",
       },
     ],
-    tags: ["Conference Paper", "2024", "React"],
+    tags: ["Conference Paper", "2024", "React", FEATURED_IN_ABOUT_TAG],
   },
   {
     slug: "future-of-web-development",
@@ -61,7 +63,7 @@ export const publications: Publication[] = [
         alt: "Publication detail figure for future web development article",
       },
     ],
-    tags: ["Journal Article", "2023", "Web Trends"],
+    tags: ["Journal Article", "2023", "Web Trends", FEATURED_IN_ABOUT_TAG],
   },
   {
     slug: "optimizing-database-performance",

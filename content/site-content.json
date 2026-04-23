@@ -35,6 +35,7 @@
     "headers": {
       "about": "About Me",
       "coreSkills": "Core Skills",
+      "featuredPublications": "Featured Publications",
       "featuredProjects": "Featured Projects",
       "portfolio": "Selected Work",
       "publications": "Publications",
@@ -162,12 +163,7 @@
       ],
       "url": "https://example.com",
       "github": "https://github.com",
-      "tags": [
-        "Next.js",
-        "Stripe",
-        "Prisma",
-        "PostgreSQL"
-      ],
+      "tags": [],
       "slug": "ecommerce-platform"
     },
     {
@@ -237,7 +233,8 @@
       "tags": [
         "Conference Paper",
         "2024",
-        "React"
+        "React",
+        "Featured in About"
       ],
       "slug": "building-scalable-react-applications"
     },
@@ -262,7 +259,8 @@
       "tags": [
         "Journal Article",
         "2023",
-        "Web Trends"
+        "Web Trends",
+        "Featured in About"
       ],
       "slug": "future-of-web-development"
     },
@@ -283,7 +281,8 @@
       "tags": [
         "Conference Paper",
         "2023",
-        "Databases"
+        "Databases",
+        "Featured in About"
       ],
       "slug": "optimizing-database-performance"
     },
@@ -304,7 +303,8 @@
       "tags": [
         "Article",
         "2022",
-        "Accessibility"
+        "Accessibility",
+        "Featured in About"
       ],
       "slug": "accessibility-in-design-systems"
     }

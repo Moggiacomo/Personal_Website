@@ -19,6 +19,7 @@ import type {
 } from "@/lib/content-types";
 import type { Project } from "@/lib/projects";
 import type { Publication } from "@/lib/publications";
+import { FEATURED_IN_ABOUT_TAG } from "@/lib/publications";
 import { cn } from "@/lib/utils";
 
 type AuthState = "loading" | "authenticated" | "unauthenticated";
@@ -1451,6 +1452,20 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                   }
                 />
               </Field>
+              <Field label="Featured Publications header">
+                <Input
+                  value={draft.site.headers.featuredPublications}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      headers: {
+                        ...draft.site.headers,
+                        featuredPublications: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
               <Field label="Portfolio page header">
                 <Input
                   value={draft.site.headers.portfolio}
@@ -2192,6 +2207,30 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                     rows={4}
                   />
                 </Field>
+
+                <label className="flex items-center gap-3 rounded-xl border border-border/50 px-4 py-3">
+                  <input
+                    type="checkbox"
+                    checked={publication.tags.includes(FEATURED_IN_ABOUT_TAG)}
+                    onChange={(event) => {
+                      const next = [...draft.publications];
+                      const nextTags = event.target.checked
+                        ? Array.from(new Set([...publication.tags, FEATURED_IN_ABOUT_TAG]))
+                        : publication.tags.filter((tag) => tag !== FEATURED_IN_ABOUT_TAG);
+                      next[index] = { ...publication, tags: nextTags };
+                      updateSection("publications", next);
+                    }}
+                    className="size-4"
+                  />
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-medium text-foreground">
+                      Feature in About
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Shows this publication in the stacking cards section on the About page.
+                    </p>
+                  </div>
+                </label>
 
                 <StringListEditor
                   label="Tags"

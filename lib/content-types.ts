@@ -69,6 +69,7 @@ export interface SiteContactContent {
 export interface SiteHeadersContent {
   about: string;
   coreSkills: string;
+  featuredPublications: string;
   featuredProjects: string;
   portfolio: string;
   publications: string;

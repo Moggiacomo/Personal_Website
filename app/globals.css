@@ -114,20 +114,40 @@
   object-position: center !important;
 }
 
-@keyframes skill-wave {
+@keyframes skill-wave-ring {
   0% {
-    opacity: 0.38;
+    opacity: 0.9;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.32);
+  }
+}
+
+.skill-wave-ring {
+  animation: skill-wave-ring 720ms cubic-bezier(0.18, 0.9, 0.2, 1);
+  border: 2px solid currentColor;
+  background: transparent;
+}
+
+@keyframes skill-wave-glow {
+  0% {
+    opacity: 0.45;
     transform: scale(1);
     filter: blur(0px);
   }
 
   100% {
     opacity: 0;
-    transform: scale(1.75);
+    transform: scale(1.24);
     filter: blur(10px);
   }
 }
 
-.skill-wave {
-  animation: skill-wave 720ms cubic-bezier(0.18, 0.9, 0.2, 1);
+.skill-wave-glow {
+  animation: skill-wave-glow 720ms cubic-bezier(0.18, 0.9, 0.2, 1);
+  background: currentColor;
+  opacity: 0.35;
 }
