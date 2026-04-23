@@ -1,43 +1,74 @@
 "use client";
 
-import { PageLayout } from "@/components/page-layout";
-import { EditableText } from "@/components/editable-text";
-import { CoverFlow, type CoverFlowItem } from "@ashishgogula/coverflow";
-import { projects } from "@/lib/projects";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { CoverFlow, type CoverFlowItem } from "@ashishgogula/coverflow";
+import initialSiteContent from "@/content/site-content.json";
+import { EditableText } from "@/components/editable-text";
+import { PageLayout } from "@/components/page-layout";
+import { useSiteContent } from "@/hooks/use-site-content";
+import { cn } from "@/lib/utils";
+import type { SiteContent } from "@/lib/content-types";
 
-const coverFlowItems: CoverFlowItem[] = projects.map((project, index) => ({
-  id: index,
-  image: project.image,
-  title: project.title,
-  subtitle: project.tags.slice(0, 2).join(", "),
-}));
+const chalkPalette = ["#9877a2", "#8499c1", "#d990a3", "#96c8c5", "#f2dede"];
+
+type SkillHoverState = {
+  color: string;
+  pulseKey: number;
+};
 
 export default function HomePage() {
   const router = useRouter();
   const [itemWidth, setItemWidth] = useState(260);
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
+  const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
+  const [skillStates, setSkillStates] = useState<Record<string, SkillHoverState>>({});
+  const { content } = useSiteContent(initialSiteContent as SiteContent);
+
+  const coverFlowItems: CoverFlowItem[] = content.portfolio.map((project, index) => ({
+    id: index,
+    image: project.image,
+    title: project.title,
+    subtitle: project.tags.slice(0, 2).join(", "),
+  }));
 
   useEffect(() => {
     const updateItemWidth = () => {
       const width = window.innerWidth;
       if (width < 640) {
-        setItemWidth(400); // Mobile - 400x400 (reasonable for mobile)
+        setItemWidth(400);
       } else if (width < 1024) {
-        setItemWidth(640); // Tablet - 640x640 (double of 320)
+        setItemWidth(640);
       } else {
-        setItemWidth(700); // Desktop - 700x700 (double of 350)
+        setItemWidth(700);
       }
     };
 
     updateItemWidth();
-    window.addEventListener('resize', updateItemWidth);
-    return () => window.removeEventListener('resize', updateItemWidth);
+    window.addEventListener("resize", updateItemWidth);
+    return () => window.removeEventListener("resize", updateItemWidth);
   }, []);
 
-  const handleItemClick = (item: CoverFlowItem, index: number) => {
+  const handleItemClick = (_item: CoverFlowItem, index: number) => {
     router.push(`/portfolio#project-${index}`);
+  };
+
+  const handleSkillEnter = (skill: string) => {
+    const color =
+      chalkPalette[Math.floor(Math.random() * chalkPalette.length)] ?? chalkPalette[0];
+
+    setSkillStates((current) => ({
+      ...current,
+      [skill]: {
+        color,
+        pulseKey: (current[skill]?.pulseKey ?? 0) + 1,
+      },
+    }));
+    setHoveredSkill(skill);
+  };
+
+  const handleSkillLeave = (skill: string) => {
+    setHoveredSkill((current) => (current === skill ? null : current));
   };
 
   return (
@@ -46,80 +77,68 @@ export default function HomePage() {
         <div className="max-w-full mx-auto w-full">
           <h2 className="text-xs uppercase tracking-widest leading-none text-muted-foreground mb-8 flex items-center gap-4">
             <span className="h-px w-8 bg-muted-foreground" />
-            About Me
+            {content.site.headers.about}
           </h2>
-          
+
           <div className="space-y-6 text-muted-foreground leading-relaxed">
-            <EditableText
-              contentKey="home-about-1"
-              as="p"
-              className="text-lg text-foreground"
-            >
-              I&apos;m a passionate professional focused on creating accessible,
-              pixel-perfect digital experiences. My work lies at the intersection
-              of design and development.
-            </EditableText>
-            <EditableText
-              contentKey="home-about-2"
-              as="p"
-              className=""
-            >
-              Creating experiences that not only look great but are meticulously 
-              built for performance and usability has always been my goal. I believe 
-              that great software should feel invisible — seamlessly integrating 
-              into people&apos;s lives while solving real problems.
-            </EditableText>
-            <EditableText
-              contentKey="home-about-3"
-              as="p"
-              className=""
-            >
-              Currently, I&apos;m working on innovative projects that push the
-              boundaries of what&apos;s possible on the web. I specialize in
-              building scalable applications that deliver exceptional user
-              experiences.
-            </EditableText>
-            <EditableText
-              contentKey="home-about-4"
-              as="p"
-              className=""
-            >
-              In my spare time, I enjoy contributing to open-source projects,
-              writing technical articles, and exploring new technologies. I believe
-              in continuous learning and sharing knowledge with the community.
-            </EditableText>
+            {content.about.paragraphs.map((paragraph, index) => (
+              <EditableText
+                key={index}
+                contentKey={`home-about-${index + 1}`}
+                as="p"
+                className={index === 0 ? "text-lg text-foreground" : ""}
+              >
+                {paragraph}
+              </EditableText>
+            ))}
           </div>
 
-          {/* Skills Section */}
           <div className="mt-16">
             <h3 className="text-xs uppercase tracking-widest leading-none text-muted-foreground mb-6 flex items-center gap-4">
               <span className="h-px w-8 bg-muted-foreground" />
-              Core Skills
+              {content.site.headers.coreSkills}
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {[
-                "JavaScript / TypeScript",
-                "React / Next.js",
-                "Node.js",
-                "Python",
-                "UI/UX Design",
-                "Cloud Services",
-              ].map((skill) => (
-                <div
-                  key={skill}
-                  className="p-4 rounded-lg bg-secondary/50 text-sm text-foreground hover:bg-secondary/80 transition-colors"
-                >
-                  {skill}
-                </div>
-              ))}
+              {content.about.skills.map((skill) => {
+                const skillState = skillStates[skill];
+                const isHovered = hoveredSkill === skill;
+                const color = skillState?.color ?? "rgba(255,255,255,0.08)";
+
+                return (
+                  <div
+                    key={skill}
+                    onMouseEnter={() => handleSkillEnter(skill)}
+                    onMouseLeave={() => handleSkillLeave(skill)}
+                    className={cn(
+                      "relative isolate overflow-visible rounded-lg border border-transparent p-4 text-sm transition-all duration-300 ease-out",
+                      isHovered
+                        ? "z-10 -translate-y-1 scale-[1.04] font-semibold shadow-[0_20px_45px_-20px_rgba(0,0,0,0.65)]"
+                        : "bg-secondary/50 text-foreground hover:shadow-[0_16px_32px_-24px_rgba(0,0,0,0.45)]"
+                    )}
+                    style={{
+                      backgroundColor: isHovered ? color : undefined,
+                      borderColor: isHovered ? `${color}cc` : undefined,
+                      color: isHovered ? "#141a22" : undefined,
+                    }}
+                  >
+                    {isHovered && skillState ? (
+                      <span
+                        key={`${skill}-${skillState.pulseKey}`}
+                        className="pointer-events-none absolute inset-0 -z-10 rounded-xl skill-wave"
+                        style={{ backgroundColor: color }}
+                      />
+                    ) : null}
+                    <span className="relative z-10">{skill}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
-          {/* Cover Flow Showcase */}
           <div className="mt-16">
             <h3 className="text-xs uppercase tracking-widest leading-none text-muted-foreground mb-6 flex items-center gap-4">
               <span className="h-px w-8 bg-muted-foreground" />
-              Featured Projects
+              {content.site.headers.featuredProjects}
             </h3>
             <div className="w-full">
               <div className="h-[820px] w-full">
@@ -146,7 +165,6 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-
         </div>
       </section>
     </PageLayout>

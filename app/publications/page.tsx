@@ -1,6 +1,5 @@
 import { PageLayout } from "@/components/page-layout";
-import { PublicationCards } from "@/components/publication-cards";
-import { publications } from "@/lib/publications";
+import { PublicationsPageClient } from "@/components/publications-page-client";
 
 export const metadata = {
   title: "Publications | Your Name",
@@ -12,12 +11,7 @@ export default function PublicationsPage() {
     <PageLayout>
       <section className="pt-8 pb-12 lg:pt-12 lg:pb-24 px-6 lg:px-12">
         <div className="max-w-full mx-auto w-full">
-          <h2 className="text-xs uppercase tracking-widest leading-none text-muted-foreground mb-12 flex items-center gap-4">
-            <span className="h-px w-8 bg-muted-foreground" />
-            Publications
-          </h2>
-          
-          <PublicationCards publications={publications} layout="stack" idPrefix="publication" />
+          <PublicationsPageClient />
         </div>
       </section>
     </PageLayout>

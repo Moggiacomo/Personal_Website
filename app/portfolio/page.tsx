@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import initialSiteContent from "@/content/site-content.json";
+import { useSiteContent } from "@/hooks/use-site-content";
 import { PageLayout } from "@/components/page-layout";
 import { PortfolioCards } from "@/components/portfolio-cards";
-import { projects } from "@/lib/projects";
+import type { SiteContent } from "@/lib/content-types";
 
 export default function PortfolioPage() {
   const [expandedFromHash, setExpandedFromHash] = useState<string | null>(null);
+  const { content } = useSiteContent(initialSiteContent as SiteContent);
 
   useEffect(() => {
     const syncExpandedFromHash = () => {
@@ -26,11 +29,11 @@ export default function PortfolioPage() {
         <div className="max-w-full mx-auto w-full">
           <h2 className="text-xs uppercase tracking-widest leading-none text-muted-foreground mb-12 flex items-center gap-4">
             <span className="h-px w-8 bg-muted-foreground" />
-            Selected Work
+            {content.site.headers.portfolio}
           </h2>
 
           <PortfolioCards
-            projects={projects}
+            projects={content.portfolio}
             layout="stack"
             idPrefix="project"
             initialExpandedId={expandedFromHash}

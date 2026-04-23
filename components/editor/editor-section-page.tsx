@@ -1,0 +1,2065 @@
+"use client";
+
+import type { FormEvent, ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import initialSiteContent from "@/content/site-content.json";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import type {
+  ExperienceType,
+  SiteContent,
+  TimelineItem,
+} from "@/lib/content-types";
+import type { Project } from "@/lib/projects";
+import type { Publication } from "@/lib/publications";
+import { cn } from "@/lib/utils";
+
+type AuthState = "loading" | "authenticated" | "unauthenticated";
+type SaveState = "idle" | "saving" | "saved" | "error";
+type SectionKey = keyof SiteContent;
+type EditorView = "home" | SectionKey | "contact";
+
+const baseContent = initialSiteContent as SiteContent;
+
+const editorSections: Array<{
+  id: Exclude<EditorView, "home">;
+  label: string;
+  href: string;
+  description: string;
+}> = [
+  {
+    id: "site",
+    label: "Site",
+    href: "/editor/site",
+    description: "Top bar, footer, navigation labels, and page headers.",
+  },
+  {
+    id: "about",
+    label: "About",
+    href: "/editor/about",
+    description: "Paragraphs and skill chips for the homepage introduction.",
+  },
+  {
+    id: "portfolio",
+    label: "Portfolio",
+    href: "/editor/portfolio",
+    description: "Project cards, figures, tags, links, and base images.",
+  },
+  {
+    id: "publications",
+    label: "Publications",
+    href: "/editor/publications",
+    description: "Publication cards, figures, tags, abstracts, and links.",
+  },
+  {
+    id: "cv",
+    label: "CV",
+    href: "/editor/cv",
+    description: "Timeline entries, dates, descriptions, details, and skills.",
+  },
+  {
+    id: "contact",
+    label: "Contact",
+    href: "/editor/contact",
+    description: "Contact section text, labels, links, and call-to-action buttons.",
+  },
+];
+
+function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function createEmptyProject(): Project {
+  return {
+    slug: `project-${crypto.randomUUID().slice(0, 8)}`,
+    title: "",
+    subtitle: "",
+    description: "",
+    image: "",
+    figures: [{ src: "", alt: "" }],
+    url: "",
+    github: "",
+    tags: [],
+  };
+}
+
+function createEmptyPublication(): Publication {
+  return {
+    slug: `publication-${crypto.randomUUID().slice(0, 8)}`,
+    title: "",
+    subtitle: "",
+    venue: "",
+    type: "",
+    year: "",
+    url: "",
+    abstract: "",
+    image: "",
+    figures: [{ src: "", alt: "" }],
+    tags: [],
+  };
+}
+
+function createEmptyTimelineItem(): TimelineItem {
+  return {
+    id: crypto.randomUUID(),
+    type: "work",
+    period: "",
+    startYear: new Date().getFullYear(),
+    endYear: new Date().getFullYear(),
+    title: "",
+    organization: "",
+    url: "",
+    description: "",
+    details: [],
+    skills: [],
+  };
+}
+
+function cloneContent(content: SiteContent): SiteContent {
+  return structuredClone(content);
+}
+
+function moveItem<T>(items: T[], fromIndex: number, toIndex: number) {
+  if (fromIndex === toIndex) return items;
+  const next = [...items];
+  const [moved] = next.splice(fromIndex, 1);
+  next.splice(toIndex, 0, moved);
+  return next;
+}
+
+function parseOptionalNumber(value: string) {
+  const trimmed = value.trim();
+  if (!trimmed) return undefined;
+  const parsed = Number(trimmed);
+  return Number.isNaN(parsed) ? undefined : parsed;
+}
+
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: ReactNode;
+}) {
+  return (
+    <label className="space-y-2">
+      <span className="text-sm font-medium text-foreground/80">{label}</span>
+      {children}
+    </label>
+  );
+}
+
+function SectionCard({
+  title,
+  description,
+  children,
+  actions,
+}: {
+  title: string;
+  description?: string;
+  children: ReactNode;
+  actions?: ReactNode;
+}) {
+  return (
+    <section className="rounded-2xl border border-border/60 bg-background/70 p-6 shadow-sm">
+      <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
+        <div className="space-y-1">
+          <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
+          {description ? (
+            <p className="max-w-3xl text-sm text-muted-foreground">
+              {description}
+            </p>
+          ) : null}
+        </div>
+        {actions}
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function StringListEditor({
+  label,
+  values,
+  onChange,
+  addLabel = "Add item",
+}: {
+  label: string;
+  values: string[];
+  onChange: (next: string[]) => void;
+  addLabel?: string;
+}) {
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm font-medium text-foreground/80">{label}</p>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={() => onChange([...values, ""])}
+        >
+          {addLabel}
+        </Button>
+      </div>
+      <div className="space-y-2">
+        {values.map((value, index) => (
+          <div key={`${label}-${index}`} className="flex gap-2">
+            <Input
+              value={value}
+              onChange={(event) => {
+                const next = [...values];
+                next[index] = event.target.value;
+                onChange(next);
+              }}
+            />
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              onClick={() => onChange(values.filter((_, item) => item !== index))}
+            >
+              Remove
+            </Button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CollapsibleEditorCard({
+  title,
+  cardKey,
+  collapsed,
+  preview,
+  orderLabel,
+  onToggle,
+  onRemove,
+  canMoveUp,
+  canMoveDown,
+  onMoveUp,
+  onMoveDown,
+  children,
+}: {
+  title: string;
+  cardKey: string;
+  collapsed: boolean;
+  preview?: ReactNode;
+  orderLabel: string;
+  onToggle: () => void;
+  onRemove: () => void;
+  canMoveUp: boolean;
+  canMoveDown: boolean;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <div className="rounded-2xl border border-border/50 p-5 transition-colors">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          {preview}
+          <div className="space-y-0.5">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+              {orderLabel}
+            </p>
+            <h3 className="text-lg font-medium">{title}</h3>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onMoveUp}
+            disabled={!canMoveUp}
+          >
+            Move up
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onMoveDown}
+            disabled={!canMoveDown}
+          >
+            Move down
+          </Button>
+          <Button type="button" variant="ghost" size="sm" onClick={onToggle}>
+            {collapsed ? (
+              <>
+                <ChevronDown className="mr-1 size-4" />
+                Expand
+              </>
+            ) : (
+              <>
+                <ChevronUp className="mr-1 size-4" />
+                Collapse
+              </>
+            )}
+          </Button>
+          <Button type="button" variant="ghost" size="sm" onClick={onRemove}>
+            Remove
+          </Button>
+        </div>
+      </div>
+
+      {!collapsed ? <div className="mt-5 space-y-5">{children}</div> : null}
+    </div>
+  );
+}
+
+function BaseFigurePreview({
+  src,
+  alt,
+  aspect = "square",
+}: {
+  src?: string;
+  alt: string;
+  aspect?: "square" | "a-portrait";
+}) {
+  return (
+    <div
+      className={cn(
+        "relative shrink-0 overflow-hidden rounded-lg border border-border/50 bg-secondary/30",
+        aspect === "square" ? "h-16 w-16" : "h-20 w-14"
+      )}
+    >
+      {src ? (
+        <Image src={src} alt={alt} fill className="object-contain p-1.5" />
+      ) : (
+        <div className="flex h-full items-center justify-center px-2 text-center text-[10px] text-muted-foreground">
+          No image
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FigureRowEditor({
+  figure,
+  index,
+  folder,
+  baseImage,
+  canMoveUp,
+  canMoveDown,
+  onMoveUp,
+  onMoveDown,
+  onUpdate,
+  onRemove,
+  onSelectBase,
+}: {
+  figure: { src: string; alt: string };
+  index: number;
+  folder: string;
+  baseImage: string;
+  canMoveUp: boolean;
+  canMoveDown: boolean;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
+  onUpdate: (next: { src: string; alt: string }) => void;
+  onRemove: () => void;
+  onSelectBase: (src: string) => void;
+}) {
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const [uploadResult, setUploadResult] = useState("");
+
+  async function handleUpload() {
+    if (!uploadFile) return;
+
+    setUploading(true);
+    setUploadError("");
+    setUploadResult("");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", uploadFile);
+      formData.append("folder", folder);
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = (await response.json()) as { path?: string; error?: string };
+      if (!response.ok || !data.path) {
+        throw new Error(data.error || "Upload failed");
+      }
+
+      onUpdate({ ...figure, src: data.path });
+      setUploadResult(data.path);
+      setUploadFile(null);
+    } catch (error) {
+      setUploadError(
+        error instanceof Error ? error.message : "Could not upload image."
+      );
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return (
+    <div className="space-y-3 rounded-xl border border-border/50 p-4 transition-colors">
+      <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+        Figure {index + 1}
+      </div>
+      <div className="flex justify-start">
+        <div className="relative flex h-28 w-28 items-center justify-center overflow-hidden rounded-xl border border-border/50 bg-secondary/30">
+          {figure.src ? (
+            <Image
+              src={figure.src}
+              alt={figure.alt || `Figure ${index + 1} preview`}
+              fill
+              className="object-contain p-2"
+            />
+          ) : (
+            <span className="px-3 text-center text-xs leading-relaxed text-muted-foreground">
+              No image selected
+            </span>
+          )}
+        </div>
+      </div>
+      <div className="grid gap-3 lg:grid-cols-[1fr_1fr_auto_auto]">
+        <Field label="Image path">
+          <Input
+            value={figure.src}
+            placeholder={`/uploads/${folder}/image.png`}
+            onChange={(event) => onUpdate({ ...figure, src: event.target.value })}
+          />
+        </Field>
+        <Field label="Alt text">
+          <Input
+            value={figure.alt}
+            onChange={(event) => onUpdate({ ...figure, alt: event.target.value })}
+          />
+        </Field>
+        <div className="flex items-end">
+          <Button
+            type="button"
+            size="sm"
+            variant={figure.src === baseImage ? "default" : "outline"}
+            onClick={() => onSelectBase(figure.src)}
+            disabled={!figure.src}
+          >
+            {figure.src === baseImage ? "Base figure" : "Set as base"}
+          </Button>
+        </div>
+        <div className="flex items-end">
+          <Button type="button" size="sm" variant="ghost" onClick={onRemove}>
+            Remove
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex gap-2">
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          disabled={!canMoveUp}
+          onClick={onMoveUp}
+        >
+          Move up
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          disabled={!canMoveDown}
+          onClick={onMoveDown}
+        >
+          Move down
+        </Button>
+      </div>
+
+      <div className="grid gap-3 lg:grid-cols-[1fr_auto]">
+        <Field label="Upload image for this figure">
+          <Input
+            key={uploadResult || `${folder}-${index}`}
+            type="file"
+            accept="image/*"
+            onChange={(event) => setUploadFile(event.target.files?.[0] ?? null)}
+          />
+        </Field>
+        <div className="flex items-end">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleUpload}
+            disabled={!uploadFile || uploading}
+          >
+            {uploading ? "Uploading..." : "Upload to figure"}
+          </Button>
+        </div>
+      </div>
+
+      {uploadResult ? (
+        <p className="text-sm text-muted-foreground">
+          Uploaded path: <code>{uploadResult}</code>
+        </p>
+      ) : null}
+      {uploadError ? <p className="text-sm text-red-500">{uploadError}</p> : null}
+    </div>
+  );
+}
+
+function FigureListEditor({
+  figures,
+  baseImage,
+  folder,
+  onChange,
+  onSelectBase,
+}: {
+  figures: Array<{ src: string; alt: string }>;
+  baseImage: string;
+  folder: string;
+  onChange: (next: Array<{ src: string; alt: string }>) => void;
+  onSelectBase: (src: string) => void;
+}) {
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm font-medium text-foreground/80">Figures</p>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={() => onChange([...figures, { src: "", alt: "" }])}
+        >
+          Add figure
+        </Button>
+      </div>
+      <div className="space-y-3">
+        {figures.map((figure, index) => (
+          <FigureRowEditor
+            key={`figure-${index}`}
+            figure={figure}
+            index={index}
+            folder={folder}
+            baseImage={baseImage}
+            canMoveUp={index > 0}
+            canMoveDown={index < figures.length - 1}
+            onMoveUp={() => onChange(moveItem(figures, index, index - 1))}
+            onMoveDown={() => onChange(moveItem(figures, index, index + 1))}
+            onUpdate={(nextFigure) => {
+              const next = [...figures];
+              next[index] = nextFigure;
+              onChange(next);
+            }}
+            onRemove={() => onChange(figures.filter((_, item) => item !== index))}
+            onSelectBase={onSelectBase}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function FileUploadField({
+  label,
+  accept,
+  folder,
+  onUploaded,
+}: {
+  label: string;
+  accept?: string;
+  folder: string;
+  onUploaded: (path: string) => void;
+}) {
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const [uploadResult, setUploadResult] = useState("");
+
+  async function handleUpload() {
+    if (!uploadFile) return;
+
+    setUploading(true);
+    setUploadError("");
+    setUploadResult("");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", uploadFile);
+      formData.append("folder", folder);
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = (await response.json()) as { path?: string; error?: string };
+      if (!response.ok || !data.path) {
+        throw new Error(data.error || "Upload failed");
+      }
+
+      onUploaded(data.path);
+      setUploadResult(data.path);
+      setUploadFile(null);
+    } catch (error) {
+      setUploadError(
+        error instanceof Error ? error.message : "Could not upload file."
+      );
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return (
+    <div className="space-y-3 rounded-xl border border-border/50 p-4">
+      <div className="grid gap-3 lg:grid-cols-[1fr_auto]">
+        <Field label={label}>
+          <Input
+            key={uploadResult || folder}
+            type="file"
+            accept={accept}
+            onChange={(event) => setUploadFile(event.target.files?.[0] ?? null)}
+          />
+        </Field>
+        <div className="flex items-end">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleUpload}
+            disabled={!uploadFile || uploading}
+          >
+            {uploading ? "Uploading..." : "Upload file"}
+          </Button>
+        </div>
+      </div>
+      {uploadResult ? (
+        <p className="text-sm text-muted-foreground">
+          Uploaded path: <code>{uploadResult}</code>
+        </p>
+      ) : null}
+      {uploadError ? <p className="text-sm text-red-500">{uploadError}</p> : null}
+    </div>
+  );
+}
+
+function EditorNav({ currentSection }: { currentSection: EditorView }) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      <Link
+        href="/editor"
+        className={cn(
+          "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+          currentSection === "home"
+            ? "bg-secondary text-foreground"
+            : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
+        )}
+      >
+        Overview
+      </Link>
+      {editorSections.map((section) => (
+        <Link
+          key={section.id}
+          href={section.href}
+          className={cn(
+            "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+            currentSection === section.id
+              ? "bg-secondary text-foreground"
+              : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
+          )}
+        >
+          {section.label}
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+function EditorShell({
+  currentSection,
+  usingDefaultPassword,
+  statusText,
+  onLogout,
+  children,
+}: {
+  currentSection: EditorView;
+  usingDefaultPassword: boolean;
+  statusText: string;
+  onLogout: () => Promise<void>;
+  children: ReactNode;
+}) {
+  return (
+    <main className="mx-auto max-w-7xl px-6 py-10">
+      <div className="mb-8 space-y-5">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="space-y-2">
+            <p className="text-sm uppercase tracking-[0.25em] text-muted-foreground">
+              Content Editor
+            </p>
+            <h1 className="text-3xl font-semibold tracking-tight">
+              Update your website without editing code
+            </h1>
+            <p className="max-w-3xl text-sm text-muted-foreground">
+              Each editor page maps to a website section. Save changes back into
+              <code> content/site-content.json</code>, and upload figures directly
+              where they belong.
+            </p>
+            {usingDefaultPassword ? (
+              <p className="text-sm text-amber-600">
+                You are using the default editor password. Set{" "}
+                <code>EDITOR_PASSWORD</code> to secure this page.
+              </p>
+            ) : null}
+            {statusText ? (
+              <p className="text-sm text-muted-foreground">{statusText}</p>
+            ) : null}
+          </div>
+          <Button type="button" variant="outline" onClick={onLogout}>
+            Log out
+          </Button>
+        </div>
+        <EditorNav currentSection={currentSection} />
+      </div>
+      {children}
+    </main>
+  );
+}
+
+function HomeEditorIntro() {
+  return (
+    <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+      {editorSections.map((section) => (
+        <Link
+          key={section.id}
+          href={section.href}
+          className="rounded-2xl border border-border/60 bg-background/70 p-6 shadow-sm transition-colors hover:border-primary/40 hover:bg-background"
+        >
+          <h2 className="text-lg font-semibold tracking-tight">{section.label}</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            {section.description}
+          </p>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+export function EditorSectionPage({ section }: { section: EditorView }) {
+  const [authState, setAuthState] = useState<AuthState>("loading");
+  const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
+  const [usingDefaultPassword, setUsingDefaultPassword] = useState(false);
+  const [draft, setDraft] = useState<SiteContent>(() => cloneContent(baseContent));
+  const [saveState, setSaveState] = useState<Record<SectionKey, SaveState>>({
+    site: "idle",
+    about: "idle",
+    portfolio: "idle",
+    publications: "idle",
+    cv: "idle",
+  });
+  const [collapsedCards, setCollapsedCards] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    let active = true;
+
+    const loadSession = async () => {
+      try {
+        const response = await fetch("/api/editor-login", { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error("Failed to check editor session");
+        }
+        const data = (await response.json()) as {
+          authenticated: boolean;
+          usingDefaultPassword: boolean;
+        };
+        if (!active) return;
+        setUsingDefaultPassword(data.usingDefaultPassword);
+        setAuthState(data.authenticated ? "authenticated" : "unauthenticated");
+      } catch {
+        if (active) {
+          setAuthState("unauthenticated");
+        }
+      }
+    };
+
+    loadSession();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (authState !== "authenticated") return;
+
+    let active = true;
+
+    const loadContent = async () => {
+      try {
+        const response = await fetch("/api/content", { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error("Failed to load content");
+        }
+        const content = (await response.json()) as SiteContent;
+        if (active) {
+          setDraft(content);
+        }
+      } catch {
+        if (active) {
+          setDraft(cloneContent(baseContent));
+        }
+      }
+    };
+
+    loadContent();
+
+    return () => {
+      active = false;
+    };
+  }, [authState]);
+
+  const statusText = useMemo(() => {
+    if (section === "home") return "";
+    const currentState = saveState[section === "contact" ? "site" : section];
+    if (currentState === "saving") return `Saving ${section}...`;
+    if (currentState === "error") return `Could not save ${section}.`;
+    if (currentState === "saved") return "Changes saved.";
+    return "";
+  }, [saveState, section]);
+
+  function updateSection<K extends SectionKey>(key: K, value: SiteContent[K]) {
+    setDraft((current) => ({ ...current, [key]: value }));
+  }
+
+  function toggleCard(cardKey: string) {
+    setCollapsedCards((current) => ({
+      ...current,
+      [cardKey]: !current[cardKey],
+    }));
+  }
+
+  async function saveSection(currentSection: SectionKey) {
+    setSaveState((current) => ({ ...current, [currentSection]: "saving" }));
+
+    try {
+      const response = await fetch("/api/content", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(draft),
+      });
+
+      if (response.status === 401) {
+        setAuthState("unauthenticated");
+        throw new Error("Unauthorized");
+      }
+
+      if (!response.ok) {
+        throw new Error("Failed to save");
+      }
+
+      setSaveState((current) => ({ ...current, [currentSection]: "saved" }));
+      window.setTimeout(() => {
+        setSaveState((current) => ({
+          ...current,
+          [currentSection]:
+            current[currentSection] === "saved"
+              ? "idle"
+              : current[currentSection],
+        }));
+      }, 1500);
+    } catch {
+      setSaveState((current) => ({ ...current, [currentSection]: "error" }));
+    }
+  }
+
+  async function handleLogin(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setLoginError("");
+
+    try {
+      const response = await fetch("/api/editor-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+
+      const data = (await response.json()) as {
+        error?: string;
+        usingDefaultPassword?: boolean;
+      };
+
+      if (!response.ok) {
+        throw new Error(data.error || "Invalid password");
+      }
+
+      setUsingDefaultPassword(Boolean(data.usingDefaultPassword));
+      setAuthState("authenticated");
+      setPassword("");
+    } catch (error) {
+      setLoginError(
+        error instanceof Error ? error.message : "Could not log in to the editor."
+      );
+    }
+  }
+
+  async function handleLogout() {
+    await fetch("/api/editor-login", { method: "DELETE" });
+    setAuthState("unauthenticated");
+  }
+
+  if (authState === "loading") {
+    return (
+      <main className="mx-auto flex min-h-screen max-w-3xl items-center px-6 py-16">
+        <div className="w-full rounded-2xl border border-border/60 bg-background/80 p-8 shadow-sm">
+          <p className="text-sm text-muted-foreground">Checking editor access...</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (authState === "unauthenticated") {
+    return (
+      <main className="mx-auto flex min-h-screen max-w-3xl items-center px-6 py-16">
+        <div className="w-full rounded-3xl border border-border/60 bg-background/90 p-8 shadow-sm">
+          <div className="space-y-2">
+            <p className="text-sm uppercase tracking-[0.25em] text-muted-foreground">
+              Editor Access
+            </p>
+            <h1 className="text-3xl font-semibold tracking-tight">
+              Sign in to edit site content
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              This page is protected by a simple password cookie. Set{" "}
+              <code>EDITOR_PASSWORD</code> in your environment before deploying it
+              publicly.
+            </p>
+          </div>
+
+          <form className="mt-8 space-y-4" onSubmit={handleLogin}>
+            <Field label="Password">
+              <Input
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="Enter editor password"
+              />
+            </Field>
+            {loginError ? (
+              <p className="text-sm text-red-500">{loginError}</p>
+            ) : null}
+            <Button type="submit">Unlock editor</Button>
+          </form>
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <EditorShell
+      currentSection={section}
+      usingDefaultPassword={usingDefaultPassword}
+      statusText={statusText}
+      onLogout={handleLogout}
+    >
+      {section === "home" ? (
+        <HomeEditorIntro />
+      ) : section === "site" ? (
+        <SectionCard
+          title="Site Chrome"
+          description="Update the top bar, footer text, editor button label, and the headers shown on each main page."
+          actions={
+            <Button type="button" onClick={() => saveSection("site")}>
+              Save Site
+            </Button>
+          }
+        >
+          <div className="space-y-6">
+            <div className="grid gap-4 md:grid-cols-3">
+              <Field label="Main title">
+                <Input
+                  value={draft.site.branding.name}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      branding: {
+                        ...draft.site.branding,
+                        name: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Subtitle">
+                <Input
+                  value={draft.site.branding.title}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      branding: {
+                        ...draft.site.branding,
+                        title: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Footer copyright name">
+                <Input
+                  value={draft.site.footer.copyrightName}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      footer: {
+                        ...draft.site.footer,
+                        copyrightName: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+            </div>
+
+            <Field label="Top bar description">
+              <Textarea
+                value={draft.site.branding.description}
+                rows={3}
+                onChange={(event) =>
+                  updateSection("site", {
+                    ...draft.site,
+                    branding: {
+                      ...draft.site.branding,
+                      description: event.target.value,
+                    },
+                  })
+                }
+              />
+            </Field>
+
+            <div className="grid gap-4 md:grid-cols-3">
+              <Field label="Top bar About button">
+                <Input
+                  value={draft.site.navigation.about}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      navigation: {
+                        ...draft.site.navigation,
+                        about: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Top bar CV button">
+                <Input
+                  value={draft.site.navigation.cv}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      navigation: {
+                        ...draft.site.navigation,
+                        cv: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Top bar Publications button">
+                <Input
+                  value={draft.site.navigation.publications}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      navigation: {
+                        ...draft.site.navigation,
+                        publications: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Top bar Portfolio button">
+                <Input
+                  value={draft.site.navigation.portfolio}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      navigation: {
+                        ...draft.site.navigation,
+                        portfolio: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Top bar Contact button">
+                <Input
+                  value={draft.site.navigation.contact}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      navigation: {
+                        ...draft.site.navigation,
+                        contact: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Footer editor button">
+                <Input
+                  value={draft.site.navigation.editor}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      navigation: {
+                        ...draft.site.navigation,
+                        editor: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-3">
+              <Field label="About page header">
+                <Input
+                  value={draft.site.headers.about}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      headers: {
+                        ...draft.site.headers,
+                        about: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Core Skills header">
+                <Input
+                  value={draft.site.headers.coreSkills}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      headers: {
+                        ...draft.site.headers,
+                        coreSkills: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Featured Projects header">
+                <Input
+                  value={draft.site.headers.featuredProjects}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      headers: {
+                        ...draft.site.headers,
+                        featuredProjects: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Portfolio page header">
+                <Input
+                  value={draft.site.headers.portfolio}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      headers: {
+                        ...draft.site.headers,
+                        portfolio: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Publications page header">
+                <Input
+                  value={draft.site.headers.publications}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      headers: {
+                        ...draft.site.headers,
+                        publications: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="CV page header">
+                <Input
+                  value={draft.site.headers.cv}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      headers: {
+                        ...draft.site.headers,
+                        cv: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Contact page header">
+                <Input
+                  value={draft.site.headers.contact}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      headers: {
+                        ...draft.site.headers,
+                        contact: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Footer secondary text">
+                <Input
+                  value={draft.site.footer.builtWith}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      footer: {
+                        ...draft.site.footer,
+                        builtWith: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+            </div>
+          </div>
+        </SectionCard>
+      ) : section === "contact" ? (
+        <SectionCard
+          title="Contact"
+          description="Update the contact section text, labels, links, and call-to-action button."
+          actions={
+            <Button type="button" onClick={() => saveSection("site")}>
+              Save Contact
+            </Button>
+          }
+        >
+          <div className="space-y-6">
+            <div className="grid gap-4 md:grid-cols-2">
+              <Field label="Contact section title">
+                <Input
+                  value={draft.site.contact.sectionTitle}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      contact: {
+                        ...draft.site.contact,
+                        sectionTitle: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Contact headline">
+                <Input
+                  value={draft.site.contact.headline}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      contact: {
+                        ...draft.site.contact,
+                        headline: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+            </div>
+
+            <Field label="Contact description">
+              <Textarea
+                value={draft.site.contact.description}
+                rows={4}
+                onChange={(event) =>
+                  updateSection("site", {
+                    ...draft.site,
+                    contact: {
+                      ...draft.site.contact,
+                      description: event.target.value,
+                    },
+                  })
+                }
+              />
+            </Field>
+
+            <div className="grid gap-4 md:grid-cols-3">
+              <Field label="Email label">
+                <Input
+                  value={draft.site.contact.emailLabel}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      contact: {
+                        ...draft.site.contact,
+                        emailLabel: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Email text">
+                <Input
+                  value={draft.site.contact.emailValue}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      contact: {
+                        ...draft.site.contact,
+                        emailValue: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Email link">
+                <Input
+                  value={draft.site.contact.emailHref}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      contact: {
+                        ...draft.site.contact,
+                        emailHref: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Location label">
+                <Input
+                  value={draft.site.contact.locationLabel}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      contact: {
+                        ...draft.site.contact,
+                        locationLabel: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Location text">
+                <Input
+                  value={draft.site.contact.locationValue}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      contact: {
+                        ...draft.site.contact,
+                        locationValue: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Availability label">
+                <Input
+                  value={draft.site.contact.availabilityLabel}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      contact: {
+                        ...draft.site.contact,
+                        availabilityLabel: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Availability text">
+                <Input
+                  value={draft.site.contact.availabilityValue}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      contact: {
+                        ...draft.site.contact,
+                        availabilityValue: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Primary button label">
+                <Input
+                  value={draft.site.contact.primaryButtonLabel}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      contact: {
+                        ...draft.site.contact,
+                        primaryButtonLabel: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Primary button link">
+                <Input
+                  value={draft.site.contact.primaryButtonHref}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      contact: {
+                        ...draft.site.contact,
+                        primaryButtonHref: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+            </div>
+          </div>
+        </SectionCard>
+      ) : section === "about" ? (
+        <SectionCard
+          title="About"
+          description="Edit the text blocks and the skill chips shown in the About section."
+          actions={
+            <Button type="button" onClick={() => saveSection("about")}>
+              Save About
+            </Button>
+          }
+        >
+          <div className="grid gap-6 lg:grid-cols-2">
+            <StringListEditor
+              label="Paragraphs"
+              addLabel="Add paragraph"
+              values={draft.about.paragraphs}
+              onChange={(paragraphs) =>
+                updateSection("about", { ...draft.about, paragraphs })
+              }
+            />
+            <StringListEditor
+              label="Skills"
+              addLabel="Add skill"
+              values={draft.about.skills}
+              onChange={(skills) => updateSection("about", { ...draft.about, skills })}
+            />
+          </div>
+        </SectionCard>
+      ) : section === "portfolio" ? (
+        <SectionCard
+          title="Portfolio"
+          description="Manage project cards, links, figure sets, and base images."
+          actions={
+            <Button type="button" onClick={() => saveSection("portfolio")}>
+              Save Portfolio
+            </Button>
+          }
+        >
+          <div className="space-y-5">
+            <div className="flex justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() =>
+                  updateSection("portfolio", [...draft.portfolio, createEmptyProject()])
+                }
+              >
+                Add project
+              </Button>
+            </div>
+
+            {draft.portfolio.map((project, index) => (
+              <CollapsibleEditorCard
+                key={`project-${index}`}
+                title={project.title || `Project ${index + 1}`}
+                cardKey={`portfolio-${index}`}
+                collapsed={collapsedCards[`portfolio-${index}`] ?? true}
+                orderLabel={`Project ${index + 1}`}
+                preview={
+                  <BaseFigurePreview
+                    src={project.image}
+                    alt={`${project.title || `Project ${index + 1}`} base figure`}
+                    aspect="square"
+                  />
+                }
+                onToggle={() => toggleCard(`portfolio-${index}`)}
+                onRemove={() =>
+                  updateSection(
+                    "portfolio",
+                    draft.portfolio.filter((_, item) => item !== index)
+                  )
+                }
+                canMoveUp={index > 0}
+                canMoveDown={index < draft.portfolio.length - 1}
+                onMoveUp={() =>
+                  updateSection("portfolio", moveItem(draft.portfolio, index, index - 1))
+                }
+                onMoveDown={() =>
+                  updateSection("portfolio", moveItem(draft.portfolio, index, index + 1))
+                }
+              >
+                <div className="grid gap-4 md:grid-cols-2">
+                  <Field label="Title">
+                    <Input
+                      value={project.title}
+                      onChange={(event) => {
+                        const next = [...draft.portfolio];
+                        const title = event.target.value;
+                        next[index] = {
+                          ...project,
+                          title,
+                          slug: slugify(title) || project.slug,
+                        };
+                        updateSection("portfolio", next);
+                      }}
+                    />
+                  </Field>
+                  <Field label="Subtitle">
+                    <Input
+                      value={project.subtitle ?? ""}
+                      onChange={(event) => {
+                        const next = [...draft.portfolio];
+                        next[index] = { ...project, subtitle: event.target.value };
+                        updateSection("portfolio", next);
+                      }}
+                      placeholder="Optional"
+                    />
+                  </Field>
+                  <Field label="Base image path">
+                    <Input
+                      value={project.image}
+                      onChange={(event) => {
+                        const next = [...draft.portfolio];
+                        next[index] = { ...project, image: event.target.value };
+                        updateSection("portfolio", next);
+                      }}
+                    />
+                  </Field>
+                  <Field label="Live URL">
+                    <Input
+                      value={project.url}
+                      onChange={(event) => {
+                        const next = [...draft.portfolio];
+                        next[index] = { ...project, url: event.target.value };
+                        updateSection("portfolio", next);
+                      }}
+                    />
+                  </Field>
+                  <Field label="GitHub URL">
+                    <Input
+                      value={project.github}
+                      onChange={(event) => {
+                        const next = [...draft.portfolio];
+                        next[index] = { ...project, github: event.target.value };
+                        updateSection("portfolio", next);
+                      }}
+                    />
+                  </Field>
+                </div>
+
+                <Field label="Description">
+                  <Textarea
+                    value={project.description}
+                    onChange={(event) => {
+                      const next = [...draft.portfolio];
+                      next[index] = { ...project, description: event.target.value };
+                      updateSection("portfolio", next);
+                    }}
+                    rows={4}
+                  />
+                </Field>
+
+                <StringListEditor
+                  label="Tags"
+                  addLabel="Add tag"
+                  values={project.tags}
+                  onChange={(tags) => {
+                    const next = [...draft.portfolio];
+                    next[index] = { ...project, tags };
+                    updateSection("portfolio", next);
+                  }}
+                />
+
+                <FigureListEditor
+                  baseImage={project.image}
+                  figures={project.figures ?? []}
+                  folder={`portfolio/${project.slug || slugify(project.title) || `project-${index + 1}`}`}
+                  onChange={(figures) => {
+                    const next = [...draft.portfolio];
+                    next[index] = { ...project, figures };
+                    updateSection("portfolio", next);
+                  }}
+                  onSelectBase={(image) => {
+                    const next = [...draft.portfolio];
+                    next[index] = { ...project, image };
+                    updateSection("portfolio", next);
+                  }}
+                />
+              </CollapsibleEditorCard>
+            ))}
+          </div>
+        </SectionCard>
+      ) : section === "publications" ? (
+        <SectionCard
+          title="Publications"
+          description="Edit publication cards with their details, images, and figure sets."
+          actions={
+            <Button type="button" onClick={() => saveSection("publications")}>
+              Save Publications
+            </Button>
+          }
+        >
+          <div className="space-y-5">
+            <div className="flex justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() =>
+                  updateSection(
+                    "publications",
+                    [...draft.publications, createEmptyPublication()]
+                  )
+                }
+              >
+                Add publication
+              </Button>
+            </div>
+
+            {draft.publications.map((publication, index) => (
+              <CollapsibleEditorCard
+                key={`publication-${index}`}
+                title={publication.title || `Publication ${index + 1}`}
+                cardKey={`publications-${index}`}
+                collapsed={collapsedCards[`publications-${index}`] ?? true}
+                orderLabel={`Publication ${index + 1}`}
+                preview={
+                  <BaseFigurePreview
+                    src={publication.image}
+                    alt={`${publication.title || `Publication ${index + 1}`} base figure`}
+                    aspect="a-portrait"
+                  />
+                }
+                onToggle={() => toggleCard(`publications-${index}`)}
+                onRemove={() =>
+                  updateSection(
+                    "publications",
+                    draft.publications.filter((_, item) => item !== index)
+                  )
+                }
+                canMoveUp={index > 0}
+                canMoveDown={index < draft.publications.length - 1}
+                onMoveUp={() =>
+                  updateSection(
+                    "publications",
+                    moveItem(draft.publications, index, index - 1)
+                  )
+                }
+                onMoveDown={() =>
+                  updateSection(
+                    "publications",
+                    moveItem(draft.publications, index, index + 1)
+                  )
+                }
+              >
+                <div className="grid gap-4 md:grid-cols-2">
+                  <Field label="Title">
+                    <Input
+                      value={publication.title}
+                      onChange={(event) => {
+                        const next = [...draft.publications];
+                        const title = event.target.value;
+                        next[index] = {
+                          ...publication,
+                          title,
+                          slug: slugify(title) || publication.slug,
+                        };
+                        updateSection("publications", next);
+                      }}
+                    />
+                  </Field>
+                  <Field label="Subtitle">
+                    <Input
+                      value={publication.subtitle ?? ""}
+                      onChange={(event) => {
+                        const next = [...draft.publications];
+                        next[index] = {
+                          ...publication,
+                          subtitle: event.target.value,
+                        };
+                        updateSection("publications", next);
+                      }}
+                      placeholder="Optional"
+                    />
+                  </Field>
+                  <Field label="Venue">
+                    <Input
+                      value={publication.venue}
+                      onChange={(event) => {
+                        const next = [...draft.publications];
+                        next[index] = { ...publication, venue: event.target.value };
+                        updateSection("publications", next);
+                      }}
+                    />
+                  </Field>
+                  <Field label="Type">
+                    <Input
+                      value={publication.type}
+                      onChange={(event) => {
+                        const next = [...draft.publications];
+                        next[index] = { ...publication, type: event.target.value };
+                        updateSection("publications", next);
+                      }}
+                    />
+                  </Field>
+                  <Field label="Year">
+                    <Input
+                      value={publication.year}
+                      onChange={(event) => {
+                        const next = [...draft.publications];
+                        next[index] = { ...publication, year: event.target.value };
+                        updateSection("publications", next);
+                      }}
+                    />
+                  </Field>
+                  <Field label="URL">
+                    <Input
+                      value={publication.url}
+                      onChange={(event) => {
+                        const next = [...draft.publications];
+                        next[index] = { ...publication, url: event.target.value };
+                        updateSection("publications", next);
+                      }}
+                    />
+                  </Field>
+                  <Field label="Base image path">
+                    <Input
+                      value={publication.image}
+                      onChange={(event) => {
+                        const next = [...draft.publications];
+                        next[index] = { ...publication, image: event.target.value };
+                        updateSection("publications", next);
+                      }}
+                    />
+                  </Field>
+                </div>
+
+                <Field label="Abstract">
+                  <Textarea
+                    value={publication.abstract}
+                    onChange={(event) => {
+                      const next = [...draft.publications];
+                      next[index] = { ...publication, abstract: event.target.value };
+                      updateSection("publications", next);
+                    }}
+                    rows={4}
+                  />
+                </Field>
+
+                <StringListEditor
+                  label="Tags"
+                  addLabel="Add tag"
+                  values={publication.tags}
+                  onChange={(tags) => {
+                    const next = [...draft.publications];
+                    next[index] = { ...publication, tags };
+                    updateSection("publications", next);
+                  }}
+                />
+
+                <FigureListEditor
+                  baseImage={publication.image}
+                  figures={publication.figures ?? []}
+                  folder={`publications/${publication.slug || slugify(publication.title) || `publication-${index + 1}`}`}
+                  onChange={(figures) => {
+                    const next = [...draft.publications];
+                    next[index] = { ...publication, figures };
+                    updateSection("publications", next);
+                  }}
+                  onSelectBase={(image) => {
+                    const next = [...draft.publications];
+                    next[index] = { ...publication, image };
+                    updateSection("publications", next);
+                  }}
+                />
+              </CollapsibleEditorCard>
+            ))}
+          </div>
+        </SectionCard>
+      ) : (
+        <SectionCard
+          title="Curriculum Vitae"
+          description="Manage the CV timeline entries, dates, labels, descriptions, details, and skill lists."
+          actions={
+            <Button type="button" onClick={() => saveSection("cv")}>
+              Save CV
+            </Button>
+          }
+        >
+          <div className="space-y-5">
+            <div className="grid gap-4 md:grid-cols-2">
+              <Field label="CV document path">
+                <Input
+                  value={draft.cv.documentPath ?? ""}
+                  onChange={(event) =>
+                    updateSection("cv", {
+                      ...draft.cv,
+                      documentPath: event.target.value,
+                    })
+                  }
+                  placeholder="/uploads/documents/cv/cv.pdf"
+                />
+              </Field>
+              <Field label="Download button label">
+                <Input
+                  value={draft.cv.documentLabel ?? ""}
+                  onChange={(event) =>
+                    updateSection("cv", {
+                      ...draft.cv,
+                      documentLabel: event.target.value,
+                    })
+                  }
+                  placeholder="Download CV"
+                />
+              </Field>
+            </div>
+
+            <FileUploadField
+              label="Upload CV file"
+              accept=".pdf,application/pdf"
+              folder="documents/cv"
+              onUploaded={(path) =>
+                updateSection("cv", {
+                  ...draft.cv,
+                  documentPath: path,
+                })
+              }
+            />
+
+            <div className="flex justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() =>
+                  updateSection("cv", {
+                    items: [...draft.cv.items, createEmptyTimelineItem()],
+                  })
+                }
+              >
+                Add CV item
+              </Button>
+            </div>
+
+            {draft.cv.items.map((item, index) => (
+              <CollapsibleEditorCard
+                key={item.id || `cv-${index}`}
+                title={item.title || `CV item ${index + 1}`}
+                cardKey={`cv-${item.id || index}`}
+                collapsed={collapsedCards[`cv-${item.id || index}`] ?? true}
+                orderLabel={`Item ${index + 1}`}
+                onToggle={() => toggleCard(`cv-${item.id || index}`)}
+                onRemove={() =>
+                  updateSection("cv", {
+                    items: draft.cv.items.filter((_, entry) => entry !== index),
+                  })
+                }
+                canMoveUp={index > 0}
+                canMoveDown={index < draft.cv.items.length - 1}
+                onMoveUp={() =>
+                  updateSection("cv", {
+                    items: moveItem(draft.cv.items, index, index - 1),
+                  })
+                }
+                onMoveDown={() =>
+                  updateSection("cv", {
+                    items: moveItem(draft.cv.items, index, index + 1),
+                  })
+                }
+              >
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  <Field label="ID">
+                    <Input
+                      value={item.id}
+                      onChange={(event) => {
+                        const next = [...draft.cv.items];
+                        next[index] = { ...item, id: event.target.value };
+                        updateSection("cv", { items: next });
+                      }}
+                    />
+                  </Field>
+                  <Field label="Type">
+                    <select
+                      className="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm"
+                      value={item.type}
+                      onChange={(event) => {
+                        const next = [...draft.cv.items];
+                        next[index] = {
+                          ...item,
+                          type: event.target.value as ExperienceType,
+                        };
+                        updateSection("cv", { items: next });
+                      }}
+                    >
+                      <option value="work">Work</option>
+                      <option value="education">Education</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </Field>
+                  <Field label="Period label">
+                    <Input
+                      value={item.period}
+                      onChange={(event) => {
+                        const next = [...draft.cv.items];
+                        next[index] = { ...item, period: event.target.value };
+                        updateSection("cv", { items: next });
+                      }}
+                    />
+                  </Field>
+                  <Field label="Start year">
+                    <Input
+                      type="number"
+                      value={item.startYear}
+                      onChange={(event) => {
+                        const next = [...draft.cv.items];
+                        next[index] = {
+                          ...item,
+                          startYear: Number(event.target.value) || item.startYear,
+                        };
+                        updateSection("cv", { items: next });
+                      }}
+                    />
+                  </Field>
+                  <Field label="Start month">
+                    <Input
+                      type="number"
+                      min="1"
+                      max="12"
+                      value={item.startMonth ?? ""}
+                      onChange={(event) => {
+                        const next = [...draft.cv.items];
+                        next[index] = {
+                          ...item,
+                          startMonth: parseOptionalNumber(event.target.value),
+                        };
+                        updateSection("cv", { items: next });
+                      }}
+                      placeholder="Optional"
+                    />
+                  </Field>
+                  <Field label="End year">
+                    <Input
+                      type="number"
+                      value={item.endYear}
+                      onChange={(event) => {
+                        const next = [...draft.cv.items];
+                        next[index] = {
+                          ...item,
+                          endYear: Number(event.target.value) || item.endYear,
+                        };
+                        updateSection("cv", { items: next });
+                      }}
+                    />
+                  </Field>
+                  <Field label="End month">
+                    <Input
+                      type="number"
+                      min="1"
+                      max="12"
+                      value={item.endMonth ?? ""}
+                      onChange={(event) => {
+                        const next = [...draft.cv.items];
+                        next[index] = {
+                          ...item,
+                          endMonth: parseOptionalNumber(event.target.value),
+                        };
+                        updateSection("cv", { items: next });
+                      }}
+                      placeholder="Optional"
+                    />
+                  </Field>
+                  <Field label="Title">
+                    <Input
+                      value={item.title}
+                      onChange={(event) => {
+                        const next = [...draft.cv.items];
+                        next[index] = { ...item, title: event.target.value };
+                        updateSection("cv", { items: next });
+                      }}
+                    />
+                  </Field>
+                  <Field label="Organization">
+                    <Input
+                      value={item.organization}
+                      onChange={(event) => {
+                        const next = [...draft.cv.items];
+                        next[index] = { ...item, organization: event.target.value };
+                        updateSection("cv", { items: next });
+                      }}
+                    />
+                  </Field>
+                  <Field label="URL">
+                    <Input
+                      value={item.url ?? ""}
+                      onChange={(event) => {
+                        const next = [...draft.cv.items];
+                        next[index] = { ...item, url: event.target.value };
+                        updateSection("cv", { items: next });
+                      }}
+                      placeholder="Optional"
+                    />
+                  </Field>
+                </div>
+
+                <Field label="Description">
+                  <Textarea
+                    value={item.description}
+                    onChange={(event) => {
+                      const next = [...draft.cv.items];
+                      next[index] = { ...item, description: event.target.value };
+                      updateSection("cv", { items: next });
+                    }}
+                    rows={4}
+                  />
+                </Field>
+
+                <StringListEditor
+                  label="Details"
+                  addLabel="Add detail"
+                  values={item.details ?? []}
+                  onChange={(details) => {
+                    const next = [...draft.cv.items];
+                    next[index] = { ...item, details };
+                    updateSection("cv", { items: next });
+                  }}
+                />
+
+                <StringListEditor
+                  label="Skills"
+                  addLabel="Add skill"
+                  values={item.skills ?? []}
+                  onChange={(skills) => {
+                    const next = [...draft.cv.items];
+                    next[index] = { ...item, skills };
+                    updateSection("cv", { items: next });
+                  }}
+                />
+              </CollapsibleEditorCard>
+            ))}
+          </div>
+        </SectionCard>
+      )}
+    </EditorShell>
+  );
+}

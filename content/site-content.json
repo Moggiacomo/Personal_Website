@@ -1,0 +1,423 @@
+{
+  "site": {
+    "branding": {
+      "name": "Dr. Giacomo Moggioli",
+      "title": "from data to understanding",
+      "description": "I build elegant digital experiences that blend thoughtful design with robust engineering."
+    },
+    "navigation": {
+      "about": "About",
+      "cv": "CV",
+      "publications": "Publications",
+      "portfolio": "Portfolio",
+      "contact": "Contact",
+      "editor": "Editor"
+    },
+    "footer": {
+      "copyrightName": "GiacomoMoggioli",
+      "builtWith": "Built with Next.js & Tailwind CSS"
+    },
+    "contact": {
+      "sectionTitle": "Contact",
+      "headline": "Let's keep in touch",
+      "description": "I'm always interested in hearing about new opportunities, collaborations, or just having a chat about technology and design. Feel free to reach out!",
+      "emailLabel": "Email",
+      "emailValue": "hello@example.com",
+      "emailHref": "mailto:hello@example.com",
+      "locationLabel": "Location",
+      "locationValue": "San Francisco, CA",
+      "availabilityLabel": "Availability",
+      "availabilityValue": "Open to opportunities",
+      "primaryButtonLabel": "Get in Touch",
+      "primaryButtonHref": "mailto:hello@example.com"
+    },
+    "headers": {
+      "about": "About Me",
+      "coreSkills": "Core Skills",
+      "featuredProjects": "Featured Projects",
+      "portfolio": "Selected Work",
+      "publications": "Publications",
+      "cv": "Curriculum Vitae",
+      "contact": "Contact"
+    }
+  },
+  "about": {
+    "paragraphs": [
+      "I'm a passionate professional focused on creating accessible, pixel-perfect digital experiences. My work lies at the intersection of design and development.",
+      "Creating experiences that not only look great but are meticulously built for performance and usability has always been my goal. I believe that great software should feel invisible, seamlessly integrating into people's lives while solving real problems.",
+      "Currently, I'm working on innovative projects that push the boundaries of what's possible on the web. I specialize in building scalable applications that deliver exceptional user experiences.",
+      "In my spare time, I enjoy contributing to open-source projects, writing technical articles, and exploring new technologies. I believe in continuous learning and sharing knowledge with the community."
+    ],
+    "skills": [
+      "JavaScript / TypeScript",
+      "React / Next.js",
+      "Node.js",
+      "Python",
+      "UI/UX Design",
+      "Cloud Services",
+      "Illustration"
+    ]
+  },
+  "portfolio": [
+    {
+      "title": "E-Commerce Platform",
+      "subtitle": "Commerce Systems and Checkout Design",
+      "description": "A full-stack e-commerce solution with real-time inventory management, payment processing, and an intuitive admin dashboard.",
+      "image": "/uploads/portfolio/ecommerce-platform/cover.png",
+      "figures": [
+        {
+          "src": "/uploads/portfolio/ecommerce-platform/cover.png",
+          "alt": "ECO department"
+        },
+        {
+          "src": "/uploads/portfolio/ecommerce-platform/figure-1.png",
+          "alt": "E-Commerce Platform storefront interface"
+        },
+        {
+          "src": "/uploads/portfolio/ecommerce-platform/figure-2.png",
+          "alt": "E-Commerce Platform alternate figure two"
+        },
+        {
+          "src": "/uploads/portfolio/ecommerce-platform/figure-3.png",
+          "alt": "E-Commerce Platform alternate figure three"
+        },
+        {
+          "src": "/uploads/portfolio/ecommerce-platform/figure-4.svg",
+          "alt": "E-Commerce Platform blue square test figure"
+        },
+        {
+          "src": "/uploads/portfolio/ecommerce-platform/figure-5.svg",
+          "alt": "E-Commerce Platform tall rectangle test figure"
+        }
+      ],
+      "url": "https://example.com",
+      "github": "https://github.com",
+      "tags": [
+        "Next.js",
+        "Stripe",
+        "Prisma",
+        "PostgreSQL"
+      ],
+      "slug": "ecommerce-platform"
+    },
+    {
+      "title": "Analytics Dashboard",
+      "subtitle": "Data Visualization and KPI Monitoring",
+      "description": "Real-time analytics dashboard for tracking user behavior and business metrics with interactive visualizations.",
+      "image": "/uploads/portfolio/analytics-dashboard/cover.png",
+      "figures": [
+        {
+          "src": "/uploads/portfolio/analytics-dashboard/figure-1.png",
+          "alt": "Analytics Dashboard KPI overview"
+        },
+        {
+          "src": "/uploads/portfolio/analytics-dashboard/figure-2.png",
+          "alt": "Analytics Dashboard alternate figure two"
+        },
+        {
+          "src": "/uploads/portfolio/analytics-dashboard/figure-3.png",
+          "alt": "Analytics Dashboard alternate figure three"
+        }
+      ],
+      "url": "https://example.com",
+      "github": "https://github.com",
+      "tags": [
+        "React",
+        "D3.js",
+        "Node.js",
+        "MongoDB"
+      ],
+      "slug": "analytics-dashboard"
+    },
+    {
+      "title": "Task Management App",
+      "description": "A collaborative task management application with real-time updates, drag-and-drop functionality, and team features.",
+      "image": "/uploads/portfolio/task-management-app/cover.png",
+      "figures": [
+        {
+          "src": "/uploads/portfolio/task-management-app/figure-1.png",
+          "alt": "Task Management App board view"
+        },
+        {
+          "src": "/uploads/portfolio/task-management-app/figure-2.png",
+          "alt": "Task Management App alternate figure two"
+        }
+      ],
+      "url": "https://example.com",
+      "github": "https://github.com",
+      "tags": [
+        "Vue.js",
+        "Firebase",
+        "Tailwind CSS"
+      ],
+      "slug": "task-management-app"
+    },
+    {
+      "title": "AI Content Generator",
+      "description": "An AI-powered content generation tool that helps marketers create engaging copy for various platforms.",
+      "image": "/uploads/portfolio/ai-content-generator/cover.png",
+      "figures": [
+        {
+          "src": "/uploads/portfolio/ai-content-generator/figure-1.png",
+          "alt": "AI Content Generator prompt workspace"
+        }
+      ],
+      "url": "https://example.com",
+      "github": "https://github.com",
+      "tags": [
+        "Python",
+        "OpenAI",
+        "FastAPI",
+        "React"
+      ],
+      "slug": "ai-content-generator"
+    }
+  ],
+  "publications": [
+    {
+      "title": "Building Scalable React Applications: Best Practices and Patterns",
+      "subtitle": "Component Systems and Performance Architecture",
+      "venue": "Tech Conference 2024",
+      "type": "Conference Paper",
+      "year": "2024",
+      "url": "https://example.com/paper1",
+      "abstract": "An exploration of modern patterns for building maintainable React applications at scale, including state management, component architecture, and performance optimization.",
+      "image": "/uploads/publications/building-scalable-react-applications/cover.svg",
+      "figures": [
+        {
+          "src": "/uploads/publications/building-scalable-react-applications/figure-1.svg",
+          "alt": "Publication cover preview for scalable React applications"
+        },
+        {
+          "src": "/uploads/publications/building-scalable-react-applications/figure-2.png",
+          "alt": "Publication detail figure for scalable React applications"
+        }
+      ],
+      "tags": [
+        "Conference Paper",
+        "2024",
+        "React"
+      ],
+      "slug": "building-scalable-react-applications"
+    },
+    {
+      "title": "The Future of Web Development: Trends and Predictions",
+      "venue": "Web Dev Journal",
+      "type": "Journal Article",
+      "year": "2023",
+      "url": "https://example.com/paper2",
+      "abstract": "A comprehensive analysis of emerging web technologies and their potential impact on how we build digital experiences in the coming years.",
+      "image": "/uploads/publications/future-of-web-development/cover.svg",
+      "figures": [
+        {
+          "src": "/uploads/publications/future-of-web-development/figure-1.svg",
+          "alt": "Publication cover preview for future web development article"
+        },
+        {
+          "src": "/uploads/publications/future-of-web-development/figure-2.png",
+          "alt": "Publication detail figure for future web development article"
+        }
+      ],
+      "tags": [
+        "Journal Article",
+        "2023",
+        "Web Trends"
+      ],
+      "slug": "future-of-web-development"
+    },
+    {
+      "title": "Optimizing Database Performance in Modern Web Applications",
+      "venue": "Database Systems Symposium",
+      "type": "Conference Paper",
+      "year": "2023",
+      "url": "https://example.com/paper3",
+      "abstract": "Techniques for improving database query performance and reducing latency in high-traffic web applications through indexing, caching, and query optimization.",
+      "image": "/uploads/publications/optimizing-database-performance/cover.svg",
+      "figures": [
+        {
+          "src": "/uploads/publications/optimizing-database-performance/figure-1.svg",
+          "alt": "Publication cover preview for database performance paper"
+        }
+      ],
+      "tags": [
+        "Conference Paper",
+        "2023",
+        "Databases"
+      ],
+      "slug": "optimizing-database-performance"
+    },
+    {
+      "title": "Accessibility in Design Systems: A Practical Guide",
+      "venue": "UX Design Magazine",
+      "type": "Article",
+      "year": "2022",
+      "url": "https://example.com/paper4",
+      "abstract": "Guidelines for integrating accessibility considerations into design system components, ensuring inclusive digital experiences for all users.",
+      "image": "/uploads/publications/accessibility-in-design-systems/cover.svg",
+      "figures": [
+        {
+          "src": "/uploads/publications/accessibility-in-design-systems/figure-1.svg",
+          "alt": "Publication cover preview for accessibility in design systems article"
+        }
+      ],
+      "tags": [
+        "Article",
+        "2022",
+        "Accessibility"
+      ],
+      "slug": "accessibility-in-design-systems"
+    }
+  ],
+  "cv": {
+    "documentPath": "/cv.pdf",
+    "documentLabel": "Download CV",
+    "items": [
+      {
+        "id": "1",
+        "type": "work",
+        "period": "2022 - Present",
+        "startYear": 2022,
+        "endYear": 2026,
+        "title": "Senior Software Engineer",
+        "organization": "Tech Company",
+        "url": "https://example.com",
+        "description": "Lead the development of scalable web applications serving millions of users.",
+        "details": [
+          "Architected frontend solutions using React and TypeScript",
+          "Mentored junior developers and conducted code reviews",
+          "Improved application performance by 60%",
+          "Collaborated with cross-functional teams on product strategy"
+        ],
+        "skills": [
+          "React",
+          "TypeScript",
+          "Node.js",
+          "AWS",
+          "GraphQL"
+        ]
+      },
+      {
+        "id": "2",
+        "type": "work",
+        "period": "2020 - 2022",
+        "startYear": 2020,
+        "endYear": 2022,
+        "title": "Software Engineer",
+        "organization": "Startup Inc",
+        "url": "https://example.com",
+        "description": "Built and maintained core product features, improving performance by 40%.",
+        "details": [
+          "Implemented CI/CD pipelines using GitHub Actions",
+          "Established coding standards across the engineering team",
+          "Developed RESTful APIs with Python and FastAPI",
+          "Managed PostgreSQL databases and optimized queries"
+        ],
+        "skills": [
+          "Vue.js",
+          "Python",
+          "PostgreSQL",
+          "Docker"
+        ]
+      },
+      {
+        "id": "3",
+        "type": "education",
+        "period": "2018 - 2020",
+        "startYear": 2018,
+        "endYear": 2020,
+        "title": "Master of Science in Computer Science",
+        "organization": "University Name",
+        "url": "https://example.edu",
+        "description": "Specialized in distributed systems and machine learning.",
+        "details": [
+          "Thesis: Scalable Machine Learning Pipelines for Real-time Data",
+          "GPA: 3.9/4.0",
+          "Teaching Assistant for Advanced Algorithms course",
+          "Published 2 papers in peer-reviewed conferences"
+        ]
+      },
+      {
+        "id": "4",
+        "type": "work",
+        "period": "08/2018 - 03/2020",
+        "startYear": 2018,
+        "startMonth": 8,
+        "endYear": 2020,
+        "endMonth": 3,
+        "title": "Junior Developer",
+        "organization": "Agency Name",
+        "url": "https://example.com",
+        "description": "Developed responsive websites and web applications for diverse clients.",
+        "details": [
+          "Built 20+ client websites from design to deployment",
+          "Implemented pixel-perfect interfaces from Figma designs",
+          "Maintained WordPress sites and developed custom plugins"
+        ],
+        "skills": [
+          "JavaScript",
+          "HTML/CSS",
+          "WordPress",
+          "PHP"
+        ]
+      },
+      {
+        "id": "5",
+        "type": "other",
+        "period": "2019",
+        "startYear": 2019,
+        "endYear": 2019,
+        "title": "Google Summer of Code",
+        "organization": "Open Source Organization",
+        "url": "https://summerofcode.withgoogle.com",
+        "description": "Contributed to an open-source project as part of Google Summer of Code.",
+        "details": [
+          "Developed a new feature for the project core library",
+          "Collaborated with mentors from around the world",
+          "Code merged into main branch and used by 10K+ developers"
+        ],
+        "skills": [
+          "Python",
+          "Open Source",
+          "Git"
+        ]
+      },
+      {
+        "id": "6",
+        "type": "education",
+        "period": "2014 - 2018",
+        "startYear": 2014,
+        "endYear": 2018,
+        "title": "Bachelor of Science in Software Engineering",
+        "organization": "University Name",
+        "url": "https://example.edu",
+        "description": "Foundation in computer science, software development, and engineering principles.",
+        "details": [
+          "GPA: 3.7/4.0",
+          "Dean's List for 6 semesters",
+          "Senior Project: Mobile App for Campus Navigation",
+          "Member of ACM Student Chapter"
+        ]
+      },
+      {
+        "id": "7",
+        "type": "other",
+        "period": "2017",
+        "startYear": 2017,
+        "endYear": 2017,
+        "title": "Hackathon Winner",
+        "organization": "TechCrunch Disrupt",
+        "description": "Won first place at TechCrunch Disrupt Hackathon with an AI-powered accessibility tool.",
+        "details": [
+          "Built a prototype in 24 hours with a team of 4",
+          "Presented to panel of judges including VCs and tech leaders",
+          "Featured in TechCrunch article about the event"
+        ],
+        "skills": [
+          "Python",
+          "TensorFlow",
+          "React Native"
+        ]
+      }
+    ]
+  }
+}

@@ -6,29 +6,14 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/page-layout";
+import initialSiteContent from "@/content/site-content.json";
+import type { ExperienceType, SiteContent, TimelineItem } from "@/lib/content-types";
+import { useSiteContent } from "@/hooks/use-site-content";
 import { cn } from "@/lib/utils";
-
-type ExperienceType = "work" | "education" | "other";
-
-interface TimelineItem {
-  id: string;
-  type: ExperienceType;
-  period: string;
-  startYear: number;
-  startMonth?: number;
-  endYear: number;
-  endMonth?: number;
-  title: string;
-  organization: string;
-  url?: string;
-  description: string;
-  details?: string[];
-  skills?: string[];
-}
 
 const currentYear = new Date().getFullYear();
 
-const timelineItems: TimelineItem[] = [
+const fallbackTimelineItems: TimelineItem[] = [
   {
     id: "1",
     type: "work",
@@ -209,6 +194,8 @@ const getEndMonth = (item: TimelineItem) => item.endMonth ?? 12;
 const getMonthIndex = (year: number, month: number) => year * 12 + (month - 1);
 const getItemStartIndex = (item: TimelineItem) => getMonthIndex(item.startYear, getStartMonth(item));
 const getItemEndIndex = (item: TimelineItem) => getMonthIndex(item.endYear, getEndMonth(item));
+const sortTimelineItemsByEndDate = (items: TimelineItem[]) =>
+  [...items].sort((a, b) => getItemEndIndex(b) - getItemEndIndex(a));
 
 // Calculate column positions for overlapping items
 function calculateColumns(items: TimelineItem[]): Map<string, number> {
@@ -244,12 +231,20 @@ export default function CVPage() {
   const timelineRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const [linePositions, setLinePositions] = useState<Map<string, { barRightX: number; barCenterY: number; cardLeftX: number; cardY: number }>>(new Map());
+  const { content } = useSiteContent(initialSiteContent as SiteContent);
+  const timelineItems = useMemo(
+    () =>
+      sortTimelineItemsByEndDate(
+        (content.cv.items.length ? content.cv.items : fallbackTimelineItems) as TimelineItem[]
+      ),
+    [content.cv.items]
+  );
 
   const filteredItems = useMemo(() => {
     return timelineItems
       .filter((item) => filter === "all" || item.type === filter)
-      .sort((a, b) => getItemStartIndex(b) - getItemStartIndex(a));
-  }, [filter]);
+      .sort((a, b) => getItemEndIndex(b) - getItemEndIndex(a));
+  }, [filter, timelineItems]);
 
   const minYear = Math.min(...timelineItems.map(i => i.startYear));
   const maxYear = currentYear;
@@ -334,7 +329,7 @@ export default function CVPage() {
           {/* Header */}
           <h2 className="text-xs uppercase tracking-widest leading-none text-muted-foreground mb-12 flex items-center gap-4">
             <span className="h-px w-8 bg-muted-foreground" />
-            Curriculum Vitae
+            {content.site.headers.cv}
           </h2>
           <div className="mb-12">
             <Button
@@ -343,9 +338,9 @@ export default function CVPage() {
               asChild
               className="w-fit border-border hover:bg-secondary/50"
             >
-              <Link href="/cv.pdf" target="_blank">
+              <Link href={content.cv.documentPath || "/cv.pdf"} target="_blank">
                 <Download className="size-4 mr-2" />
-                Download CV
+                {content.cv.documentLabel || "Download CV"}
               </Link>
             </Button>
           </div>

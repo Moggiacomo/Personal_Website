@@ -155,7 +155,7 @@ function GridPublicationCard({
           fill
           className={cn(
             "opacity-80 transition-all duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)] group-hover:opacity-100",
-            isExpanded ? "object-contain" : "object-cover"
+            isExpanded ? "object-contain" : "object-contain"
           )}
         />
       </div>
@@ -232,7 +232,7 @@ function StackPublicationCard({
           fill
           className={cn(
             "opacity-80 transition-all duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)] group-hover:opacity-100",
-            isExpanded ? "object-contain" : "object-cover"
+            isExpanded ? "object-contain" : "object-contain"
           )}
         />
       </div>
@@ -383,7 +383,7 @@ function PublicationFigureGallery({
               type="button"
               onClick={() => onSelect(index)}
               className={cn(
-                "relative h-16 w-20 shrink-0 overflow-hidden rounded-2xl border border-border/40 bg-card/60 transition-all duration-500 ease-[cubic-bezier(0.18,0.9,0.2,1)]",
+                "relative h-16 w-20 shrink-0 rounded-2xl border border-border/40 bg-transparent p-1.5 transition-all duration-500 ease-[cubic-bezier(0.18,0.9,0.2,1)]",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
                 figures.length === 1
                   ? "z-10"
@@ -403,12 +403,14 @@ function PublicationFigureGallery({
               aria-label={`Show figure ${index + 1}`}
               aria-pressed={isActive}
             >
-              <Image
-                src={figure.src}
-                alt={figure.alt}
-                fill
-                className="object-cover"
-              />
+              <div className="relative h-full w-full overflow-hidden rounded-xl">
+                <Image
+                  src={figure.src}
+                  alt={figure.alt}
+                  fill
+                  className="object-contain"
+                />
+              </div>
             </button>
           );
         })}

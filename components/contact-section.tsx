@@ -1,24 +1,33 @@
+"use client";
+
 import { Mail, MapPin } from "lucide-react";
 import Link from "next/link";
+import initialSiteContent from "@/content/site-content.json";
 import { Button } from "@/components/ui/button";
+import { useSiteContent } from "@/hooks/use-site-content";
+import type { SiteContent } from "@/lib/content-types";
 
 export function ContactSection() {
+  const { content } = useSiteContent(initialSiteContent as SiteContent);
+  const contact = content.site.contact;
+
   return (
-    <section id="contact" className="pt-16 pb-24 px-6 lg:px-0 lg:pt-20 bg-card/50">
-      <div className="max-w-full mx-auto w-full">
-        <h2 className="text-xs uppercase tracking-widest leading-none text-muted-foreground mb-12 flex items-center gap-4">
+    <section
+      id="contact"
+      className="bg-card/50 px-6 pt-16 pb-24 lg:px-0 lg:pt-20"
+    >
+      <div className="mx-auto w-full max-w-full">
+        <h2 className="mb-12 flex items-center gap-4 text-xs leading-none uppercase tracking-widest text-muted-foreground">
           <span className="h-px w-8 bg-muted-foreground" />
-          Contact
+          {contact.sectionTitle}
         </h2>
         <div className="max-w-2xl space-y-8">
           <div>
-            <h3 className="text-3xl md:text-4xl font-bold text-foreground text-balance">
-              Let&apos;s work together
+            <h3 className="text-3xl font-bold text-balance text-foreground md:text-4xl">
+              {contact.headline}
             </h3>
-            <p className="text-muted-foreground mt-4 leading-relaxed">
-              I&apos;m always interested in hearing about new opportunities,
-              collaborations, or just having a chat about technology and design.
-              Feel free to reach out!
+            <p className="mt-4 leading-relaxed text-muted-foreground">
+              {contact.description}
             </p>
           </div>
 
@@ -26,15 +35,15 @@ export function ContactSection() {
             <div className="flex items-center gap-3 text-muted-foreground">
               <Mail className="size-5 text-primary" />
               <Link
-                href="mailto:hello@example.com"
-                className="hover:text-foreground transition-colors"
+                href={contact.emailHref}
+                className="transition-colors hover:text-foreground"
               >
-                hello@example.com
+                {contact.emailValue}
               </Link>
             </div>
             <div className="flex items-center gap-3 text-muted-foreground">
               <MapPin className="size-5 text-primary" />
-              <span>San Francisco, CA</span>
+              <span>{contact.locationValue}</span>
             </div>
           </div>
 
@@ -42,9 +51,7 @@ export function ContactSection() {
             asChild
             className="bg-primary text-primary-foreground hover:bg-primary/90"
           >
-            <Link href="mailto:hello@example.com">
-              Get in Touch
-            </Link>
+            <Link href={contact.primaryButtonHref}>{contact.primaryButtonLabel}</Link>
           </Button>
         </div>
       </div>
@@ -53,15 +60,25 @@ export function ContactSection() {
 }
 
 export function Footer() {
+  const { content } = useSiteContent(initialSiteContent as SiteContent);
+
   return (
-    <footer className="py-8 px-6 lg:px-0 border-t border-border">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+    <footer className="border-t border-border px-6 py-8 lg:px-0">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 md:flex-row">
         <p className="text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Your Name. All rights reserved.
+          &copy; {new Date().getFullYear()} {content.site.footer.copyrightName}. All rights reserved.
         </p>
-        <p className="text-xs text-muted-foreground">
-          Built with Next.js & Tailwind CSS
-        </p>
+        <div className="flex items-center gap-4 self-end md:self-auto">
+          <p className="text-xs text-muted-foreground">
+            {content.site.footer.builtWith}
+          </p>
+          <Link
+            href="/editor"
+            className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            {content.site.navigation.editor}
+          </Link>
+        </div>
       </div>
     </footer>
   );

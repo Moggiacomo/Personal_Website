@@ -3,15 +3,10 @@
 import { Github, Linkedin, Mail, Twitter } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import initialSiteContent from "@/content/site-content.json";
+import { useSiteContent } from "@/hooks/use-site-content";
+import type { SiteContent } from "@/lib/content-types";
 import { cn } from "@/lib/utils";
-
-const navItems = [
-  { href: "/", label: "About" },
-  { href: "/cv", label: "CV" },
-  { href: "/publications", label: "Publications" },
-  { href: "/portfolio", label: "Portfolio" },
-  { href: "/contact", label: "Contact" },
-];
 
 const socialLinks = [
   { href: "https://github.com", icon: Github, label: "GitHub" },
@@ -22,6 +17,14 @@ const socialLinks = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { content } = useSiteContent(initialSiteContent as SiteContent);
+  const navItems = [
+    { href: "/", label: content.site.navigation.about },
+    { href: "/cv", label: content.site.navigation.cv },
+    { href: "/publications", label: content.site.navigation.publications },
+    { href: "/portfolio", label: content.site.navigation.portfolio },
+    { href: "/contact", label: content.site.navigation.contact },
+  ];
 
   return (
     <aside className="w-full bg-background border-b border-border p-6 lg:p-8">
@@ -31,15 +34,14 @@ export function Sidebar() {
           <div className="flex-1">
             <Link href="/">
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-foreground hover:text-primary transition-colors">
-                Your Name
+                {content.site.branding.name}
               </h1>
             </Link>
             <p className="text-lg md:text-xl text-primary mt-1 font-medium">
-              Your Title
+              {content.site.branding.title}
             </p>
             <p className="text-muted-foreground mt-2 leading-relaxed text-sm md:text-base max-w-2xl">
-              I build elegant digital experiences that blend thoughtful design
-              with robust engineering.
+              {content.site.branding.description}
             </p>
           </div>
 
