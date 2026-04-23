@@ -14,6 +14,10 @@ interface PublicationCardsProps {
   idPrefix?: string;
 }
 
+const expandedViewportStyle = {
+  "--expanded-viewport-gap": "clamp(1.5rem, 4vw, 3rem)",
+} as React.CSSProperties;
+
 export function PublicationCards({
   publications,
   layout = "grid",
@@ -22,6 +26,7 @@ export function PublicationCards({
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [activeFigures, setActiveFigures] = useState<Record<string, number>>({});
   const leaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const articleRefs = useRef(new Map<string, HTMLElement>());
   const isGrid = layout === "grid";
 
   useEffect(() => {
@@ -29,6 +34,32 @@ export function PublicationCards({
       if (leaveTimeoutRef.current) clearTimeout(leaveTimeoutRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (!expandedId) return;
+
+    const target = articleRefs.current.get(expandedId);
+    if (!target) return;
+
+    const timeoutId = window.setTimeout(() => {
+      const rect = target.getBoundingClientRect();
+      const styles = window.getComputedStyle(target);
+      const marginTop = Number.parseFloat(styles.marginTop) || 0;
+      const marginBottom = Number.parseFloat(styles.marginBottom) || 0;
+      const totalHeight = rect.height + marginTop + marginBottom;
+      const targetTop =
+        window.scrollY + rect.top - marginTop - (window.innerHeight - totalHeight) / 2;
+
+      window.scrollTo({
+        top: Math.max(0, targetTop),
+        behavior: "smooth",
+      });
+    }, 120);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [expandedId]);
 
   const openCard = (cardId: string) => {
     if (expandedId === cardId) return;
@@ -72,6 +103,13 @@ export function PublicationCards({
           <article
             key={cardId}
             id={cardId}
+            ref={(element) => {
+              if (element) {
+                articleRefs.current.set(cardId, element);
+              } else {
+                articleRefs.current.delete(cardId);
+              }
+            }}
             onClick={(event) => handleCardClick(cardId, event)}
             onMouseLeave={() => closeCard(cardId)}
             onBlur={(event) => {
@@ -80,14 +118,31 @@ export function PublicationCards({
               }
             }}
             className={cn(
-              "group text-foreground transition-all duration-[500ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
+              "group scroll-mt-8 text-foreground transition-all duration-[500ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
               isGrid
                 ? "relative overflow-hidden rounded-lg border border-border/50 bg-secondary/50 hover:border-primary/30 hover:bg-secondary/75 hover:shadow-[0_24px_80px_-36px_rgba(0,0,0,0.55)]"
                 : "rounded-lg hover:bg-secondary/30",
               isExpanded ? "cursor-default" : "cursor-pointer",
-              isExpanded && (isGrid ? "scale-[1.01]" : "bg-secondary/30"),
-              !isGrid && "-mx-6"
+              isExpanded &&
+                (isGrid
+                  ? "scale-[1.01]"
+                  : "flex items-center bg-secondary/30"),
+              !isGrid && !isExpanded && "-mx-6"
             )}
+            style={
+              !isGrid && isExpanded
+                ? {
+                    ...expandedViewportStyle,
+                    width: "calc(100vw - (var(--expanded-viewport-gap) * 2))",
+                    maxWidth: "calc(100vw - (var(--expanded-viewport-gap) * 2))",
+                    marginTop: "var(--expanded-viewport-gap)",
+                    marginBottom: "var(--expanded-viewport-gap)",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    minHeight: "calc(100svh - (var(--expanded-viewport-gap) * 2))",
+                  }
+                : undefined
+            }
           >
             {isGrid ? (
               <GridPublicationCard
@@ -213,8 +268,8 @@ function StackPublicationCard({
   return (
     <div
       className={cn(
-        "grid gap-5 p-6 transition-[grid-template-columns] duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
-        isExpanded ? "grid-cols-1" : "grid-cols-1 md:grid-cols-[16rem_minmax(0,1fr)]"
+        "grid w-full gap-5 p-6 transition-[grid-template-columns] duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
+        isExpanded ? "grid-cols-1 min-h-full" : "grid-cols-1 md:grid-cols-[16rem_minmax(0,1fr)]"
       )}
     >
       <div
