@@ -10,6 +10,7 @@
       "cv": "CV",
       "publications": "Publications",
       "portfolio": "Portfolio",
+      "repo": "Repo",
       "contact": "Contact",
       "editor": "Editor"
     },
@@ -37,16 +38,56 @@
       "featuredProjects": "Featured Projects",
       "portfolio": "Selected Work",
       "publications": "Publications",
+      "repo": "Repo",
       "cv": "Curriculum Vitae",
       "contact": "Contact"
+    },
+    "pageIntro": {
+      "portfolio": [],
+      "publications": [
+        {
+          "text": "Research papers, articles, and written work focused on design systems, accessibility, and modern web practice.",
+          "level": "lead"
+        }
+      ],
+      "repo": [
+        {
+          "text": "A downloadable library of illustrations and visual assets collected in one place for quick browsing and reuse.",
+          "level": "lead"
+        }
+      ],
+      "cv": [
+        {
+          "text": "An interactive timeline of work, education, and selected milestones, with the latest experience surfaced first.",
+          "level": "lead"
+        }
+      ],
+      "contact": [
+        {
+          "text": "If you would like to collaborate, discuss an opportunity, or simply say hello, you can reach me through the links below.",
+          "level": "lead"
+        }
+      ]
     }
   },
   "about": {
     "paragraphs": [
-      "I'm a passionate professional focused on creating accessible, pixel-perfect digital experiences. My work lies at the intersection of design and development.",
-      "Creating experiences that not only look great but are meticulously built for performance and usability has always been my goal. I believe that great software should feel invisible, seamlessly integrating into people's lives while solving real problems.",
-      "Currently, I'm working on innovative projects that push the boundaries of what's possible on the web. I specialize in building scalable applications that deliver exceptional user experiences.",
-      "In my spare time, I enjoy contributing to open-source projects, writing technical articles, and exploring new technologies. I believe in continuous learning and sharing knowledge with the community."
+      {
+        "text": "I'm a passionate professional focused on creating accessible, pixel-perfect digital experiences. My work lies at the intersection of design and development.",
+        "level": "lead"
+      },
+      {
+        "text": "Creating experiences that not only look great but are meticulously built for performance and usability has always been my goal. I believe that great software should feel invisible, seamlessly integrating into people's lives while solving real problems.",
+        "level": "body"
+      },
+      {
+        "text": "Currently, I'm working on innovative projects that push the boundaries of what's possible on the web. I specialize in building scalable applications that deliver exceptional user experiences.",
+        "level": "body"
+      },
+      {
+        "text": "In my spare time, I enjoy contributing to open-source projects, writing technical articles, and exploring new technologies. I believe in continuous learning and sharing knowledge with the community.",
+        "level": "body"
+      }
     ],
     "skills": [
       "JavaScript / TypeScript",
@@ -59,6 +100,35 @@
     ]
   },
   "portfolio": [
+    {
+      "title": "Analytics Dashboard",
+      "subtitle": "Data Visualization and KPI Monitoring",
+      "description": "Real-time analytics dashboard for tracking user behavior and business metrics with interactive visualizations.",
+      "image": "/uploads/portfolio/analytics-dashboard/cover.png",
+      "figures": [
+        {
+          "src": "/uploads/portfolio/analytics-dashboard/figure-1.png",
+          "alt": "Analytics Dashboard KPI overview"
+        },
+        {
+          "src": "/uploads/portfolio/analytics-dashboard/figure-2.png",
+          "alt": "Analytics Dashboard alternate figure two"
+        },
+        {
+          "src": "/uploads/portfolio/analytics-dashboard/figure-3.png",
+          "alt": "Analytics Dashboard alternate figure three"
+        }
+      ],
+      "url": "https://example.com",
+      "github": "https://github.com",
+      "tags": [
+        "React",
+        "D3.js",
+        "Node.js",
+        "MongoDB"
+      ],
+      "slug": "analytics-dashboard"
+    },
     {
       "title": "E-Commerce Platform",
       "subtitle": "Commerce Systems and Checkout Design",
@@ -99,35 +169,6 @@
         "PostgreSQL"
       ],
       "slug": "ecommerce-platform"
-    },
-    {
-      "title": "Analytics Dashboard",
-      "subtitle": "Data Visualization and KPI Monitoring",
-      "description": "Real-time analytics dashboard for tracking user behavior and business metrics with interactive visualizations.",
-      "image": "/uploads/portfolio/analytics-dashboard/cover.png",
-      "figures": [
-        {
-          "src": "/uploads/portfolio/analytics-dashboard/figure-1.png",
-          "alt": "Analytics Dashboard KPI overview"
-        },
-        {
-          "src": "/uploads/portfolio/analytics-dashboard/figure-2.png",
-          "alt": "Analytics Dashboard alternate figure two"
-        },
-        {
-          "src": "/uploads/portfolio/analytics-dashboard/figure-3.png",
-          "alt": "Analytics Dashboard alternate figure three"
-        }
-      ],
-      "url": "https://example.com",
-      "github": "https://github.com",
-      "tags": [
-        "React",
-        "D3.js",
-        "Node.js",
-        "MongoDB"
-      ],
-      "slug": "analytics-dashboard"
     },
     {
       "title": "Task Management App",
@@ -266,6 +307,40 @@
         "Accessibility"
       ],
       "slug": "accessibility-in-design-systems"
+    }
+  ],
+  "repo": [
+    {
+      "id": "repo-1",
+      "title": "E-Commerce Artwork",
+      "image": "/uploads/repo/e-commerce-artwork/cover.png",
+      "downloadPath": "/uploads/repo/e-commerce-artwork/cover.png",
+      "downloadLabel": "Download PNG",
+      "alt": "E-Commerce artwork preview"
+    },
+    {
+      "id": "repo-2",
+      "title": "Analytics Illustration",
+      "image": "/uploads/repo/analytics-illustration/figure-1.png",
+      "downloadPath": "/uploads/repo/analytics-illustration/figure-1.png",
+      "downloadLabel": "Download PNG",
+      "alt": "Analytics illustration preview"
+    },
+    {
+      "id": "repo-3",
+      "title": "Task Board Preview",
+      "image": "/uploads/repo/task-board-preview/figure-1.png",
+      "downloadPath": "/uploads/repo/task-board-preview/figure-1.png",
+      "downloadLabel": "Download PNG",
+      "alt": "Task board illustration preview"
+    },
+    {
+      "id": "repo-4",
+      "title": "AI Workspace",
+      "image": "/uploads/repo/ai-workspace/figure-1.png",
+      "downloadPath": "/uploads/repo/ai-workspace/figure-1.png",
+      "downloadLabel": "Download PNG",
+      "alt": "AI workspace illustration preview"
     }
   ],
   "cv": {

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/page-layout";
+import { PageIntro } from "@/components/page-intro";
 import initialSiteContent from "@/content/site-content.json";
 import type { ExperienceType, SiteContent, TimelineItem } from "@/lib/content-types";
 import { useSiteContent } from "@/hooks/use-site-content";
@@ -331,6 +332,10 @@ export default function CVPage() {
             <span className="h-px w-8 bg-muted-foreground" />
             {content.site.headers.cv}
           </h2>
+          <PageIntro
+            paragraphs={content.site.pageIntro.cv}
+            className="mb-10"
+          />
           <div className="mb-12">
             <Button
               variant="outline"

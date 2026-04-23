@@ -2,6 +2,12 @@ import type { Project } from "@/lib/projects";
 import type { Publication } from "@/lib/publications";
 
 export type ExperienceType = "work" | "education" | "other";
+export type ParagraphLevel = "body" | "lead" | "highlight";
+
+export interface RichParagraph {
+  text: string;
+  level?: ParagraphLevel;
+}
 
 export interface TimelineItem {
   id: string;
@@ -20,7 +26,7 @@ export interface TimelineItem {
 }
 
 export interface AboutContent {
-  paragraphs: string[];
+  paragraphs: RichParagraph[];
   skills: string[];
 }
 
@@ -35,6 +41,7 @@ export interface SiteNavigationContent {
   cv: string;
   publications: string;
   portfolio: string;
+  repo: string;
   contact: string;
   editor: string;
 }
@@ -65,8 +72,17 @@ export interface SiteHeadersContent {
   featuredProjects: string;
   portfolio: string;
   publications: string;
+  repo: string;
   cv: string;
   contact: string;
+}
+
+export interface SitePageIntroContent {
+  portfolio: RichParagraph[];
+  publications: RichParagraph[];
+  repo: RichParagraph[];
+  cv: RichParagraph[];
+  contact: RichParagraph[];
 }
 
 export interface SiteChromeContent {
@@ -74,6 +90,7 @@ export interface SiteChromeContent {
   navigation: SiteNavigationContent;
   footer: SiteFooterContent;
   headers: SiteHeadersContent;
+  pageIntro: SitePageIntroContent;
   contact: SiteContactContent;
 }
 
@@ -83,10 +100,20 @@ export interface CVContent {
   items: TimelineItem[];
 }
 
+export interface RepoItem {
+  id: string;
+  title: string;
+  image: string;
+  downloadPath: string;
+  downloadLabel?: string;
+  alt?: string;
+}
+
 export interface SiteContent {
   site: SiteChromeContent;
   about: AboutContent;
   portfolio: Project[];
   publications: Publication[];
+  repo: RepoItem[];
   cv: CVContent;
 }

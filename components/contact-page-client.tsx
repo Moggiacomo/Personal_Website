@@ -3,6 +3,7 @@
 import { Calendar, Mail, MapPin } from "lucide-react";
 import Link from "next/link";
 import initialSiteContent from "@/content/site-content.json";
+import { PageIntro } from "@/components/page-intro";
 import { Button } from "@/components/ui/button";
 import { useSiteContent } from "@/hooks/use-site-content";
 import type { SiteContent } from "@/lib/content-types";
@@ -18,6 +19,11 @@ export function ContactPageClient() {
           <span className="h-px w-8 bg-muted-foreground" />
           {contact.sectionTitle}
         </h2>
+
+        <PageIntro
+          paragraphs={content.site.pageIntro.contact}
+          className="mb-12"
+        />
 
         <div className="space-y-8">
           <div>

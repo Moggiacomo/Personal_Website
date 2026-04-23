@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CoverFlow, type CoverFlowItem } from "@ashishgogula/coverflow";
 import initialSiteContent from "@/content/site-content.json";
-import { EditableText } from "@/components/editable-text";
 import { PageLayout } from "@/components/page-layout";
+import { PageIntro } from "@/components/page-intro";
 import { useSiteContent } from "@/hooks/use-site-content";
 import { cn } from "@/lib/utils";
 import type { SiteContent } from "@/lib/content-types";
@@ -80,18 +80,7 @@ export default function HomePage() {
             {content.site.headers.about}
           </h2>
 
-          <div className="space-y-6 text-muted-foreground leading-relaxed">
-            {content.about.paragraphs.map((paragraph, index) => (
-              <EditableText
-                key={index}
-                contentKey={`home-about-${index + 1}`}
-                as="p"
-                className={index === 0 ? "text-lg text-foreground" : ""}
-              >
-                {paragraph}
-              </EditableText>
-            ))}
-          </div>
+          <PageIntro paragraphs={content.about.paragraphs} />
 
           <div className="mt-16">
             <h3 className="text-xs uppercase tracking-widest leading-none text-muted-foreground mb-6 flex items-center gap-4">

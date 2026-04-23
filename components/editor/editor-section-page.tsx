@@ -11,6 +11,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type {
   ExperienceType,
+  ParagraphLevel,
+  RepoItem,
+  RichParagraph,
   SiteContent,
   TimelineItem,
 } from "@/lib/content-types";
@@ -48,6 +51,12 @@ const editorSections: Array<{
     label: "Portfolio",
     href: "/editor/portfolio",
     description: "Project cards, figures, tags, links, and base images.",
+  },
+  {
+    id: "repo",
+    label: "Repo",
+    href: "/editor/repo",
+    description: "Downloadable image cards shown in the public repo gallery.",
   },
   {
     id: "publications",
@@ -107,6 +116,18 @@ function createEmptyPublication(): Publication {
   };
 }
 
+function createEmptyRepoItem(): RepoItem {
+  const id = crypto.randomUUID();
+  return {
+    id,
+    title: "",
+    image: "",
+    downloadPath: "",
+    downloadLabel: "Download",
+    alt: "",
+  };
+}
+
 function createEmptyTimelineItem(): TimelineItem {
   return {
     id: crypto.randomUUID(),
@@ -140,6 +161,13 @@ function parseOptionalNumber(value: string) {
   if (!trimmed) return undefined;
   const parsed = Number(trimmed);
   return Number.isNaN(parsed) ? undefined : parsed;
+}
+
+function createEmptyParagraph(level: ParagraphLevel = "body"): RichParagraph {
+  return {
+    text: "",
+    level,
+  };
 }
 
 function Field({
@@ -229,6 +257,87 @@ function StringListEditor({
             >
               Remove
             </Button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ParagraphListEditor({
+  label,
+  values,
+  onChange,
+  addLabel = "Add paragraph",
+}: {
+  label: string;
+  values: RichParagraph[];
+  onChange: (next: RichParagraph[]) => void;
+  addLabel?: string;
+}) {
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm font-medium text-foreground/80">{label}</p>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={() => onChange([...values, createEmptyParagraph()])}
+        >
+          {addLabel}
+        </Button>
+      </div>
+      <div className="space-y-3">
+        {values.map((value, index) => (
+          <div
+            key={`${label}-${index}`}
+            className="space-y-3 rounded-xl border border-border/50 p-4"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                Paragraph {index + 1}
+              </p>
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                onClick={() => onChange(values.filter((_, item) => item !== index))}
+              >
+                Remove
+              </Button>
+            </div>
+            <div className="grid gap-3 md:grid-cols-[1fr_12rem]">
+              <Field label="Text">
+                <Textarea
+                  value={value.text}
+                  rows={4}
+                  onChange={(event) => {
+                    const next = [...values];
+                    next[index] = { ...value, text: event.target.value };
+                    onChange(next);
+                  }}
+                />
+              </Field>
+              <Field label="Style level">
+                <select
+                  value={value.level ?? "body"}
+                  onChange={(event) => {
+                    const next = [...values];
+                    next[index] = {
+                      ...value,
+                      level: event.target.value as ParagraphLevel,
+                    };
+                    onChange(next);
+                  }}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                >
+                  <option value="body">Body</option>
+                  <option value="lead">Lead</option>
+                  <option value="highlight">Highlight</option>
+                </select>
+              </Field>
+            </div>
           </div>
         ))}
       </div>
@@ -648,6 +757,161 @@ function FileUploadField({
   );
 }
 
+function RepoEditorCard({
+  item,
+  index,
+  onChange,
+  onRemove,
+  onMoveUp,
+  onMoveDown,
+  canMoveUp,
+  canMoveDown,
+  onDragStart,
+  onDragEnd,
+  onDragOver,
+  onDrop,
+  isDragging,
+  isDropTarget,
+}: {
+  item: RepoItem;
+  index: number;
+  onChange: (next: RepoItem) => void;
+  onRemove: () => void;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
+  canMoveUp: boolean;
+  canMoveDown: boolean;
+  onDragStart: () => void;
+  onDragEnd: () => void;
+  onDragOver: () => void;
+  onDrop: () => void;
+  isDragging: boolean;
+  isDropTarget: boolean;
+}) {
+  return (
+    <div
+      onDragOver={(event) => {
+        event.preventDefault();
+        onDragOver();
+      }}
+      onDrop={onDrop}
+      className={cn(
+        "rounded-2xl border border-border/50 bg-background/70 p-4 shadow-sm transition-all",
+        isDragging && "opacity-60",
+        isDropTarget && "border-primary/60 bg-primary/5"
+      )}
+    >
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="space-y-0.5">
+          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+            Repo Item {index + 1}
+          </p>
+          <p className="text-sm font-medium text-foreground">
+            {item.title || "Untitled item"}
+          </p>
+        </div>
+        <button
+          type="button"
+          draggable
+          onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
+          className="rounded-md border border-border/50 px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+        >
+          Drag
+        </button>
+      </div>
+
+      <div className="relative mb-4 aspect-square overflow-hidden rounded-xl border border-border/50 bg-secondary/30">
+        {item.image ? (
+          <Image
+            src={item.image}
+            alt={item.alt || item.title || `Repo item ${index + 1}`}
+            fill
+            className="object-contain p-4"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center px-6 text-center text-sm text-muted-foreground">
+            Upload an image to preview this repo card
+          </div>
+        )}
+      </div>
+
+      <div className="space-y-4">
+        <Field label="Title">
+          <Input
+            value={item.title}
+            onChange={(event) => onChange({ ...item, title: event.target.value })}
+          />
+        </Field>
+
+        <Field label="Image path">
+          <Input
+            value={item.image}
+            onChange={(event) => onChange({ ...item, image: event.target.value })}
+          />
+        </Field>
+
+        <Field label="Download file path">
+          <Input
+            value={item.downloadPath}
+            onChange={(event) =>
+              onChange({ ...item, downloadPath: event.target.value })
+            }
+          />
+        </Field>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <Field label="Download button label">
+            <Input
+              value={item.downloadLabel ?? ""}
+              onChange={(event) =>
+                onChange({ ...item, downloadLabel: event.target.value })
+              }
+            />
+          </Field>
+          <Field label="Alt text">
+            <Input
+              value={item.alt ?? ""}
+              onChange={(event) => onChange({ ...item, alt: event.target.value })}
+            />
+          </Field>
+        </div>
+
+        <FileUploadField
+          label="Upload downloadable image"
+          accept="image/*"
+          folder={`repo/${slugify(item.title) || item.id}`}
+          onUploaded={(path) =>
+            onChange({
+              ...item,
+              image: path,
+              downloadPath: path,
+            })
+          }
+        />
+
+        <div className="flex flex-wrap gap-2">
+          <Button type="button" variant="ghost" size="sm" disabled={!canMoveUp} onClick={onMoveUp}>
+            Move up
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            disabled={!canMoveDown}
+            onClick={onMoveDown}
+          >
+            Move down
+          </Button>
+          <Button type="button" variant="ghost" size="sm" onClick={onRemove}>
+            Remove
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function EditorNav({ currentSection }: { currentSection: EditorView }) {
   return (
     <div className="flex flex-wrap gap-2">
@@ -759,10 +1023,13 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
     site: "idle",
     about: "idle",
     portfolio: "idle",
+    repo: "idle",
     publications: "idle",
     cv: "idle",
   });
   const [collapsedCards, setCollapsedCards] = useState<Record<string, boolean>>({});
+  const [draggingRepoIndex, setDraggingRepoIndex] = useState<number | null>(null);
+  const [dropRepoIndex, setDropRepoIndex] = useState<number | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -1111,6 +1378,20 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                   }
                 />
               </Field>
+              <Field label="Top bar Repo button">
+                <Input
+                  value={draft.site.navigation.repo}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      navigation: {
+                        ...draft.site.navigation,
+                        repo: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
               <Field label="Footer editor button">
                 <Input
                   value={draft.site.navigation.editor}
@@ -1198,6 +1479,20 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                   }
                 />
               </Field>
+              <Field label="Repo page header">
+                <Input
+                  value={draft.site.headers.repo}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      headers: {
+                        ...draft.site.headers,
+                        repo: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
               <Field label="CV page header">
                 <Input
                   value={draft.site.headers.cv}
@@ -1254,6 +1549,21 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
           }
         >
           <div className="space-y-6">
+            <ParagraphListEditor
+              label="Header text"
+              addLabel="Add paragraph"
+              values={draft.site.pageIntro.contact}
+              onChange={(contact) =>
+                updateSection("site", {
+                  ...draft.site,
+                  pageIntro: {
+                    ...draft.site.pageIntro,
+                    contact,
+                  },
+                })
+              }
+            />
+
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="Contact section title">
                 <Input
@@ -1441,8 +1751,8 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
             </Button>
           }
         >
-          <div className="grid gap-6 lg:grid-cols-2">
-            <StringListEditor
+          <div className="space-y-6">
+            <ParagraphListEditor
               label="Paragraphs"
               addLabel="Add paragraph"
               values={draft.about.paragraphs}
@@ -1469,6 +1779,21 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
           }
         >
           <div className="space-y-5">
+            <ParagraphListEditor
+              label="Header text"
+              addLabel="Add paragraph"
+              values={draft.site.pageIntro.portfolio}
+              onChange={(portfolio) =>
+                updateSection("site", {
+                  ...draft.site,
+                  pageIntro: {
+                    ...draft.site.pageIntro,
+                    portfolio,
+                  },
+                })
+              }
+            />
+
             <div className="flex justify-end">
               <Button
                 type="button"
@@ -1612,6 +1937,91 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
             ))}
           </div>
         </SectionCard>
+      ) : section === "repo" ? (
+        <SectionCard
+          title="Repo"
+          description="Manage the downloadable image cards shown on the public repo page."
+          actions={
+            <Button type="button" onClick={() => saveSection("repo")}>
+              Save Repo
+            </Button>
+          }
+        >
+          <div className="space-y-5">
+            <ParagraphListEditor
+              label="Header text"
+              addLabel="Add paragraph"
+              values={draft.site.pageIntro.repo}
+              onChange={(repo) =>
+                updateSection("site", {
+                  ...draft.site,
+                  pageIntro: {
+                    ...draft.site.pageIntro,
+                    repo,
+                  },
+                })
+              }
+            />
+
+            <div className="flex justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => updateSection("repo", [...draft.repo, createEmptyRepoItem()])}
+              >
+                Add repo item
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+              {draft.repo.map((item, index) => (
+                <RepoEditorCard
+                  key={item.id}
+                  item={item}
+                  index={index}
+                  onChange={(nextItem) => {
+                    const next = [...draft.repo];
+                    next[index] = nextItem;
+                    updateSection("repo", next);
+                  }}
+                  onRemove={() =>
+                    updateSection(
+                      "repo",
+                      draft.repo.filter((_, repoIndex) => repoIndex !== index)
+                    )
+                  }
+                  onMoveUp={() => updateSection("repo", moveItem(draft.repo, index, index - 1))}
+                  onMoveDown={() =>
+                    updateSection("repo", moveItem(draft.repo, index, index + 1))
+                  }
+                  canMoveUp={index > 0}
+                  canMoveDown={index < draft.repo.length - 1}
+                  onDragStart={() => {
+                    setDraggingRepoIndex(index);
+                    setDropRepoIndex(index);
+                  }}
+                  onDragEnd={() => {
+                    setDraggingRepoIndex(null);
+                    setDropRepoIndex(null);
+                  }}
+                  onDragOver={() => setDropRepoIndex(index)}
+                  onDrop={() => {
+                    if (draggingRepoIndex === null) return;
+                    updateSection("repo", moveItem(draft.repo, draggingRepoIndex, index));
+                    setDraggingRepoIndex(null);
+                    setDropRepoIndex(null);
+                  }}
+                  isDragging={draggingRepoIndex === index}
+                  isDropTarget={
+                    dropRepoIndex === index &&
+                    draggingRepoIndex !== null &&
+                    draggingRepoIndex !== index
+                  }
+                />
+              ))}
+            </div>
+          </div>
+        </SectionCard>
       ) : section === "publications" ? (
         <SectionCard
           title="Publications"
@@ -1623,6 +2033,21 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
           }
         >
           <div className="space-y-5">
+            <ParagraphListEditor
+              label="Header text"
+              addLabel="Add paragraph"
+              values={draft.site.pageIntro.publications}
+              onChange={(publications) =>
+                updateSection("site", {
+                  ...draft.site,
+                  pageIntro: {
+                    ...draft.site.pageIntro,
+                    publications,
+                  },
+                })
+              }
+            />
+
             <div className="flex justify-end">
               <Button
                 type="button"
@@ -1809,6 +2234,21 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
           }
         >
           <div className="space-y-5">
+            <ParagraphListEditor
+              label="Header text"
+              addLabel="Add paragraph"
+              values={draft.site.pageIntro.cv}
+              onChange={(cv) =>
+                updateSection("site", {
+                  ...draft.site,
+                  pageIntro: {
+                    ...draft.site.pageIntro,
+                    cv,
+                  },
+                })
+              }
+            />
+
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="CV document path">
                 <Input

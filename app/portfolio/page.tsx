@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import initialSiteContent from "@/content/site-content.json";
 import { useSiteContent } from "@/hooks/use-site-content";
 import { PageLayout } from "@/components/page-layout";
+import { PageIntro } from "@/components/page-intro";
 import { PortfolioCards } from "@/components/portfolio-cards";
 import type { SiteContent } from "@/lib/content-types";
 
@@ -31,6 +32,11 @@ export default function PortfolioPage() {
             <span className="h-px w-8 bg-muted-foreground" />
             {content.site.headers.portfolio}
           </h2>
+
+          <PageIntro
+            paragraphs={content.site.pageIntro.portfolio}
+            className="mb-12"
+          />
 
           <PortfolioCards
             projects={content.portfolio}

@@ -23,6 +23,7 @@ export function Sidebar() {
     { href: "/cv", label: content.site.navigation.cv },
     { href: "/publications", label: content.site.navigation.publications },
     { href: "/portfolio", label: content.site.navigation.portfolio },
+    { href: "/repo", label: content.site.navigation.repo },
     { href: "/contact", label: content.site.navigation.contact },
   ];
 
