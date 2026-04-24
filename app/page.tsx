@@ -379,7 +379,7 @@ export default function HomePage() {
               {content.site.headers.featuredProjects}
             </h3>
             <div className="w-full">
-              <div className="h-[820px] w-full">
+              <div className="h-[620px] w-full sm:h-[700px] lg:h-[820px]">
                 <CoverFlow
                   items={coverFlowItems}
                   itemWidth={itemWidth}
@@ -393,8 +393,8 @@ export default function HomePage() {
                   className="about-coverflow w-full"
                 />
               </div>
-              <div className="mt-4 text-center">
-                <h4 className="text-xl font-semibold tracking-tight text-foreground md:text-2xl">
+              <div className="mt-2 text-center sm:mt-3 md:mt-4">
+                <h4 className="text-lg font-semibold tracking-tight text-foreground sm:text-xl md:text-2xl">
                   {coverFlowItems[activeProjectIndex]?.title}
                 </h4>
               </div>
