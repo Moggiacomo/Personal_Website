@@ -29,6 +29,7 @@ export interface AboutContent {
   paragraphs: RichParagraph[];
   skills: string[];
   morphWords: string[];
+  backgroundImage?: string;
 }
 
 export interface SiteBrandingContent {

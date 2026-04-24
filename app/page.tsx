@@ -1,17 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CoverFlow, type CoverFlowItem } from "@ashishgogula/coverflow";
+import {
+  motion,
+  useScroll,
+  useMotionValueEvent,
+  useTransform,
+  type MotionValue,
+} from "motion/react";
 import initialSiteContent from "@/content/site-content.json";
 import { AboutPublicationStack } from "@/components/about-publication-stack";
 import { PageLayout } from "@/components/page-layout";
-import { PageIntro } from "@/components/page-intro";
 import { AboutScrollWords } from "@/components/about-scroll-words";
 import { useSiteContent } from "@/hooks/use-site-content";
 import { FEATURED_IN_ABOUT_TAG } from "@/lib/publications";
 import { cn } from "@/lib/utils";
-import type { SiteContent } from "@/lib/content-types";
+import type { ParagraphLevel, RichParagraph, SiteContent } from "@/lib/content-types";
 
 const chalkPalette = ["#9877a2", "#8499c1", "#d990a3", "#96c8c5", "#f2dede"];
 
@@ -20,13 +26,78 @@ type SkillHoverState = {
   pulseKey: number;
 };
 
+function getParagraphClass(level: ParagraphLevel = "body") {
+  if (level === "lead") {
+    return "text-lg leading-relaxed text-foreground md:text-xl";
+  }
+
+  if (level === "highlight") {
+    return "text-base font-semibold leading-relaxed text-foreground md:text-lg";
+  }
+
+  return "leading-relaxed text-muted-foreground md:text-[1.02rem]";
+}
+
+function AboutIntroParagraph({
+  paragraph,
+  index,
+  total,
+  progress,
+  revealed,
+}: {
+  paragraph: RichParagraph;
+  index: number;
+  total: number;
+  progress: MotionValue<number>;
+  revealed: boolean;
+}) {
+  const entryWindowStart = 0.08;
+  const entryWindowEnd = 0.72;
+  const span = Math.max(total - 1, 1);
+  const step = (entryWindowEnd - entryWindowStart) / span;
+  const start = total === 1 ? 0.12 : entryWindowStart + index * step;
+  const end = Math.min(start + 0.18, 0.82);
+  const rawX = useTransform(progress, [start, end], [-120, 0]);
+  const rawOpacity = useTransform(progress, [start, end], [0, 1]);
+  const rawBlur = useTransform(progress, [start, end], [10, 0]);
+  const rawFilter = useTransform(rawBlur, (value) => `blur(${value}px)`);
+
+  return (
+    <motion.p
+      className={cn(getParagraphClass(paragraph.level))}
+      style={{
+        x: revealed ? 0 : rawX,
+        opacity: revealed ? 1 : rawOpacity,
+        filter: revealed ? "blur(0px)" : rawFilter,
+      }}
+    >
+      {paragraph.text}
+    </motion.p>
+  );
+}
+
 export default function HomePage() {
   const router = useRouter();
+  const aboutIntroRef = useRef<HTMLDivElement | null>(null);
+  const aboutStickyRef = useRef<HTMLDivElement | null>(null);
+  const [topBarHeight, setTopBarHeight] = useState(0);
+  const [aboutSceneInset, setAboutSceneInset] = useState(32);
+  const [aboutReleaseProgress, setAboutReleaseProgress] = useState(0);
   const [itemWidth, setItemWidth] = useState(260);
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
   const [skillStates, setSkillStates] = useState<Record<string, SkillHoverState>>({});
+  const [revealedParagraphs, setRevealedParagraphs] = useState<boolean[]>([]);
   const { content } = useSiteContent(initialSiteContent as SiteContent);
+  const { scrollYProgress: aboutImageProgress } = useScroll({
+    target: aboutIntroRef,
+    offset: ["start start", "end start"],
+  });
+  const { scrollY } = useScroll();
+  const aboutSceneHeight = `${Math.max(230, 160 + content.about.paragraphs.length * 34)}svh`;
+  const aboutSceneTop = topBarHeight + aboutSceneInset;
+  const aboutImageOpacity = 0.28 * (1 - aboutReleaseProgress);
+  const aboutImageY = 52 * aboutReleaseProgress;
   const featuredPublications = content.publications.flatMap((publication, index) =>
     publication.tags.includes(FEATURED_IN_ABOUT_TAG)
       ? [{ publication, href: `/publications#publication-${index}` }]
@@ -56,6 +127,71 @@ export default function HomePage() {
     return () => window.removeEventListener("resize", updateItemWidth);
   }, []);
 
+  useLayoutEffect(() => {
+    const topBar = document.querySelector("aside");
+
+    const updateOffsets = () => {
+      setTopBarHeight(topBar?.getBoundingClientRect().height ?? 0);
+      setAboutSceneInset(window.innerWidth >= 1024 ? 48 : 32);
+    };
+
+    updateOffsets();
+
+    const observer = topBar ? new ResizeObserver(updateOffsets) : null;
+    if (topBar && observer) {
+      observer.observe(topBar);
+    }
+    window.addEventListener("resize", updateOffsets);
+
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("resize", updateOffsets);
+    };
+  }, []);
+
+  useEffect(() => {
+    setRevealedParagraphs((current) =>
+      content.about.paragraphs.map((_, index) => current[index] ?? false)
+    );
+  }, [content.about.paragraphs]);
+
+  useMotionValueEvent(aboutImageProgress, "change", (latest) => {
+    const total = content.about.paragraphs.length;
+    if (!total) return;
+
+      setRevealedParagraphs((current) => {
+        let changed = false;
+        const next = content.about.paragraphs.map((_, index) => {
+          const entryWindowStart = 0.08;
+          const entryWindowEnd = 0.72;
+          const span = Math.max(total - 1, 1);
+          const step = (entryWindowEnd - entryWindowStart) / span;
+          const start = total === 1 ? 0.12 : entryWindowStart + index * step;
+          const threshold = Math.min(start + 0.11, 0.8);
+          const revealed = current[index] || latest >= threshold;
+          if (revealed !== current[index]) {
+            changed = true;
+        }
+        return revealed;
+      });
+
+      return changed ? next : current;
+    });
+  });
+
+  useMotionValueEvent(scrollY, "change", () => {
+    const stickyElement = aboutStickyRef.current;
+    if (!stickyElement) return;
+
+    const rect = stickyElement.getBoundingClientRect();
+    const releaseDelta = Math.max(0, aboutSceneTop - rect.top);
+    const nextProgress = Math.min(releaseDelta / 120, 1);
+
+    setAboutReleaseProgress((current) =>
+      Math.abs(current - nextProgress) > 0.001 ? nextProgress : current
+    );
+  });
+
   const handleItemClick = (_item: CoverFlowItem, index: number) => {
     router.push(`/portfolio#project-${index}`);
   };
@@ -82,12 +218,70 @@ export default function HomePage() {
     <PageLayout>
       <section className="pt-8 pb-12 lg:pt-12 lg:pb-24 px-6 lg:px-12">
         <div className="max-w-full mx-auto w-full">
-          <h2 className="text-xs uppercase tracking-widest leading-none text-muted-foreground mb-8 flex items-center gap-4">
-            <span className="h-px w-8 bg-muted-foreground" />
-            {content.site.headers.about}
-          </h2>
+          {content.about.backgroundImage ? (
+            <motion.div
+              aria-hidden="true"
+              className="pointer-events-none fixed inset-y-0 right-0 hidden md:block"
+              style={{
+                top: 0,
+                bottom: 0,
+                height: "100svh",
+                width: "min(62vw, 64rem)",
+                zIndex: 0,
+                opacity: aboutImageOpacity,
+                y: aboutImageY,
+                maskImage:
+                  "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.24) 18%, rgba(0,0,0,0.78) 40%, black 58%, black 100%), linear-gradient(to bottom, black 0%, black 88%, rgba(0,0,0,0.08) 100%)",
+                WebkitMaskImage:
+                  "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.24) 18%, rgba(0,0,0,0.78) 40%, black 58%, black 100%), linear-gradient(to bottom, black 0%, black 88%, rgba(0,0,0,0.08) 100%)",
+                maskComposite: "intersect",
+                WebkitMaskComposite: "source-in",
+              }}
+            >
+              <div
+                className="absolute inset-0 bg-right-center bg-no-repeat bg-cover"
+                style={{ backgroundImage: `url(${content.about.backgroundImage})` }}
+              />
+            </motion.div>
+          ) : null}
 
-          <PageIntro paragraphs={content.about.paragraphs} />
+          <div ref={aboutIntroRef} className="relative" style={{ minHeight: aboutSceneHeight }}>
+            <div
+              ref={aboutStickyRef}
+              className="sticky overflow-hidden"
+              style={{
+                top: aboutSceneTop,
+                minHeight: `calc(100svh - ${aboutSceneTop}px)`,
+              }}
+            >
+              <div
+                className="relative z-10 flex items-start"
+                style={{
+                  minHeight: `calc(100svh - ${aboutSceneTop}px)`,
+                  paddingTop: 0,
+                }}
+              >
+                <div className="w-full max-w-5xl pr-0 md:pr-[16vw] lg:pr-[18vw]">
+                  <h2 className="mb-8 flex items-center gap-4 text-xs uppercase tracking-widest leading-none text-muted-foreground">
+                    <span className="h-px w-8 bg-muted-foreground" />
+                    {content.site.headers.about}
+                  </h2>
+                  <div className="space-y-6 text-muted-foreground">
+                    {content.about.paragraphs.map((paragraph, index) => (
+                      <AboutIntroParagraph
+                        key={`about-paragraph-${index}`}
+                        paragraph={paragraph}
+                        index={index}
+                        total={content.about.paragraphs.length}
+                        progress={aboutImageProgress}
+                        revealed={revealedParagraphs[index] ?? false}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div className="mt-20">
             <AboutScrollWords words={content.about.morphWords} />

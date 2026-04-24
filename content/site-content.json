@@ -81,6 +81,7 @@
     }
   },
   "about": {
+    "backgroundImage": "/placeholder-user.jpg",
     "paragraphs": [
       {
         "text": "I'm a passionate professional focused on creating accessible, pixel-perfect digital experiences. My work lies at the intersection of design and development.",

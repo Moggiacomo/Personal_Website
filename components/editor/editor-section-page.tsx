@@ -1869,6 +1869,31 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
           }
         >
           <div className="space-y-6">
+            <div className="grid gap-4 md:grid-cols-2">
+              <Field label="Background image path">
+                <Input
+                  value={draft.about.backgroundImage ?? ""}
+                  onChange={(event) =>
+                    updateSection("about", {
+                      ...draft.about,
+                      backgroundImage: event.target.value,
+                    })
+                  }
+                  placeholder="/uploads/about/background.png"
+                />
+              </Field>
+              <FileUploadField
+                label="Upload About background"
+                accept="image/*"
+                folder="about"
+                onUploaded={(path) =>
+                  updateSection("about", {
+                    ...draft.about,
+                    backgroundImage: path,
+                  })
+                }
+              />
+            </div>
             <ParagraphListEditor
               label="Paragraphs"
               addLabel="Add paragraph"
