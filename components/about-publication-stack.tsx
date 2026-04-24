@@ -66,8 +66,8 @@ export function AboutPublicationStack({
         <StackingCardItem
           key={publication.slug}
           index={index + 1}
-          topPosition={`${5 + index * 1.2}%`}
-          className={cn(index === items.length - 1 ? "min-h-[42rem]" : "h-[72rem]")}
+          topPosition={`${5 + index * 1.7}%`}
+          className="h-[72rem]"
         >
           <Link
             href={href}
