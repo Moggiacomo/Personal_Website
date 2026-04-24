@@ -79,9 +79,9 @@ export function Sidebar() {
   return (
     <aside className="relative z-20 w-full bg-background border-b border-border p-6 lg:p-8">
       <div className="max-w-full mx-auto w-full">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
           {/* Name and Title */}
-          <div className="flex-1">
+          <div className="xl:flex-1">
             <div className="flex items-start gap-4">
               {content.site.branding.icon?.trim() ? (
                 <Link
@@ -103,7 +103,7 @@ export function Sidebar() {
                   />
                 </Link>
               ) : null}
-              <div ref={brandingTextRef} className="min-w-0 py-0.5">
+              <div ref={brandingTextRef} className="py-0.5">
                 <Link href="/">
                   <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-foreground hover:text-primary transition-colors">
                     {content.site.branding.name}
@@ -120,9 +120,9 @@ export function Sidebar() {
           </div>
 
           {/* Navigation and Social Links */}
-          <div className="flex flex-col md:flex-row md:items-center gap-6">
+          <div className="flex flex-col gap-6 xl:shrink-0 xl:items-end">
             {/* Navigation */}
-            <nav className="flex flex-wrap gap-4 md:gap-6">
+            <nav className="flex flex-wrap gap-4 md:gap-6 xl:justify-end">
               {navItems.map((item) => (
                 <NavLink
                   key={item.href}
@@ -134,7 +134,7 @@ export function Sidebar() {
             </nav>
 
             {/* Social Links */}
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4 xl:justify-end">
               {socialLinks.map((social) => (
                 (() => {
                   const Icon = getExternalLinkIcon(social.href);

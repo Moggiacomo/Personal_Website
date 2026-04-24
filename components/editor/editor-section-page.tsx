@@ -1247,7 +1247,7 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
           }
         >
           <div className="space-y-6">
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               <Field label="Brand icon path">
                 <Input
                   value={draft.site.branding.icon ?? ""}
@@ -1263,6 +1263,20 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                   placeholder="/icon.svg"
                 />
               </Field>
+              <FileUploadField
+                label="Upload brand icon"
+                accept="image/*"
+                folder="branding"
+                onUploaded={(path) =>
+                  updateSection("site", {
+                    ...draft.site,
+                    branding: {
+                      ...draft.site.branding,
+                      icon: path,
+                    },
+                  })
+                }
+              />
               <Field label="Main title">
                 <Input
                   value={draft.site.branding.name}

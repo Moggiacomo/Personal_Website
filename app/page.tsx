@@ -20,6 +20,10 @@ import { cn } from "@/lib/utils";
 import type { ParagraphLevel, RichParagraph, SiteContent } from "@/lib/content-types";
 
 const chalkPalette = ["#9877a2", "#8499c1", "#d990a3", "#96c8c5", "#f2dede"];
+const ABOUT_ENTRY_WINDOW_START = 0.08;
+const ABOUT_ENTRY_WINDOW_END = 0.58;
+const ABOUT_ENTRY_DURATION = 0.16;
+const ABOUT_REVEAL_THRESHOLD_OFFSET = 0.15;
 
 type SkillHoverState = {
   color: string;
@@ -51,12 +55,10 @@ function AboutIntroParagraph({
   progress: MotionValue<number>;
   revealed: boolean;
 }) {
-  const entryWindowStart = 0.08;
-  const entryWindowEnd = 0.72;
   const span = Math.max(total - 1, 1);
-  const step = (entryWindowEnd - entryWindowStart) / span;
-  const start = total === 1 ? 0.12 : entryWindowStart + index * step;
-  const end = Math.min(start + 0.18, 0.82);
+  const step = (ABOUT_ENTRY_WINDOW_END - ABOUT_ENTRY_WINDOW_START) / span;
+  const start = total === 1 ? 0.12 : ABOUT_ENTRY_WINDOW_START + index * step;
+  const end = Math.min(start + ABOUT_ENTRY_DURATION, ABOUT_ENTRY_WINDOW_END + ABOUT_ENTRY_DURATION);
   const rawX = useTransform(progress, [start, end], [-120, 0]);
   const rawOpacity = useTransform(progress, [start, end], [0, 1]);
   const rawBlur = useTransform(progress, [start, end], [10, 0]);
@@ -94,9 +96,9 @@ export default function HomePage() {
     offset: ["start start", "end start"],
   });
   const { scrollY } = useScroll();
-  const aboutSceneHeight = `${Math.max(230, 160 + content.about.paragraphs.length * 34)}svh`;
+  const aboutSceneHeight = `${Math.max(325, 235 + content.about.paragraphs.length * 52)}svh`;
   const aboutSceneTop = topBarHeight + aboutSceneInset;
-  const aboutImageOpacity = 0.28 * (1 - aboutReleaseProgress);
+  const aboutImageOpacity = 1 - aboutReleaseProgress * aboutReleaseProgress;
   const aboutImageY = 52 * aboutReleaseProgress;
   const featuredPublications = content.publications.flatMap((publication, index) =>
     publication.tags.includes(FEATURED_IN_ABOUT_TAG)
@@ -159,18 +161,19 @@ export default function HomePage() {
     const total = content.about.paragraphs.length;
     if (!total) return;
 
-      setRevealedParagraphs((current) => {
-        let changed = false;
-        const next = content.about.paragraphs.map((_, index) => {
-          const entryWindowStart = 0.08;
-          const entryWindowEnd = 0.72;
-          const span = Math.max(total - 1, 1);
-          const step = (entryWindowEnd - entryWindowStart) / span;
-          const start = total === 1 ? 0.12 : entryWindowStart + index * step;
-          const threshold = Math.min(start + 0.11, 0.8);
-          const revealed = current[index] || latest >= threshold;
-          if (revealed !== current[index]) {
-            changed = true;
+    setRevealedParagraphs((current) => {
+      let changed = false;
+      const next = content.about.paragraphs.map((_, index) => {
+        const span = Math.max(total - 1, 1);
+        const step = (ABOUT_ENTRY_WINDOW_END - ABOUT_ENTRY_WINDOW_START) / span;
+        const start = total === 1 ? 0.12 : ABOUT_ENTRY_WINDOW_START + index * step;
+        const threshold = Math.min(
+          start + ABOUT_REVEAL_THRESHOLD_OFFSET,
+          ABOUT_ENTRY_WINDOW_END + ABOUT_ENTRY_DURATION
+        );
+        const revealed = current[index] || latest >= threshold;
+        if (revealed !== current[index]) {
+          changed = true;
         }
         return revealed;
       });
@@ -185,7 +188,7 @@ export default function HomePage() {
 
     const rect = stickyElement.getBoundingClientRect();
     const releaseDelta = Math.max(0, aboutSceneTop - rect.top);
-    const nextProgress = Math.min(releaseDelta / 120, 1);
+    const nextProgress = Math.min(releaseDelta / 280, 1);
 
     setAboutReleaseProgress((current) =>
       Math.abs(current - nextProgress) > 0.001 ? nextProgress : current
@@ -218,37 +221,40 @@ export default function HomePage() {
     <PageLayout>
       <section className="pt-8 pb-12 lg:pt-12 lg:pb-24 px-6 lg:px-12">
         <div className="max-w-full mx-auto w-full">
-          {content.about.backgroundImage ? (
-            <motion.div
-              aria-hidden="true"
-              className="pointer-events-none fixed inset-y-0 right-0 hidden md:block"
-              style={{
-                top: 0,
-                bottom: 0,
-                height: "100svh",
-                width: "min(62vw, 64rem)",
-                zIndex: 0,
-                opacity: aboutImageOpacity,
-                y: aboutImageY,
-                maskImage:
-                  "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.24) 18%, rgba(0,0,0,0.78) 40%, black 58%, black 100%), linear-gradient(to bottom, black 0%, black 88%, rgba(0,0,0,0.08) 100%)",
-                WebkitMaskImage:
-                  "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.24) 18%, rgba(0,0,0,0.78) 40%, black 58%, black 100%), linear-gradient(to bottom, black 0%, black 88%, rgba(0,0,0,0.08) 100%)",
-                maskComposite: "intersect",
-                WebkitMaskComposite: "source-in",
-              }}
-            >
-              <div
-                className="absolute inset-0 bg-right-center bg-no-repeat bg-cover"
-                style={{ backgroundImage: `url(${content.about.backgroundImage})` }}
-              />
-            </motion.div>
-          ) : null}
+          <div className="md:hidden">
+            <h2 className="mb-8 flex items-center gap-4 text-xs uppercase tracking-widest leading-none text-muted-foreground">
+              <span className="h-px w-8 bg-muted-foreground" />
+              {content.site.headers.about}
+            </h2>
 
-          <div ref={aboutIntroRef} className="relative" style={{ minHeight: aboutSceneHeight }}>
+            {content.about.backgroundImage ? (
+              <div className="relative mb-8 aspect-square w-full overflow-hidden">
+                <img
+                  src={content.about.backgroundImage}
+                  alt=""
+                  className="absolute inset-0 h-full w-full object-contain object-bottom"
+                  style={{ imageRendering: "auto" }}
+                />
+              </div>
+            ) : null}
+
+            <div className="space-y-6 text-muted-foreground">
+              {content.about.paragraphs.map((paragraph, index) => (
+                <p key={`about-mobile-${index}`} className={cn(getParagraphClass(paragraph.level))}>
+                  {paragraph.text}
+                </p>
+              ))}
+            </div>
+          </div>
+
+          <div
+            ref={aboutIntroRef}
+            className="relative hidden md:block"
+            style={{ minHeight: aboutSceneHeight }}
+          >
             <div
               ref={aboutStickyRef}
-              className="sticky overflow-hidden"
+              className="sticky overflow-visible"
               style={{
                 top: aboutSceneTop,
                 minHeight: `calc(100svh - ${aboutSceneTop}px)`,
@@ -261,7 +267,35 @@ export default function HomePage() {
                   paddingTop: 0,
                 }}
               >
-                <div className="w-full max-w-5xl pr-0 md:pr-[16vw] lg:pr-[18vw]">
+                {content.about.backgroundImage ? (
+                  <motion.div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute bottom-0 right-[-1.5rem] z-0 lg:right-[-3rem]"
+                    style={{
+                      opacity: aboutImageOpacity,
+                      y: aboutImageY,
+                    }}
+                  >
+                    <div
+                      className="relative"
+                      style={{
+                        width: `min(68rem, 100vw, calc(100svh - ${aboutSceneTop}px))`,
+                        height: `min(68rem, 100vw, calc(100svh - ${aboutSceneTop}px))`,
+                      }}
+                    >
+                      <img
+                        src={content.about.backgroundImage}
+                        alt=""
+                        className="block h-full w-full object-contain object-right-bottom"
+                        style={{
+                          imageRendering: "auto",
+                        }}
+                      />
+                    </div>
+                  </motion.div>
+                ) : null}
+
+                <div className="relative z-20 w-full max-w-5xl pr-[0vw] md:pr-[4vw] lg:pr-[8vw]">
                   <h2 className="mb-8 flex items-center gap-4 text-xs uppercase tracking-widest leading-none text-muted-foreground">
                     <span className="h-px w-8 bg-muted-foreground" />
                     {content.site.headers.about}
