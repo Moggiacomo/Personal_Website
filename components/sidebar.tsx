@@ -1,23 +1,21 @@
 "use client";
 
-import { Github, Linkedin, Mail, Twitter } from "lucide-react";
+import { useLayoutEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import initialSiteContent from "@/content/site-content.json";
 import { useSiteContent } from "@/hooks/use-site-content";
+import { getExternalLinkIcon, hasUsableLink } from "@/lib/external-links";
 import type { SiteContent } from "@/lib/content-types";
 import { cn } from "@/lib/utils";
 
-const socialLinks = [
-  { href: "https://github.com", icon: Github, label: "GitHub" },
-  { href: "https://linkedin.com", icon: Linkedin, label: "LinkedIn" },
-  { href: "https://twitter.com", icon: Twitter, label: "Twitter" },
-  { href: "mailto:hello@example.com", icon: Mail, label: "Email" },
-];
-
 export function Sidebar() {
   const pathname = usePathname();
-  const { content } = useSiteContent(initialSiteContent as SiteContent);
+  const { content, loading } = useSiteContent(initialSiteContent as SiteContent);
+  const brandingIconRef = useRef<HTMLAnchorElement>(null);
+  const brandingTextRef = useRef<HTMLDivElement>(null);
+  const [brandingIconSize, setBrandingIconSize] = useState<number | null>(null);
   const navItems = [
     { href: "/", label: content.site.navigation.about },
     { href: "/cv", label: content.site.navigation.cv },
@@ -26,6 +24,57 @@ export function Sidebar() {
     { href: "/repo", label: content.site.navigation.repo },
     { href: "/contact", label: content.site.navigation.contact },
   ];
+  const socialLinks = [
+    { href: content.site.social.github, label: "GitHub" },
+    { href: content.site.social.linkedin, label: "LinkedIn" },
+    { href: content.site.social.twitter, label: "Twitter" },
+    { href: content.site.social.instagram, label: "Instagram" },
+    { href: content.site.social.youtube, label: "YouTube" },
+    { href: content.site.social.email, label: "Email" },
+  ].filter((social) => hasUsableLink(social.href));
+
+  useLayoutEffect(() => {
+    const iconElement = brandingIconRef.current;
+    const textElement = brandingTextRef.current;
+    if (!iconElement || !textElement) return;
+
+    const updateSize = () => {
+      let nextSize = brandingIconSize ?? textElement.getBoundingClientRect().height;
+
+      for (let iteration = 0; iteration < 8; iteration += 1) {
+        iconElement.style.width = `${nextSize}px`;
+        iconElement.style.height = `${nextSize}px`;
+
+        const measuredTextHeight = textElement.getBoundingClientRect().height;
+        if (Math.abs(measuredTextHeight - nextSize) < 0.5) {
+          nextSize = measuredTextHeight;
+          break;
+        }
+
+        nextSize = measuredTextHeight;
+      }
+
+      setBrandingIconSize(nextSize > 0 ? nextSize : null);
+    };
+
+    const rafId = window.requestAnimationFrame(updateSize);
+
+    const observer = new ResizeObserver(updateSize);
+    observer.observe(textElement);
+    window.addEventListener("resize", updateSize);
+
+    return () => {
+      window.cancelAnimationFrame(rafId);
+      observer.disconnect();
+      window.removeEventListener("resize", updateSize);
+    };
+  }, [
+    brandingIconSize,
+    loading,
+    content.site.branding.name,
+    content.site.branding.title,
+    content.site.branding.description,
+  ]);
 
   return (
     <aside className="w-full bg-background border-b border-border p-6 lg:p-8">
@@ -33,17 +82,41 @@ export function Sidebar() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           {/* Name and Title */}
           <div className="flex-1">
-            <Link href="/">
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-foreground hover:text-primary transition-colors">
-                {content.site.branding.name}
-              </h1>
-            </Link>
-            <p className="text-lg md:text-xl text-primary mt-1 font-medium">
-              {content.site.branding.title}
-            </p>
-            <p className="text-muted-foreground mt-2 leading-relaxed text-sm md:text-base max-w-2xl">
-              {content.site.branding.description}
-            </p>
+            <div className="flex items-start gap-4">
+              {content.site.branding.icon?.trim() ? (
+                <Link
+                  href="/"
+                  ref={brandingIconRef}
+                  className="relative block shrink-0 overflow-hidden"
+                  aria-label="Go to homepage"
+                  style={
+                    brandingIconSize
+                      ? { width: `${brandingIconSize}px`, height: `${brandingIconSize}px` }
+                      : undefined
+                  }
+                >
+                  <Image
+                    src={content.site.branding.icon.trim()}
+                    alt={`${content.site.branding.name} icon`}
+                    fill
+                    className="object-contain"
+                  />
+                </Link>
+              ) : null}
+              <div ref={brandingTextRef} className="min-w-0 py-0.5">
+                <Link href="/">
+                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-foreground hover:text-primary transition-colors">
+                    {content.site.branding.name}
+                  </h1>
+                </Link>
+                <p className="text-lg md:text-xl text-primary mt-1 font-medium">
+                  {content.site.branding.title}
+                </p>
+                <p className="text-muted-foreground mt-2 leading-relaxed text-sm md:text-base max-w-2xl">
+                  {content.site.branding.description}
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Navigation and Social Links */}
@@ -63,16 +136,26 @@ export function Sidebar() {
             {/* Social Links */}
             <div className="flex items-center gap-4">
               {socialLinks.map((social) => (
-                <Link
-                  key={social.label}
-                  href={social.href}
-                  target={social.href.startsWith("mailto") ? undefined : "_blank"}
-                  rel={social.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                  aria-label={social.label}
-                >
-                  <social.icon className="size-5" />
-                </Link>
+                (() => {
+                  const Icon = getExternalLinkIcon(social.href);
+
+                  return (
+                    <Link
+                      key={social.label}
+                      href={social.href!}
+                      target={social.href!.startsWith("mailto") ? undefined : "_blank"}
+                      rel={
+                        social.href!.startsWith("mailto")
+                          ? undefined
+                          : "noopener noreferrer"
+                      }
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                      aria-label={social.label}
+                    >
+                      <Icon className="size-5" />
+                    </Link>
+                  );
+                })()
               ))}
             </div>
           </div>

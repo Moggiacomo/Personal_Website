@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CoverFlow, type CoverFlowItem } from "@ashishgogula/coverflow";
 import initialSiteContent from "@/content/site-content.json";
 import { AboutPublicationStack } from "@/components/about-publication-stack";
 import { PageLayout } from "@/components/page-layout";
 import { PageIntro } from "@/components/page-intro";
+import { AboutScrollWords } from "@/components/about-scroll-words";
 import { useSiteContent } from "@/hooks/use-site-content";
 import { FEATURED_IN_ABOUT_TAG } from "@/lib/publications";
 import { cn } from "@/lib/utils";
@@ -88,6 +89,10 @@ export default function HomePage() {
 
           <PageIntro paragraphs={content.about.paragraphs} />
 
+          <div className="mt-20">
+            <AboutScrollWords words={content.about.morphWords} />
+          </div>
+
           <div className="mt-16">
             <h3 className="text-xs uppercase tracking-widest leading-none text-muted-foreground mb-6 flex items-center gap-4">
               <span className="h-px w-8 bg-muted-foreground" />
@@ -105,7 +110,7 @@ export default function HomePage() {
                     onMouseEnter={() => handleSkillEnter(skill)}
                     onMouseLeave={() => handleSkillLeave(skill)}
                     className={cn(
-                      "relative isolate overflow-visible rounded-lg border border-transparent p-4 text-sm transition-all duration-300 ease-out",
+                      "relative isolate flex min-h-24 items-center justify-center overflow-visible rounded-lg border border-transparent px-5 py-4 text-center text-lg transition-all duration-300 ease-out md:min-h-28 md:text-xl",
                       isHovered
                         ? "z-10 -translate-y-1 scale-[1.04] font-semibold shadow-[0_20px_45px_-20px_rgba(0,0,0,0.65)]"
                         : "bg-secondary/50 text-foreground hover:shadow-[0_16px_32px_-24px_rgba(0,0,0,0.45)]"
@@ -117,20 +122,13 @@ export default function HomePage() {
                     }}
                   >
                     {isHovered && skillState ? (
-                      <>
-                        <span
-                          key={`${skill}-${skillState.pulseKey}-glow`}
-                          className="pointer-events-none absolute inset-[-6px] z-[1] rounded-[0.95rem] skill-wave-glow"
-                          style={{ color } as CSSProperties}
-                        />
-                        <span
-                          key={`${skill}-${skillState.pulseKey}-ring`}
-                          className="pointer-events-none absolute inset-[-2px] z-[2] rounded-[0.85rem] skill-wave-ring"
-                          style={{ color } as CSSProperties}
-                        />
-                      </>
+                      <span
+                        key={`${skill}-${skillState.pulseKey}`}
+                        className="pointer-events-none absolute inset-0 -z-10 rounded-xl skill-wave"
+                        style={{ backgroundColor: color }}
+                      />
                     ) : null}
-                    <span className="relative z-10">{skill}</span>
+                    <span className="relative z-10 leading-snug">{skill}</span>
                   </div>
                 );
               })}

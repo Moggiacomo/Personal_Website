@@ -1,6 +1,7 @@
 {
   "site": {
     "branding": {
+      "icon": "/icon.svg",
       "name": "Dr. Giacomo Moggioli",
       "title": "from data to understanding",
       "description": "I build elegant digital experiences that blend thoughtful design with robust engineering."
@@ -13,6 +14,14 @@
       "repo": "Repo",
       "contact": "Contact",
       "editor": "Editor"
+    },
+    "social": {
+      "github": "https://github.com",
+      "linkedin": "https://linkedin.com",
+      "twitter": "https://twitter.com",
+      "instagram": "",
+      "youtube": "",
+      "email": "mailto:hello@example.com"
     },
     "footer": {
       "copyrightName": "GiacomoMoggioli",
@@ -98,6 +107,11 @@
       "UI/UX Design",
       "Cloud Services",
       "Illustration"
+    ],
+    "morphWords": [
+      "SCIENCE",
+      "DATA",
+      "ART"
     ]
   },
   "portfolio": [
@@ -311,12 +325,12 @@
   ],
   "repo": [
     {
-      "id": "repo-1",
-      "title": "E-Commerce Artwork",
-      "image": "/uploads/repo/e-commerce-artwork/cover.png",
-      "downloadPath": "/uploads/repo/e-commerce-artwork/cover.png",
+      "id": "repo-3",
+      "title": "Task Board Preview",
+      "image": "/uploads/repo/task-board-preview/figure-1.png",
+      "downloadPath": "/uploads/repo/task-board-preview/figure-1.png",
       "downloadLabel": "Download PNG",
-      "alt": "E-Commerce artwork preview"
+      "alt": "Task board illustration preview"
     },
     {
       "id": "repo-2",
@@ -327,20 +341,28 @@
       "alt": "Analytics illustration preview"
     },
     {
-      "id": "repo-3",
-      "title": "Task Board Preview",
-      "image": "/uploads/repo/task-board-preview/figure-1.png",
-      "downloadPath": "/uploads/repo/task-board-preview/figure-1.png",
-      "downloadLabel": "Download PNG",
-      "alt": "Task board illustration preview"
-    },
-    {
       "id": "repo-4",
       "title": "AI Workspace",
       "image": "/uploads/repo/ai-workspace/figure-1.png",
       "downloadPath": "/uploads/repo/ai-workspace/figure-1.png",
       "downloadLabel": "Download PNG",
       "alt": "AI workspace illustration preview"
+    },
+    {
+      "id": "219aaa78-61c8-4bef-aac2-d5250525e9fc",
+      "title": "",
+      "image": "",
+      "downloadPath": "",
+      "downloadLabel": "Download",
+      "alt": ""
+    },
+    {
+      "id": "repo-1",
+      "title": "E-Commerce Artwork",
+      "image": "/uploads/repo/e-commerce-artwork/cover.png",
+      "downloadPath": "/uploads/repo/e-commerce-artwork/cover.png",
+      "downloadLabel": "Download PNG",
+      "alt": "E-Commerce artwork preview"
     }
   ],
   "cv": {

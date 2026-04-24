@@ -1248,6 +1248,21 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
         >
           <div className="space-y-6">
             <div className="grid gap-4 md:grid-cols-3">
+              <Field label="Brand icon path">
+                <Input
+                  value={draft.site.branding.icon ?? ""}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      branding: {
+                        ...draft.site.branding,
+                        icon: event.target.value,
+                      },
+                    })
+                  }
+                  placeholder="/icon.svg"
+                />
+              </Field>
               <Field label="Main title">
                 <Input
                   value={draft.site.branding.name}
@@ -1402,6 +1417,93 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                       navigation: {
                         ...draft.site.navigation,
                         editor: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-3">
+              <Field label="GitHub link">
+                <Input
+                  value={draft.site.social.github ?? ""}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      social: {
+                        ...draft.site.social,
+                        github: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="LinkedIn link">
+                <Input
+                  value={draft.site.social.linkedin ?? ""}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      social: {
+                        ...draft.site.social,
+                        linkedin: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Twitter/X link">
+                <Input
+                  value={draft.site.social.twitter ?? ""}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      social: {
+                        ...draft.site.social,
+                        twitter: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Instagram link">
+                <Input
+                  value={draft.site.social.instagram ?? ""}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      social: {
+                        ...draft.site.social,
+                        instagram: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="YouTube link">
+                <Input
+                  value={draft.site.social.youtube ?? ""}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      social: {
+                        ...draft.site.social,
+                        youtube: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Email link">
+                <Input
+                  value={draft.site.social.email ?? ""}
+                  onChange={(event) =>
+                    updateSection("site", {
+                      ...draft.site,
+                      social: {
+                        ...draft.site.social,
+                        email: event.target.value,
                       },
                     })
                   }
@@ -1780,6 +1882,14 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
               addLabel="Add skill"
               values={draft.about.skills}
               onChange={(skills) => updateSection("about", { ...draft.about, skills })}
+            />
+            <StringListEditor
+              label="Scroll words"
+              addLabel="Add word"
+              values={draft.about.morphWords}
+              onChange={(morphWords) =>
+                updateSection("about", { ...draft.about, morphWords })
+              }
             />
           </div>
         </SectionCard>

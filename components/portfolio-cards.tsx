@@ -3,8 +3,9 @@
 import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { getExternalLinkIcon, hasUsableLink } from "@/lib/external-links";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/lib/projects";
 
@@ -398,6 +399,11 @@ function CardHeader({
   url: string;
   expanded?: boolean;
 }) {
+  const hasGithub = hasUsableLink(github);
+  const hasUrl = hasUsableLink(url);
+  const GithubIcon = getExternalLinkIcon(github);
+  const UrlIcon = getExternalLinkIcon(url);
+
   return (
     <div
       className={cn(
@@ -431,26 +437,26 @@ function CardHeader({
           expanded ? "absolute right-0 top-0 justify-end" : ""
         )}
       >
-        {github && (
+        {hasGithub && (
           <Link
-            href={github}
+            href={github.trim()}
             target="_blank"
             rel="noopener noreferrer"
             className="text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             aria-label={`View ${title} on GitHub`}
           >
-            <Github className="size-5" />
+            <GithubIcon className="size-5" />
           </Link>
         )}
-        {url && (
+        {hasUrl && (
           <Link
-            href={url}
+            href={url.trim()}
             target="_blank"
             rel="noopener noreferrer"
             className="text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             aria-label={`View ${title} live`}
           >
-            <ExternalLink className="size-5" />
+            <UrlIcon className="size-5" />
           </Link>
         )}
       </div>

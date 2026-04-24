@@ -28,9 +28,11 @@ export interface TimelineItem {
 export interface AboutContent {
   paragraphs: RichParagraph[];
   skills: string[];
+  morphWords: string[];
 }
 
 export interface SiteBrandingContent {
+  icon?: string;
   name: string;
   title: string;
   description: string;
@@ -49,6 +51,15 @@ export interface SiteNavigationContent {
 export interface SiteFooterContent {
   copyrightName: string;
   builtWith: string;
+}
+
+export interface SiteSocialLinksContent {
+  github?: string;
+  linkedin?: string;
+  twitter?: string;
+  instagram?: string;
+  youtube?: string;
+  email?: string;
 }
 
 export interface SiteContactContent {
@@ -89,6 +100,7 @@ export interface SitePageIntroContent {
 export interface SiteChromeContent {
   branding: SiteBrandingContent;
   navigation: SiteNavigationContent;
+  social: SiteSocialLinksContent;
   footer: SiteFooterContent;
   headers: SiteHeadersContent;
   pageIntro: SitePageIntroContent;

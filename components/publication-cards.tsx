@@ -3,8 +3,9 @@
 import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, ExternalLink, FileText } from "lucide-react";
+import { ChevronLeft, ChevronRight, FileText } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { getExternalLinkIcon, hasUsableLink } from "@/lib/external-links";
 import { cn } from "@/lib/utils";
 import type { Publication } from "@/lib/publications";
 
@@ -336,6 +337,9 @@ function PublicationHeader({
   publication: Publication;
   expanded?: boolean;
 }) {
+  const hasUrl = hasUsableLink(publication.url);
+  const UrlIcon = getExternalLinkIcon(publication.url);
+
   return (
     <div
       className={cn(
@@ -371,15 +375,17 @@ function PublicationHeader({
           <FileText className="size-3" />
           {publication.type}
         </span>
-        <Link
-          href={publication.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          aria-label={`Open ${publication.title}`}
-        >
-          <ExternalLink className="size-5" />
-        </Link>
+        {hasUrl ? (
+          <Link
+            href={publication.url.trim()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            aria-label={`Open ${publication.title}`}
+          >
+            <UrlIcon className="size-5" />
+          </Link>
+        ) : null}
       </div>
     </div>
   );
