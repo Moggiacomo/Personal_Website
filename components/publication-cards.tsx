@@ -3,7 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, FileText } from "lucide-react";
+import { ChevronLeft, ChevronRight, Expand, FileText, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { getExternalLinkIcon, hasUsableLink } from "@/lib/external-links";
 import { cn } from "@/lib/utils";
@@ -40,6 +40,12 @@ export function PublicationCards({
     initialExpandedId ?? null
   );
   const [activeFigures, setActiveFigures] = useState<Record<string, number>>({});
+  const [fullscreenGallery, setFullscreenGallery] = useState<{
+    cardId: string;
+    figures: { src: string; alt: string }[];
+    activeIndex: number;
+    title: string;
+  } | null>(null);
   const leaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const articleRefs = useRef(new Map<string, HTMLElement>());
   const isGrid = layout === "grid";
@@ -49,6 +55,25 @@ export function PublicationCards({
       if (leaveTimeoutRef.current) clearTimeout(leaveTimeoutRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (!fullscreenGallery) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setFullscreenGallery(null);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [fullscreenGallery]);
 
   useEffect(() => {
     setExpandedId(initialExpandedId ?? null);
@@ -89,6 +114,9 @@ export function PublicationCards({
   };
 
   const closeCard = (cardId: string) => {
+    if (fullscreenGallery) {
+      return;
+    }
     leaveTimeoutRef.current = setTimeout(() => {
       setExpandedId((current) => (current === cardId ? null : current));
       setActiveFigures((current) => ({
@@ -161,6 +189,20 @@ export function PublicationCards({
                     [cardId]: figureIndex,
                   }))
                 }
+                onOpenFullscreen={() =>
+                  {
+                    if (leaveTimeoutRef.current) {
+                      clearTimeout(leaveTimeoutRef.current);
+                      leaveTimeoutRef.current = null;
+                    }
+                    setFullscreenGallery({
+                      cardId,
+                      figures,
+                      activeIndex: activeFigure,
+                      title: publication.title,
+                    });
+                  }
+                }
               />
             ) : (
               <StackPublicationCard
@@ -174,11 +216,48 @@ export function PublicationCards({
                     [cardId]: figureIndex,
                   }))
                 }
+                onOpenFullscreen={() =>
+                  {
+                    if (leaveTimeoutRef.current) {
+                      clearTimeout(leaveTimeoutRef.current);
+                      leaveTimeoutRef.current = null;
+                    }
+                    setFullscreenGallery({
+                      cardId,
+                      figures,
+                      activeIndex: activeFigure,
+                      title: publication.title,
+                    });
+                  }
+                }
               />
             )}
           </article>
         );
       })}
+      {fullscreenGallery ? (
+        <FullscreenFigureViewer
+          figures={fullscreenGallery.figures}
+          title={fullscreenGallery.title}
+          activeIndex={fullscreenGallery.activeIndex}
+          onClose={() => {
+            setActiveFigures((current) => ({
+              ...current,
+              [fullscreenGallery.cardId]: fullscreenGallery.activeIndex,
+            }));
+            setFullscreenGallery(null);
+          }}
+          onSelect={(index) => {
+            setActiveFigures((current) => ({
+              ...current,
+              [fullscreenGallery.cardId]: index,
+            }));
+            setFullscreenGallery((current) =>
+              current ? { ...current, activeIndex: index } : current
+            );
+          }}
+        />
+      ) : null}
     </div>
   );
 }
@@ -189,12 +268,14 @@ function GridPublicationCard({
   activeFigure,
   isExpanded,
   onSelectFigure,
+  onOpenFullscreen,
 }: {
   publication: Publication;
   figures: { src: string; alt: string }[];
   activeFigure: number;
   isExpanded: boolean;
   onSelectFigure: (index: number) => void;
+  onOpenFullscreen: () => void;
 }) {
   const mediaRef = useFlipAnimation<HTMLDivElement>(isExpanded);
 
@@ -218,6 +299,19 @@ function GridPublicationCard({
             isExpanded ? "object-contain" : "object-contain"
           )}
         />
+        {isExpanded ? (
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              onOpenFullscreen();
+            }}
+            className="absolute bottom-3 right-3 rounded-full border border-border/60 bg-background/85 p-2 text-foreground shadow-sm transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            aria-label={`Open ${publication.title} figures fullscreen`}
+          >
+            <Expand className="size-4" />
+          </button>
+        ) : null}
       </div>
 
       <div className={cn("order-2 flex flex-1 flex-col", isExpanded && "order-1 text-center")}>
@@ -261,12 +355,14 @@ function StackPublicationCard({
   activeFigure,
   isExpanded,
   onSelectFigure,
+  onOpenFullscreen,
 }: {
   publication: Publication;
   figures: { src: string; alt: string }[];
   activeFigure: number;
   isExpanded: boolean;
   onSelectFigure: (index: number) => void;
+  onOpenFullscreen: () => void;
 }) {
   const mediaRef = useFlipAnimation<HTMLDivElement>(isExpanded);
 
@@ -295,6 +391,19 @@ function StackPublicationCard({
             isExpanded ? "object-contain" : "object-contain"
           )}
         />
+        {isExpanded ? (
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              onOpenFullscreen();
+            }}
+            className="absolute bottom-3 right-3 rounded-full border border-border/60 bg-background/85 p-2 text-foreground shadow-sm transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            aria-label={`Open ${publication.title} figures fullscreen`}
+          >
+            <Expand className="size-4" />
+          </button>
+        ) : null}
       </div>
 
       <div className={cn("space-y-2", isExpanded ? "order-1 text-center" : "order-2")}>
@@ -325,6 +434,89 @@ function StackPublicationCard({
             <PublicationTagList tags={publication.tags} centered={false} className="mt-auto pt-6" />
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+function FullscreenFigureViewer({
+  figures,
+  title,
+  activeIndex,
+  onClose,
+  onSelect,
+}: {
+  figures: { src: string; alt: string }[];
+  title: string;
+  activeIndex: number;
+  onClose: () => void;
+  onSelect: (index: number) => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col bg-background/95 backdrop-blur-sm">
+      <div className="flex items-center justify-between gap-4 p-4">
+        <p className="min-w-0 truncate text-sm font-medium text-foreground sm:text-base">
+          {title}
+        </p>
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded-full border border-border/60 bg-background/85 p-2 text-foreground transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          aria-label="Close fullscreen gallery"
+        >
+          <X className="size-4" />
+        </button>
+      </div>
+
+      <div className="flex flex-1 items-center justify-center gap-3 px-3 pb-3">
+        <button
+          type="button"
+          onClick={() => onSelect((activeIndex - 1 + figures.length) % figures.length)}
+          className="rounded-full border border-border/60 bg-background/85 p-2 text-foreground transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-40"
+          aria-label="Previous image"
+          disabled={figures.length === 1}
+        >
+          <ChevronLeft className="size-5" />
+        </button>
+        <div className="relative flex-1 self-stretch overflow-hidden rounded-2xl bg-background/30">
+          <Image
+            src={figures[activeIndex]?.src ?? figures[0]?.src ?? ""}
+            alt={figures[activeIndex]?.alt ?? title}
+            fill
+            className="object-contain"
+          />
+        </div>
+        <button
+          type="button"
+          onClick={() => onSelect((activeIndex + 1) % figures.length)}
+          className="rounded-full border border-border/60 bg-background/85 p-2 text-foreground transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-40"
+          aria-label="Next image"
+          disabled={figures.length === 1}
+        >
+          <ChevronRight className="size-5" />
+        </button>
+      </div>
+
+      <div className="flex gap-2 overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {figures.map((figure, index) => (
+          <button
+            key={`${figure.src}-${index}`}
+            type="button"
+            onClick={() => onSelect(index)}
+            className={cn(
+              "relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border p-1 transition-all",
+              index === activeIndex
+                ? "border-primary bg-primary/10"
+                : "border-border/50 bg-background/30"
+            )}
+            aria-label={`Show figure ${index + 1}`}
+            aria-pressed={index === activeIndex}
+          >
+            <div className="relative h-full w-full overflow-hidden rounded-lg">
+              <Image src={figure.src} alt={figure.alt} fill className="object-contain" />
+            </div>
+          </button>
+        ))}
       </div>
     </div>
   );

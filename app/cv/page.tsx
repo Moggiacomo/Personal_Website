@@ -527,22 +527,22 @@ export default function CVPage() {
                       )}
                     >
                       {/* Card Header - Always Visible */}
-                      <div className="p-4">
+                      <div className="p-3 sm:p-4">
                         <div className="flex items-center justify-between gap-4">
                           <div className="flex-1 min-w-0">
-                            <h3 className="text-xl md:text-2xl text-black font-semibold leading-snug truncate">
+                            <h3 className="text-base sm:text-lg md:text-2xl text-black font-semibold leading-snug break-words">
                               {item.title}
                             </h3>
-                            <p className="text-black/90 text-sm mt-1 truncate">
+                            <p className="mt-1 text-xs text-black/90 sm:text-sm break-words">
                               {item.period}
                             </p>
-                            <p className="text-black/70 text-sm truncate mt-1">
+                            <p className="mt-1 text-xs text-black/70 sm:text-sm break-words">
                               {item.organization}
                             </p>
                           </div>
                           <ChevronDown
                             className={cn(
-                              "size-5 text-black transition-transform flex-shrink-0",
+                              "size-4 sm:size-5 text-black transition-transform flex-shrink-0",
                               isExpanded && "rotate-180"
                             )}
                           />
@@ -556,18 +556,18 @@ export default function CVPage() {
                           isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
                         )}
                       >
-                        <div className="px-4 pb-4 pt-0 border-t border-border/30 mt-0">
-                          <div className="pt-4">
-                            <p className="text-black text-sm leading-relaxed">
+                        <div className="mt-0 border-t border-border/30 px-3 pb-3 pt-0 sm:px-4 sm:pb-4">
+                          <div className="pt-3 sm:pt-4">
+                            <p className="text-xs sm:text-sm text-black leading-relaxed">
                               {item.description}
                             </p>
 
                             {item.details && (
-                              <ul className="mt-4 space-y-2">
+                              <ul className="mt-3 space-y-2 sm:mt-4">
                                 {item.details.map((detail, index) => (
                                   <li
                                     key={index}
-                                    className="text-sm text-black flex items-start gap-2"
+                                    className="flex items-start gap-2 text-xs text-black sm:text-sm"
                                   >
                                     <span className={cn("size-1.5 rounded-full mt-1.5 flex-shrink-0", config.bgColor)} />
                                     {detail}
@@ -577,13 +577,13 @@ export default function CVPage() {
                             )}
 
                             {item.skills && (
-                              <div className="flex flex-wrap gap-2 mt-4">
+                              <div className="mt-3 flex flex-wrap gap-1.5 sm:mt-4 sm:gap-2">
                                 {item.skills.map((skill) => (
                                   <Badge
                                     key={skill}
                                     variant="secondary"
                                     className={cn(
-                                      "border-0 text-xs text-white",
+                                      "border-0 text-[10px] sm:text-xs text-white",
                                       config.skillBg
                                     )}
                                   >
@@ -599,7 +599,7 @@ export default function CVPage() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
-                                className="inline-flex items-center gap-1.5 text-sm mt-4 text-black hover:underline"
+                                className="mt-3 inline-flex items-center gap-1.5 text-xs text-black hover:underline sm:mt-4 sm:text-sm"
                               >
                                 Visit website
                                 <ExternalLink className="size-3.5" />

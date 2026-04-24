@@ -16,6 +16,7 @@ export function Sidebar() {
   const brandingIconRef = useRef<HTMLAnchorElement>(null);
   const brandingTextRef = useRef<HTMLDivElement>(null);
   const [brandingIconSize, setBrandingIconSize] = useState<number | null>(null);
+  const [isNarrowBranding, setIsNarrowBranding] = useState(false);
   const navItems = [
     { href: "/", label: content.site.navigation.about },
     { href: "/cv", label: content.site.navigation.cv },
@@ -76,13 +77,37 @@ export function Sidebar() {
     content.site.branding.description,
   ]);
 
+  useLayoutEffect(() => {
+    const updateBrandingLayout = () => {
+      setIsNarrowBranding(window.innerWidth < 520);
+    };
+
+    updateBrandingLayout();
+    window.addEventListener("resize", updateBrandingLayout);
+
+    return () => {
+      window.removeEventListener("resize", updateBrandingLayout);
+    };
+  }, []);
+
+  const effectiveIconSize = brandingIconSize
+    ? isNarrowBranding
+      ? Math.min(brandingIconSize, 88)
+      : brandingIconSize
+    : null;
+
   return (
     <aside className="relative z-20 w-full bg-background border-b border-border p-6 lg:p-8">
       <div className="max-w-full mx-auto w-full">
         <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
           {/* Name and Title */}
           <div className="xl:flex-1">
-            <div className="flex items-start gap-4">
+            <div
+              className={cn(
+                "gap-4",
+                isNarrowBranding ? "flex flex-col items-start" : "flex items-start"
+              )}
+            >
               {content.site.branding.icon?.trim() ? (
                 <Link
                   href="/"
@@ -90,8 +115,8 @@ export function Sidebar() {
                   className="relative block shrink-0 overflow-hidden"
                   aria-label="Go to homepage"
                   style={
-                    brandingIconSize
-                      ? { width: `${brandingIconSize}px`, height: `${brandingIconSize}px` }
+                    effectiveIconSize
+                      ? { width: `${effectiveIconSize}px`, height: `${effectiveIconSize}px` }
                       : undefined
                   }
                 >
@@ -103,16 +128,16 @@ export function Sidebar() {
                   />
                 </Link>
               ) : null}
-              <div ref={brandingTextRef} className="py-0.5">
+              <div ref={brandingTextRef} className="min-w-0 py-0.5">
                 <Link href="/">
-                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-foreground hover:text-primary transition-colors">
+                  <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-foreground hover:text-primary transition-colors">
                     {content.site.branding.name}
                   </h1>
                 </Link>
-                <p className="text-lg md:text-xl text-primary mt-1 font-medium">
+                <p className="mt-1 text-base font-medium text-primary sm:text-lg md:text-xl">
                   {content.site.branding.title}
                 </p>
-                <p className="text-muted-foreground mt-2 leading-relaxed text-sm md:text-base max-w-2xl">
+                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base">
                   {content.site.branding.description}
                 </p>
               </div>
