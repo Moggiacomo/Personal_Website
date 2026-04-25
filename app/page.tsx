@@ -96,7 +96,7 @@ export default function HomePage() {
     offset: ["start start", "end start"],
   });
   const { scrollY } = useScroll();
-  const aboutSceneHeight = `${Math.max(325, 235 + content.about.paragraphs.length * 52)}svh`;
+  const aboutSceneHeight = `${Math.max(620, 460 + content.about.paragraphs.length * 120)}svh`;
   const aboutSceneTop = topBarHeight + aboutSceneInset;
   const aboutImageOpacity = 1 - aboutReleaseProgress * aboutReleaseProgress;
   const aboutImageY = 52 * aboutReleaseProgress;

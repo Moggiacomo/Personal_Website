@@ -57,7 +57,7 @@ export function AboutScrollWords({ words }: { words: string[] }) {
   if (!safeWords.length) return null;
 
   return (
-    <div ref={sectionRef} className="relative h-[360svh]">
+    <div ref={sectionRef} className="relative h-[520svh]">
       <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
         <div
           className="relative flex h-full w-full items-center justify-center overflow-hidden"
@@ -69,7 +69,7 @@ export function AboutScrollWords({ words }: { words: string[] }) {
             const isLastWord = index === safeWords.length - 1;
             const holdStart = start + segment * 0.2;
             const holdEnd = isLastWord
-              ? start + segment * 0.94
+              ? start + segment * 0.995
               : start + segment * 0.82;
             const end = start + segment;
             const characters = [...word];
