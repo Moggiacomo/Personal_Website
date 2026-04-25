@@ -367,95 +367,129 @@
     }
   ],
   "cv": {
-    "documentPath": "/cv.pdf",
-    "documentLabel": "Download CV",
     "items": [
       {
         "id": "1",
         "type": "work",
-        "period": "2022 - Present",
-        "startYear": 2022,
+        "period": "05/2024 - Present",
+        "startYear": 2024,
         "endYear": 2026,
-        "title": "Senior Software Engineer",
-        "organization": "Tech Company",
-        "url": "https://example.com",
-        "description": "Lead the development of scalable web applications serving millions of users.",
+        "title": "PostDoctoral Researcher",
+        "organization": "Eawag, Dübendorf, Switzerland | Christoph Vorburger Lab.",
+        "url": "https://www.eawag.ch/",
+        "description": "Lead the research team working on the genomics of host-bacteria interactions in the aphid-hamiltonella model.",
         "details": [
-          "Architected frontend solutions using React and TypeScript",
-          "Mentored junior developers and conducted code reviews",
-          "Improved application performance by 60%",
-          "Collaborated with cross-functional teams on product strategy"
+          "NGS, Genome assembly & annotation, Comparative genomics, Symbioses, Functional enrichment",
+          "Data science, Machine-Learning, Data visualisation, Scientific outreach",
+          "Developed an innovative interactive Next-based platform to visualise and better understand the biological meaning of a very large set of genomic data",
+          "Mentored junior students and collaborated with cross-functional researchers"
         ],
         "skills": [
+          "NGS",
+          "Data Science",
+          "Genomics",
+          "HPC",
+          "App Development",
+          "Comparative analyses",
+          "Bash",
+          "Python",
           "React",
-          "TypeScript",
-          "Node.js",
-          "AWS",
-          "GraphQL"
-        ]
+          "Next",
+          "R",
+          "Typescript",
+          "Docker",
+          "Anaconda",
+          "Singularity"
+        ],
+        "startMonth": 5
       },
       {
         "id": "2",
         "type": "work",
-        "period": "2020 - 2022",
-        "startYear": 2020,
-        "endYear": 2022,
-        "title": "Software Engineer",
-        "organization": "Startup Inc",
-        "url": "https://example.com",
-        "description": "Built and maintained core product features, improving performance by 40%.",
+        "period": "2023 - 2024",
+        "startYear": 2023,
+        "endYear": 2024,
+        "title": "PostDoctoral Researcher",
+        "organization": "Max Planck Institute, Bremen, Germany | Laetitia Wilkins Lab.",
+        "url": "https://www.mpi-bremen.de/Max-Planck-Institut-fuer-Marine-Mikrobiologie-in-Bremen.html",
+        "description": "Researching genomic basis of symbiosis in Lucinid clams",
         "details": [
-          "Implemented CI/CD pipelines using GitHub Actions",
-          "Established coding standards across the engineering team",
-          "Developed RESTful APIs with Python and FastAPI",
-          "Managed PostgreSQL databases and optimized queries"
+          "NGS, Genome assembly & annotation, Proteomics, Comparative genomics, Symbioses",
+          "Data science, Machine-Learning, Data visualisation, Scientific outreach",
+          "Mentored students and collaborated with international professionals"
         ],
         "skills": [
-          "Vue.js",
+          "NGS",
+          "Data Science",
+          "Genomics",
+          "Comparative analyses",
+          "Docker",
+          "Anaconda",
+          "Singularity",
+          "HPC",
+          "Bash",
           "Python",
-          "PostgreSQL",
-          "Docker"
-        ]
+          "R"
+        ],
+        "startMonth": 7,
+        "endMonth": 3
       },
       {
         "id": "3",
-        "type": "education",
+        "type": "work",
         "period": "2018 - 2020",
-        "startYear": 2018,
-        "endYear": 2020,
-        "title": "Master of Science in Computer Science",
-        "organization": "University Name",
-        "url": "https://example.edu",
-        "description": "Specialized in distributed systems and machine learning.",
+        "startYear": 2022,
+        "endYear": 2022,
+        "title": "Data Scientist",
+        "organization": "RSM, S2DS (Pivigo), London, UK",
+        "url": "https://www.rsmuk.com/",
+        "description": "Developed a NLP based software able to automatically classify database entries for a tax company",
         "details": [
-          "Thesis: Scalable Machine Learning Pipelines for Real-time Data",
-          "GPA: 3.9/4.0",
-          "Teaching Assistant for Advanced Algorithms course",
-          "Published 2 papers in peer-reviewed conferences"
+          "Transorming client's ideas into functional software solutions",
+          "Machine-Learning, NLP, Automatic classifier",
+          "Lead a team of 4 data scientist"
+        ],
+        "startMonth": 10,
+        "endMonth": 11,
+        "skills": [
+          "Pytorch",
+          "NLP",
+          "AWS",
+          "Python"
         ]
+      },
+      {
+        "id": "67f05129-95a4-4ffe-acda-850469da0494",
+        "type": "education",
+        "period": "",
+        "startYear": 2019,
+        "endYear": 2023,
+        "title": "PhD Bioinformatics",
+        "organization": "Queen Mary University of London, UK | Chema Martin-Duran Lab.",
+        "url": "https://www.martinduranlab.com/",
+        "description": "",
+        "details": [],
+        "skills": [],
+        "startMonth": 9,
+        "endMonth": 7
       },
       {
         "id": "4",
         "type": "work",
         "period": "08/2018 - 03/2020",
-        "startYear": 2018,
-        "startMonth": 8,
-        "endYear": 2020,
-        "endMonth": 3,
-        "title": "Junior Developer",
-        "organization": "Agency Name",
-        "url": "https://example.com",
-        "description": "Developed responsive websites and web applications for diverse clients.",
-        "details": [
-          "Built 20+ client websites from design to deployment",
-          "Implemented pixel-perfect interfaces from Figma designs",
-          "Maintained WordPress sites and developed custom plugins"
-        ],
+        "startYear": 2019,
+        "startMonth": 10,
+        "endYear": 2022,
+        "endMonth": 9,
+        "title": "Demonstrator",
+        "organization": "Queen Mary University of London, UK",
+        "url": "https://www.qmul.ac.uk/",
+        "description": "Involved in teaching activities such as supervising master students for specific projects, teaching in classes, grading exams, organising and participating in field trips",
+        "details": [],
         "skills": [
-          "JavaScript",
-          "HTML/CSS",
-          "WordPress",
-          "PHP"
+          "Leadership",
+          "Mentorship",
+          "Communication"
         ]
       },
       {
@@ -514,6 +548,32 @@
           "Python",
           "TensorFlow",
           "React Native"
+        ]
+      },
+      {
+        "id": "2a24c774-de3f-4b46-89df-bf601812be4d",
+        "type": "work",
+        "period": "2013 - Present",
+        "startYear": 2013,
+        "endYear": 2026,
+        "title": "Freelance Illustrator",
+        "organization": "",
+        "url": "https://www.instagram.com/kelp_art/",
+        "description": "I have always worked on the side as a freelance illustrator. My works have been exhibited in Milan, Amsterdam, London and Tokyo. ",
+        "details": [
+          "Taking commissions such as logos or scientific illustrations for manuscripts and journal covers",
+          "I have taken part in many different Art fairs, Illustration festivals all over Europe",
+          "I was part of a collective of artists in Milan  with whom I organised many events including exhibitions and live paintings",
+          "Member of the creative directors of the \"Collirio\" magazine"
+        ],
+        "skills": [
+          "Creativity",
+          "Data visualisation",
+          "Imagination",
+          "Entrepreneurship",
+          "Adobe Illustrator",
+          "Adobe Photoshop",
+          "Procreate"
         ]
       }
     ]
