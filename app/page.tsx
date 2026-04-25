@@ -82,9 +82,11 @@ export default function HomePage() {
   const router = useRouter();
   const aboutIntroRef = useRef<HTMLDivElement | null>(null);
   const aboutStickyRef = useRef<HTMLDivElement | null>(null);
+  const aboutHeightBeforeUnlockRef = useRef<number | null>(null);
   const [topBarHeight, setTopBarHeight] = useState(0);
   const [aboutSceneInset, setAboutSceneInset] = useState(32);
   const [aboutReleaseProgress, setAboutReleaseProgress] = useState(0);
+  const [aboutIntroCompleted, setAboutIntroCompleted] = useState(false);
   const [itemWidth, setItemWidth] = useState(260);
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
@@ -96,10 +98,12 @@ export default function HomePage() {
     offset: ["start start", "end start"],
   });
   const { scrollY } = useScroll();
-  const aboutSceneHeight = `${Math.max(620, 460 + content.about.paragraphs.length * 120)}svh`;
+  const aboutSceneHeight = aboutIntroCompleted
+    ? "auto"
+    : `${Math.max(620, 460 + content.about.paragraphs.length * 120)}svh`;
   const aboutSceneTop = topBarHeight + aboutSceneInset;
-  const aboutImageOpacity = 1 - aboutReleaseProgress * aboutReleaseProgress;
-  const aboutImageY = 52 * aboutReleaseProgress;
+  const aboutImageOpacity = aboutIntroCompleted ? 1 : 1 - aboutReleaseProgress * aboutReleaseProgress;
+  const aboutImageY = aboutIntroCompleted ? 0 : 52 * aboutReleaseProgress;
   const featuredPublications = content.publications.flatMap((publication, index) =>
     publication.tags.includes(FEATURED_IN_ABOUT_TAG)
       ? [{ publication, href: `/publications#publication-${index}` }]
@@ -152,18 +156,37 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
+    aboutHeightBeforeUnlockRef.current = null;
+    setAboutIntroCompleted(false);
     setRevealedParagraphs((current) =>
       content.about.paragraphs.map((_, index) => current[index] ?? false)
     );
   }, [content.about.paragraphs]);
 
+  useLayoutEffect(() => {
+    if (!aboutIntroCompleted) return;
+
+    const previousHeight = aboutHeightBeforeUnlockRef.current;
+    const section = aboutIntroRef.current;
+    if (!previousHeight || !section) return;
+
+    const nextHeight = section.getBoundingClientRect().height;
+    const delta = previousHeight - nextHeight;
+
+    if (Math.abs(delta) > 1) {
+      window.scrollTo({ top: window.scrollY - delta });
+    }
+
+    aboutHeightBeforeUnlockRef.current = null;
+  }, [aboutIntroCompleted]);
+
   useMotionValueEvent(aboutImageProgress, "change", (latest) => {
     const total = content.about.paragraphs.length;
     if (!total) return;
 
-    setRevealedParagraphs((current) => {
-      let changed = false;
-      const next = content.about.paragraphs.map((_, index) => {
+      setRevealedParagraphs((current) => {
+        let changed = false;
+        const next = content.about.paragraphs.map((_, index) => {
         const span = Math.max(total - 1, 1);
         const step = (ABOUT_ENTRY_WINDOW_END - ABOUT_ENTRY_WINDOW_START) / span;
         const start = total === 1 ? 0.12 : ABOUT_ENTRY_WINDOW_START + index * step;
@@ -176,13 +199,21 @@ export default function HomePage() {
           changed = true;
         }
         return revealed;
-      });
+        });
 
-      return changed ? next : current;
-    });
+        if (next.length > 0 && next.every(Boolean) && !aboutIntroCompleted) {
+          aboutHeightBeforeUnlockRef.current =
+            aboutIntroRef.current?.getBoundingClientRect().height ?? null;
+          setAboutIntroCompleted(true);
+        }
+
+        return changed ? next : current;
+      });
   });
 
   useMotionValueEvent(scrollY, "change", () => {
+    if (aboutIntroCompleted) return;
+
     const stickyElement = aboutStickyRef.current;
     if (!stickyElement) return;
 
@@ -250,13 +281,13 @@ export default function HomePage() {
           <div
             ref={aboutIntroRef}
             className="relative hidden md:block"
-            style={{ minHeight: aboutSceneHeight }}
+            style={aboutIntroCompleted ? undefined : { minHeight: aboutSceneHeight }}
           >
             <div
               ref={aboutStickyRef}
-              className="sticky overflow-visible"
+              className={cn("overflow-visible", aboutIntroCompleted ? "relative" : "sticky")}
               style={{
-                top: aboutSceneTop,
+                top: aboutIntroCompleted ? undefined : aboutSceneTop,
                 minHeight: `calc(100svh - ${aboutSceneTop}px)`,
               }}
             >
