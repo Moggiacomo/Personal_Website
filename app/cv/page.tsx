@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useEffect, useLayoutEffect } from "react";
 import { Download, ExternalLink, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -187,8 +187,7 @@ const typeConfig: Record<ExperienceType, { label: string; color: string; bgColor
   },
 };
 
-const YEAR_HEIGHT = 80; // pixels per year
-const MONTH_HEIGHT = YEAR_HEIGHT / 12;
+const DEFAULT_YEAR_HEIGHT = 80; // pixels per year
 
 const getStartMonth = (item: TimelineItem) => item.startMonth ?? 1;
 const getEndMonth = (item: TimelineItem) => item.endMonth ?? 12;
@@ -244,7 +243,9 @@ export default function CVPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [filter, setFilter] = useState<ExperienceType | "all">("all");
   const timelineRef = useRef<HTMLDivElement>(null);
+  const cardsStackRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const [timelineHeight, setTimelineHeight] = useState(0);
   const [linePositions, setLinePositions] = useState<Map<string, { barRightX: number; barCenterY: number; cardLeftX: number; cardY: number }>>(new Map());
   const { content } = useSiteContent(initialSiteContent as SiteContent);
   const sourceTimelineItems = useMemo(
@@ -277,6 +278,10 @@ export default function CVPage() {
   const minYear = Math.min(...timelineItems.map(i => i.startYear));
   const maxYear = currentYear;
   const totalYears = maxYear - minYear + 1;
+  const totalMonths = totalYears * 12;
+  const resolvedTimelineHeight = timelineHeight || totalYears * DEFAULT_YEAR_HEIGHT;
+  const yearHeight = resolvedTimelineHeight / totalYears;
+  const monthHeight = resolvedTimelineHeight / totalMonths;
   
   const columnPositions = useMemo(
     () => calculateColumns(filteredTimelineItems),
@@ -293,6 +298,24 @@ export default function CVPage() {
   for (let year = maxYear; year >= minYear; year--) {
     yearLabels.push(year);
   }
+
+  useLayoutEffect(() => {
+    const cardsStack = cardsStackRef.current;
+    if (!cardsStack) return;
+
+    const updateTimelineHeight = () => {
+      const nextHeight = cardsStack.getBoundingClientRect().height;
+      setTimelineHeight((current) => (Math.abs(current - nextHeight) > 1 ? nextHeight : current));
+    };
+
+    updateTimelineHeight();
+
+    window.addEventListener("resize", updateTimelineHeight);
+
+    return () => {
+      window.removeEventListener("resize", updateTimelineHeight);
+    };
+  }, [filteredCardItems]);
 
   // Track bar and card positions for connecting lines
   useEffect(() => {
@@ -418,7 +441,7 @@ export default function CVPage() {
               {/* Year Labels */}
               <div className="relative w-10 flex-shrink-0">
                 {yearLabels.map((year, index) => {
-                  const topPx = index * YEAR_HEIGHT + YEAR_HEIGHT / 2;
+                  const topPx = index * yearHeight + yearHeight / 2;
                   return (
                     <div
                       key={year}
@@ -434,11 +457,11 @@ export default function CVPage() {
               {/* Main Timeline Bar */}
               <div 
                 className="relative w-3 bg-border rounded-full flex-shrink-0"
-                style={{ height: `${totalYears * YEAR_HEIGHT}px` }}
+                style={{ height: `${resolvedTimelineHeight}px` }}
               >
                 {/* Year tick marks */}
                 {yearLabels.map((year, index) => {
-                  const topPx = index * YEAR_HEIGHT;
+                  const topPx = index * yearHeight;
                   return (
                     <div
                       key={year}
@@ -453,14 +476,14 @@ export default function CVPage() {
               <div 
                 className="relative ml-2"
                 style={{ 
-                  height: `${totalYears * YEAR_HEIGHT}px`,
+                  height: `${resolvedTimelineHeight}px`,
                   width: `${maxColumns * 20 + 8}px`
                 }}
               >
                 {filteredTimelineItems.map((item) => {
                   const config = typeConfig[item.type];
-                  const topPx = ((maxYear - item.endYear) * YEAR_HEIGHT) + ((12 - getEndMonth(item)) * MONTH_HEIGHT);
-                  const heightPx = getItemDurationMonths(item) * MONTH_HEIGHT;
+                  const topPx = ((maxYear - item.endYear) * yearHeight) + ((12 - getEndMonth(item)) * monthHeight);
+                  const heightPx = getItemDurationMonths(item) * monthHeight;
                   const column = columnPositions.get(item.id) || 0;
                   
                   return (
@@ -531,7 +554,7 @@ export default function CVPage() {
               </svg>
               
               {/* Cards */}
-              <div className="space-y-4">
+              <div ref={cardsStackRef} className="space-y-4">
               {filteredCardItems.map((item) => {
                 const config = typeConfig[item.type];
                 const isExpanded = expandedId === item.id;
