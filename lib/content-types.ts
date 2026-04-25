@@ -12,6 +12,7 @@ export interface RichParagraph {
 export interface TimelineItem {
   id: string;
   type: ExperienceType;
+  cardPosition?: number;
   period: string;
   startYear: number;
   startMonth?: number;

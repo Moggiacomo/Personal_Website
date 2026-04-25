@@ -401,12 +401,13 @@
           "Anaconda",
           "Singularity"
         ],
-        "startMonth": 5
+        "startMonth": 5,
+        "cardPosition": 1
       },
       {
         "id": "2",
         "type": "work",
-        "period": "2023 - 2024",
+        "period": "07/2023 - 03/2024",
         "startYear": 2023,
         "endYear": 2024,
         "title": "PostDoctoral Researcher",
@@ -432,12 +433,13 @@
           "R"
         ],
         "startMonth": 7,
-        "endMonth": 3
+        "endMonth": 3,
+        "cardPosition": 2
       },
       {
         "id": "3",
         "type": "work",
-        "period": "2018 - 2020",
+        "period": "10/2022 - 11/2022",
         "startYear": 2022,
         "endYear": 2022,
         "title": "Data Scientist",
@@ -456,12 +458,13 @@
           "NLP",
           "AWS",
           "Python"
-        ]
+        ],
+        "cardPosition": 3
       },
       {
         "id": "67f05129-95a4-4ffe-acda-850469da0494",
         "type": "education",
-        "period": "",
+        "period": "2019 - 2023",
         "startYear": 2019,
         "endYear": 2023,
         "title": "PhD Bioinformatics",
@@ -471,12 +474,13 @@
         "details": [],
         "skills": [],
         "startMonth": 9,
-        "endMonth": 7
+        "endMonth": 6,
+        "cardPosition": 4
       },
       {
         "id": "4",
         "type": "work",
-        "period": "08/2018 - 03/2020",
+        "period": "2019 - 2022",
         "startYear": 2019,
         "startMonth": 10,
         "endYear": 2022,
@@ -490,7 +494,8 @@
           "Leadership",
           "Mentorship",
           "Communication"
-        ]
+        ],
+        "cardPosition": 5
       },
       {
         "id": "5",
@@ -511,7 +516,9 @@
           "Python",
           "Open Source",
           "Git"
-        ]
+        ],
+        "cardPosition": 6,
+        "endMonth": 3
       },
       {
         "id": "6",
@@ -528,27 +535,8 @@
           "Dean's List for 6 semesters",
           "Senior Project: Mobile App for Campus Navigation",
           "Member of ACM Student Chapter"
-        ]
-      },
-      {
-        "id": "7",
-        "type": "other",
-        "period": "2017",
-        "startYear": 2017,
-        "endYear": 2017,
-        "title": "Hackathon Winner",
-        "organization": "TechCrunch Disrupt",
-        "description": "Won first place at TechCrunch Disrupt Hackathon with an AI-powered accessibility tool.",
-        "details": [
-          "Built a prototype in 24 hours with a team of 4",
-          "Presented to panel of judges including VCs and tech leaders",
-          "Featured in TechCrunch article about the event"
         ],
-        "skills": [
-          "Python",
-          "TensorFlow",
-          "React Native"
-        ]
+        "cardPosition": 7
       },
       {
         "id": "2a24c774-de3f-4b46-89df-bf601812be4d",
@@ -574,7 +562,29 @@
           "Adobe Illustrator",
           "Adobe Photoshop",
           "Procreate"
-        ]
+        ],
+        "cardPosition": 8
+      },
+      {
+        "id": "7",
+        "type": "other",
+        "period": "2017",
+        "startYear": 2017,
+        "endYear": 2017,
+        "title": "Hackathon Winner",
+        "organization": "TechCrunch Disrupt",
+        "description": "Won first place at TechCrunch Disrupt Hackathon with an AI-powered accessibility tool.",
+        "details": [
+          "Built a prototype in 24 hours with a team of 4",
+          "Presented to panel of judges including VCs and tech leaders",
+          "Featured in TechCrunch article about the event"
+        ],
+        "skills": [
+          "Python",
+          "TensorFlow",
+          "React Native"
+        ],
+        "cardPosition": 9
       }
     ]
   }

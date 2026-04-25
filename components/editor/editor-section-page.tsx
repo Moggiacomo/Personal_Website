@@ -133,6 +133,7 @@ function createEmptyTimelineItem(): TimelineItem {
   return {
     id: crypto.randomUUID(),
     type: "work",
+    cardPosition: 0,
     period: "",
     startYear: new Date().getFullYear(),
     endYear: new Date().getFullYear(),
@@ -155,6 +156,13 @@ function moveItem<T>(items: T[], fromIndex: number, toIndex: number) {
   const [moved] = next.splice(fromIndex, 1);
   next.splice(toIndex, 0, moved);
   return next;
+}
+
+function reindexTimelineCardPositions(items: TimelineItem[]) {
+  return items.map((item, index) => ({
+    ...item,
+    cardPosition: index + 1,
+  }));
 }
 
 function parseOptionalNumber(value: string) {
@@ -2482,7 +2490,10 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                 variant="outline"
                 onClick={() =>
                   updateSection("cv", {
-                    items: [...draft.cv.items, createEmptyTimelineItem()],
+                    items: reindexTimelineCardPositions([
+                      ...draft.cv.items,
+                      createEmptyTimelineItem(),
+                    ]),
                   })
                 }
               >
@@ -2500,19 +2511,25 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                 onToggle={() => toggleCard(`cv-${item.id || index}`)}
                 onRemove={() =>
                   updateSection("cv", {
-                    items: draft.cv.items.filter((_, entry) => entry !== index),
+                    items: reindexTimelineCardPositions(
+                      draft.cv.items.filter((_, entry) => entry !== index)
+                    ),
                   })
                 }
                 canMoveUp={index > 0}
                 canMoveDown={index < draft.cv.items.length - 1}
                 onMoveUp={() =>
                   updateSection("cv", {
-                    items: moveItem(draft.cv.items, index, index - 1),
+                    items: reindexTimelineCardPositions(
+                      moveItem(draft.cv.items, index, index - 1)
+                    ),
                   })
                 }
                 onMoveDown={() =>
                   updateSection("cv", {
-                    items: moveItem(draft.cv.items, index, index + 1),
+                    items: reindexTimelineCardPositions(
+                      moveItem(draft.cv.items, index, index + 1)
+                    ),
                   })
                 }
               >
@@ -2544,6 +2561,22 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                       <option value="education">Education</option>
                       <option value="other">Other</option>
                     </select>
+                  </Field>
+                  <Field label="Card position">
+                    <Input
+                      type="number"
+                      min="1"
+                      value={item.cardPosition ?? index + 1}
+                      onChange={(event) => {
+                        const next = [...draft.cv.items];
+                        next[index] = {
+                          ...item,
+                          cardPosition:
+                            parseOptionalNumber(event.target.value) ?? index + 1,
+                        };
+                        updateSection("cv", { items: next });
+                      }}
+                    />
                   </Field>
                   <Field label="Period label">
                     <Input

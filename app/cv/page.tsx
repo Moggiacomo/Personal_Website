@@ -195,8 +195,22 @@ const getEndMonth = (item: TimelineItem) => item.endMonth ?? 12;
 const getMonthIndex = (year: number, month: number) => year * 12 + (month - 1);
 const getItemStartIndex = (item: TimelineItem) => getMonthIndex(item.startYear, getStartMonth(item));
 const getItemEndIndex = (item: TimelineItem) => getMonthIndex(item.endYear, getEndMonth(item));
+const getItemDurationMonths = (item: TimelineItem) =>
+  getItemEndIndex(item) - getItemStartIndex(item) + 1;
 const sortTimelineItemsByEndDate = (items: TimelineItem[]) =>
   [...items].sort((a, b) => getItemEndIndex(b) - getItemEndIndex(a));
+const sortTimelineItemsByCardPosition = (
+  items: TimelineItem[],
+  sourceIndexById: Map<string, number>
+) =>
+  [...items].sort((a, b) => {
+    const positionA = a.cardPosition ?? (sourceIndexById.get(a.id) ?? 0) + 1;
+    const positionB = b.cardPosition ?? (sourceIndexById.get(b.id) ?? 0) + 1;
+
+    if (positionA !== positionB) return positionA - positionB;
+
+    return (sourceIndexById.get(a.id) ?? 0) - (sourceIndexById.get(b.id) ?? 0);
+  });
 
 // Calculate column positions for overlapping items
 function calculateColumns(items: TimelineItem[]): Map<string, number> {
@@ -233,25 +247,41 @@ export default function CVPage() {
   const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const [linePositions, setLinePositions] = useState<Map<string, { barRightX: number; barCenterY: number; cardLeftX: number; cardY: number }>>(new Map());
   const { content } = useSiteContent(initialSiteContent as SiteContent);
-  const timelineItems = useMemo(
+  const sourceTimelineItems = useMemo(
     () =>
-      sortTimelineItemsByEndDate(
-        (content.cv.items.length ? content.cv.items : fallbackTimelineItems) as TimelineItem[]
-      ),
+      (content.cv.items.length ? content.cv.items : fallbackTimelineItems) as TimelineItem[],
     [content.cv.items]
   );
+  const sourceIndexById = useMemo(
+    () => new Map(sourceTimelineItems.map((item, index) => [item.id, index])),
+    [sourceTimelineItems]
+  );
+  const timelineItems = useMemo(
+    () => sortTimelineItemsByEndDate(sourceTimelineItems),
+    [sourceTimelineItems]
+  );
 
-  const filteredItems = useMemo(() => {
-    return timelineItems
-      .filter((item) => filter === "all" || item.type === filter)
-      .sort((a, b) => getItemEndIndex(b) - getItemEndIndex(a));
-  }, [filter, timelineItems]);
+  const filteredTimelineItems = useMemo(
+    () => timelineItems.filter((item) => filter === "all" || item.type === filter),
+    [filter, timelineItems]
+  );
+  const filteredCardItems = useMemo(
+    () =>
+      sortTimelineItemsByCardPosition(
+        sourceTimelineItems.filter((item) => filter === "all" || item.type === filter),
+        sourceIndexById
+      ),
+    [filter, sourceIndexById, sourceTimelineItems]
+  );
 
   const minYear = Math.min(...timelineItems.map(i => i.startYear));
   const maxYear = currentYear;
   const totalYears = maxYear - minYear + 1;
   
-  const columnPositions = useMemo(() => calculateColumns(filteredItems), [filteredItems]);
+  const columnPositions = useMemo(
+    () => calculateColumns(filteredTimelineItems),
+    [filteredTimelineItems]
+  );
   const maxColumns = Math.max(0, ...Array.from(columnPositions.values())) + 1;
 
   const toggleExpand = (id: string) => {
@@ -275,7 +305,7 @@ export default function CVPage() {
       const cardsContainerRect = cardsContainer.getBoundingClientRect();
       const newLinePositions = new Map<string, { barRightX: number; barCenterY: number; cardLeftX: number; cardY: number }>();
       
-      filteredItems.forEach(item => {
+      filteredCardItems.forEach(item => {
         const barEl = timelineRef.current?.querySelector(`[data-bar-id="${item.id}"]`);
         const cardEl = cardRefs.current.get(item.id);
         
@@ -321,7 +351,7 @@ export default function CVPage() {
       });
       window.removeEventListener('resize', updatePositions);
     };
-  }, [filteredItems, expandedId]);
+  }, [filteredCardItems, expandedId]);
 
   return (
     <PageLayout>
@@ -427,12 +457,10 @@ export default function CVPage() {
                   width: `${maxColumns * 20 + 8}px`
                 }}
               >
-                {filteredItems.map((item) => {
+                {filteredTimelineItems.map((item) => {
                   const config = typeConfig[item.type];
-                  const endIndex = getItemEndIndex(item);
-                  const startIndex = getItemStartIndex(item);
                   const topPx = ((maxYear - item.endYear) * YEAR_HEIGHT) + ((12 - getEndMonth(item)) * MONTH_HEIGHT);
-                  const heightPx = (endIndex - startIndex + 1) * MONTH_HEIGHT;
+                  const heightPx = getItemDurationMonths(item) * MONTH_HEIGHT;
                   const column = columnPositions.get(item.id) || 0;
                   
                   return (
@@ -447,7 +475,7 @@ export default function CVPage() {
                       )}
                       style={{
                         top: `${topPx}px`,
-                        height: `${Math.max(heightPx, 24)}px`,
+                        height: `${heightPx}px`,
                         left: `${column * 20}px`,
                         width: '14px',
                       }}
@@ -470,7 +498,7 @@ export default function CVPage() {
                   overflow: 'visible'
                 }}
               >
-                {filteredItems.map((item) => {
+                {filteredCardItems.map((item) => {
                   const isExpanded = expandedId === item.id;
                   const config = typeConfig[item.type];
                   const positions = linePositions.get(item.id);
@@ -504,7 +532,7 @@ export default function CVPage() {
               
               {/* Cards */}
               <div className="space-y-4">
-              {filteredItems.map((item) => {
+              {filteredCardItems.map((item) => {
                 const config = typeConfig[item.type];
                 const isExpanded = expandedId === item.id;
                 
