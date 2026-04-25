@@ -17,13 +17,14 @@ export function RepoGrid({ items }: { items: RepoItem[] }) {
             key={item.id}
             className="group relative aspect-square overflow-hidden rounded-2xl border border-border/50 bg-secondary/40 p-3 transition-all duration-300 ease-out sm:p-4 md:hover:-translate-y-1 md:hover:border-primary/40 md:hover:bg-secondary/60 md:hover:shadow-[0_22px_55px_-26px_rgba(0,0,0,0.6)]"
           >
-            <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-xl bg-background/35">
+            <div className="relative flex h-full w-full flex-col md:block">
+              <div className="relative min-h-0 flex-1 overflow-hidden rounded-xl bg-background/35 md:flex md:h-full md:items-center md:justify-center">
               {hasImage ? (
                 <Image
                   src={item.image}
                   alt={item.alt || item.title || "Repo item preview"}
                   fill
-                  className="object-contain px-3 pb-28 pt-3 transition-transform duration-500 ease-out sm:px-4 sm:pb-32 sm:pt-4 md:p-4 md:group-hover:scale-[1.04]"
+                  className="object-contain p-3 transition-transform duration-500 ease-out sm:p-4 md:p-4 md:group-hover:scale-[1.04]"
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center px-4 text-center text-xs leading-relaxed text-muted-foreground sm:px-6 sm:text-sm">
@@ -31,9 +32,33 @@ export function RepoGrid({ items }: { items: RepoItem[] }) {
                 </div>
               )}
 
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/85 via-background/35 to-transparent opacity-100 transition-opacity duration-300 md:opacity-0 md:group-hover:opacity-100" />
+                <div className="pointer-events-none absolute inset-0 hidden bg-gradient-to-t from-background/85 via-background/35 to-transparent opacity-100 transition-opacity duration-300 md:block md:opacity-0 md:group-hover:opacity-100" />
+              </div>
 
-              <div className="absolute inset-x-3 bottom-3 flex translate-y-0 flex-col gap-2 border-t border-border/40 px-3 pb-3 pt-2.5 opacity-100 transition-all duration-300 sm:inset-x-4 sm:bottom-4 sm:gap-2.5 sm:px-4 sm:pb-4 sm:pt-3 md:inset-x-0 md:bottom-0 md:translate-y-4 md:border-t-0 md:px-4 md:pb-4 md:pt-8 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100">
+              <div className="mt-3 flex flex-col gap-2 px-1 pb-1 md:hidden">
+                <div>
+                  <h3 className="line-clamp-2 text-xs font-semibold leading-tight tracking-tight text-foreground sm:text-sm">
+                    {item.title || "Untitled repo item"}
+                  </h3>
+                </div>
+                {hasDownload ? (
+                  <Link
+                    href={item.downloadPath}
+                    download
+                    className="inline-flex w-fit items-center gap-1.5 self-start rounded-full bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-sm transition-transform duration-200 hover:scale-[1.02] sm:gap-2 sm:px-4 sm:py-2 sm:text-sm"
+                  >
+                    <Download className="size-3.5 sm:size-4" />
+                    {item.downloadLabel || "Download"}
+                  </Link>
+                ) : (
+                  <span className="inline-flex w-fit items-center gap-1.5 self-start rounded-full bg-muted px-3 py-1.5 text-xs font-medium text-muted-foreground sm:gap-2 sm:px-4 sm:py-2 sm:text-sm">
+                    <Download className="size-3.5 sm:size-4" />
+                    No file yet
+                  </span>
+                )}
+              </div>
+
+              <div className="absolute inset-x-0 bottom-0 hidden translate-y-4 flex-col gap-2 px-4 pb-4 pt-8 opacity-0 transition-all duration-300 md:flex md:group-hover:translate-y-0 md:group-hover:opacity-100">
                 <div>
                   <h3 className="line-clamp-2 text-xs font-semibold leading-tight tracking-tight text-foreground sm:text-sm">
                     {item.title || "Untitled repo item"}
