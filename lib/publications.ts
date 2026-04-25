@@ -7,6 +7,7 @@ export interface Publication {
   slug: string;
   title: string;
   subtitle?: string;
+  featuredInAbout?: boolean;
   venue: string;
   type: string;
   year: string;
@@ -24,6 +25,7 @@ export const publications: Publication[] = [
     slug: "building-scalable-react-applications",
     title: "Building Scalable React Applications: Best Practices and Patterns",
     subtitle: "Component Systems and Performance Architecture",
+    featuredInAbout: true,
     venue: "Tech Conference 2024",
     type: "Conference Paper",
     year: "2024",
@@ -41,11 +43,12 @@ export const publications: Publication[] = [
         alt: "Publication detail figure for scalable React applications",
       },
     ],
-    tags: ["Conference Paper", "2024", "React", FEATURED_IN_ABOUT_TAG],
+    tags: ["Conference Paper", "2024", "React"],
   },
   {
     slug: "future-of-web-development",
     title: "The Future of Web Development: Trends and Predictions",
+    featuredInAbout: true,
     venue: "Web Dev Journal",
     type: "Journal Article",
     year: "2023",
@@ -63,11 +66,12 @@ export const publications: Publication[] = [
         alt: "Publication detail figure for future web development article",
       },
     ],
-    tags: ["Journal Article", "2023", "Web Trends", FEATURED_IN_ABOUT_TAG],
+    tags: ["Journal Article", "2023", "Web Trends"],
   },
   {
     slug: "optimizing-database-performance",
     title: "Optimizing Database Performance in Modern Web Applications",
+    featuredInAbout: true,
     venue: "Database Systems Symposium",
     type: "Conference Paper",
     year: "2023",
@@ -86,6 +90,7 @@ export const publications: Publication[] = [
   {
     slug: "accessibility-in-design-systems",
     title: "Accessibility in Design Systems: A Practical Guide",
+    featuredInAbout: true,
     venue: "UX Design Magazine",
     type: "Article",
     year: "2022",

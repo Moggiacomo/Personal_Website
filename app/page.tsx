@@ -15,7 +15,6 @@ import { AboutPublicationStack } from "@/components/about-publication-stack";
 import { PageLayout } from "@/components/page-layout";
 import { AboutScrollWords } from "@/components/about-scroll-words";
 import { useSiteContent } from "@/hooks/use-site-content";
-import { FEATURED_IN_ABOUT_TAG } from "@/lib/publications";
 import { cn } from "@/lib/utils";
 import type { ParagraphLevel, RichParagraph, SiteContent } from "@/lib/content-types";
 
@@ -105,7 +104,7 @@ export default function HomePage() {
   const aboutImageOpacity = aboutIntroCompleted ? 1 : 1 - aboutReleaseProgress * aboutReleaseProgress;
   const aboutImageY = aboutIntroCompleted ? 0 : 52 * aboutReleaseProgress;
   const featuredPublications = content.publications.flatMap((publication, index) =>
-    publication.tags.includes(FEATURED_IN_ABOUT_TAG)
+    publication.featuredInAbout
       ? [{ publication, href: `/publications#publication-${index}` }]
       : []
   );

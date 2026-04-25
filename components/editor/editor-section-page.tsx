@@ -19,7 +19,6 @@ import type {
 } from "@/lib/content-types";
 import type { Project } from "@/lib/projects";
 import type { Publication } from "@/lib/publications";
-import { FEATURED_IN_ABOUT_TAG } from "@/lib/publications";
 import { cn } from "@/lib/utils";
 
 type AuthState = "loading" | "authenticated" | "unauthenticated";
@@ -106,6 +105,7 @@ function createEmptyPublication(): Publication {
     slug: `publication-${crypto.randomUUID().slice(0, 8)}`,
     title: "",
     subtitle: "",
+    featuredInAbout: false,
     venue: "",
     type: "",
     year: "",
@@ -784,6 +784,7 @@ function PathUploadField({
   label,
   value,
   onChange,
+  onUploaded,
   folder,
   accept,
   placeholder,
@@ -792,6 +793,7 @@ function PathUploadField({
   label: string;
   value: string;
   onChange: (path: string) => void;
+  onUploaded?: (path: string) => void;
   folder: string;
   accept?: string;
   placeholder?: string;
@@ -825,7 +827,7 @@ function PathUploadField({
         throw new Error(data.error || "Upload failed");
       }
 
-      onChange(data.path);
+      (onUploaded ?? onChange)(data.path);
       setUploadResult(data.path);
       setUploadFile(null);
     } catch (error) {
@@ -1193,11 +1195,14 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
         }
         const content = (await response.json()) as SiteContent;
         if (active) {
+          draftRef.current = content;
           setDraft(content);
         }
       } catch {
         if (active) {
-          setDraft(cloneContent(baseContent));
+          const fallbackContent = cloneContent(baseContent);
+          draftRef.current = fallbackContent;
+          setDraft(fallbackContent);
         }
       }
     };
@@ -1222,10 +1227,29 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
     key: K,
     value: SiteContent[K] | ((current: SiteContent[K]) => SiteContent[K])
   ) {
-    setDraft((current) => ({
+    const current = draftRef.current;
+    const next = {
       ...current,
       [key]: typeof value === "function" ? value(current[key]) : value,
-    }));
+    };
+    draftRef.current = next;
+    setDraft(next);
+  }
+
+  function updateSectionAndAutoSave<K extends SectionKey>(
+    key: K,
+    value: SiteContent[K] | ((current: SiteContent[K]) => SiteContent[K])
+  ) {
+    const current = draftRef.current;
+    const next = {
+      ...current,
+      [key]: typeof value === "function" ? value(current[key]) : value,
+    };
+    draftRef.current = next;
+    setDraft(next);
+    queueMicrotask(() => {
+      void saveSection(key, next);
+    });
   }
 
   function toggleCard(cardKey: string) {
@@ -1235,14 +1259,17 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
     }));
   }
 
-  async function saveSection(currentSection: SectionKey) {
+  async function saveSection(
+    currentSection: SectionKey,
+    snapshot: SiteContent = draftRef.current
+  ) {
     setSaveState((current) => ({ ...current, [currentSection]: "saving" }));
 
     try {
       const response = await fetch("/api/content", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(draftRef.current),
+        body: JSON.stringify(snapshot),
       });
 
       if (response.status === 401) {
@@ -1381,6 +1408,15 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                 uploadLabel="Select icon"
                 onChange={(path) =>
                   updateSection("site", (current) => ({
+                    ...current,
+                    branding: {
+                      ...current.branding,
+                      icon: path,
+                    },
+                  }))
+                }
+                onUploaded={(path) =>
+                  updateSectionAndAutoSave("site", (current) => ({
                     ...current,
                     branding: {
                       ...current.branding,
@@ -2009,6 +2045,12 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                     backgroundImage: path,
                   }))
                 }
+                onUploaded={(path) =>
+                  updateSectionAndAutoSave("about", (current) => ({
+                    ...current,
+                    backgroundImage: path,
+                  }))
+                }
               />
             </div>
             <ParagraphListEditor
@@ -2138,6 +2180,13 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                     uploadLabel="Select image"
                     onChange={(path) =>
                       updateSection("portfolio", (current) => {
+                        const next = [...current];
+                        next[index] = { ...next[index], image: path };
+                        return next;
+                      })
+                    }
+                    onUploaded={(path) =>
+                      updateSectionAndAutoSave("portfolio", (current) => {
                         const next = [...current];
                         next[index] = { ...next[index], image: path };
                         return next;
@@ -2466,6 +2515,13 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                         return next;
                       })
                     }
+                    onUploaded={(path) =>
+                      updateSectionAndAutoSave("publications", (current) => {
+                        const next = [...current];
+                        next[index] = { ...next[index], image: path };
+                        return next;
+                      })
+                    }
                   />
                 </div>
 
@@ -2484,13 +2540,13 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                 <label className="flex items-center gap-3 rounded-xl border border-border/50 px-4 py-3">
                   <input
                     type="checkbox"
-                    checked={publication.tags.includes(FEATURED_IN_ABOUT_TAG)}
+                    checked={Boolean(publication.featuredInAbout)}
                     onChange={(event) => {
                       const next = [...draft.publications];
-                      const nextTags = event.target.checked
-                        ? Array.from(new Set([...publication.tags, FEATURED_IN_ABOUT_TAG]))
-                        : publication.tags.filter((tag) => tag !== FEATURED_IN_ABOUT_TAG);
-                      next[index] = { ...publication, tags: nextTags };
+                      next[index] = {
+                        ...publication,
+                        featuredInAbout: event.target.checked,
+                      };
                       updateSection("publications", next);
                     }}
                     className="size-4"
@@ -2581,6 +2637,12 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                 uploadLabel="Select PDF"
                 onChange={(path) =>
                   updateSection("cv", (current) => ({
+                    ...current,
+                    documentPath: path,
+                  }))
+                }
+                onUploaded={(path) =>
+                  updateSectionAndAutoSave("cv", (current) => ({
                     ...current,
                     documentPath: path,
                   }))

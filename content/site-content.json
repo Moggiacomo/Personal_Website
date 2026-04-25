@@ -224,6 +224,7 @@
     {
       "title": "Building Scalable React Applications: Best Practices and Patterns",
       "subtitle": "Component Systems and Performance Architecture",
+      "featuredInAbout": true,
       "venue": "Tech Conference 2024",
       "type": "Conference Paper",
       "year": "2024",
@@ -243,13 +244,13 @@
       "tags": [
         "Conference Paper",
         "2024",
-        "React",
-        "Featured in About"
+        "React"
       ],
       "slug": "building-scalable-react-applications"
     },
     {
       "title": "The Future of Web Development: Trends and Predictions",
+      "featuredInAbout": true,
       "venue": "Web Dev Journal",
       "type": "Journal Article",
       "year": "2023",
@@ -269,13 +270,13 @@
       "tags": [
         "Journal Article",
         "2023",
-        "Web Trends",
-        "Featured in About"
+        "Web Trends"
       ],
       "slug": "future-of-web-development"
     },
     {
       "title": "Optimizing Database Performance in Modern Web Applications",
+      "featuredInAbout": true,
       "venue": "Database Systems Symposium",
       "type": "Conference Paper",
       "year": "2023",
@@ -291,13 +292,13 @@
       "tags": [
         "Conference Paper",
         "2023",
-        "Databases",
-        "Featured in About"
+        "Databases"
       ],
       "slug": "optimizing-database-performance"
     },
     {
       "title": "Accessibility in Design Systems: A Practical Guide",
+      "featuredInAbout": true,
       "venue": "UX Design Magazine",
       "type": "Article",
       "year": "2022",
@@ -313,8 +314,7 @@
       "tags": [
         "Article",
         "2022",
-        "Accessibility",
-        "Featured in About"
+        "Accessibility"
       ],
       "slug": "accessibility-in-design-systems"
     }
@@ -648,6 +648,7 @@
         "endMonth": 7,
         "startMonth": 9
       }
-    ]
+    ],
+    "documentPath": "/uploads/documents/cv/1777135211026-cv_gm_apr2026_switzerland.pdf"
   }
 }

@@ -7,6 +7,8 @@ import { ChevronLeft, ChevronRight, Expand, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { getExternalLinkIcon, hasUsableLink } from "@/lib/external-links";
 import { cn } from "@/lib/utils";
+
+const INTERNAL_TAGS = new Set(["Featured in About"]);
 import type { Project } from "@/lib/projects";
 
 interface PortfolioCardsProps {
@@ -665,9 +667,15 @@ function TagList({
   centered?: boolean;
   className?: string;
 }) {
+  const visibleTags = tags.filter((tag) => !INTERNAL_TAGS.has(tag));
+
+  if (!visibleTags.length) {
+    return null;
+  }
+
   return (
     <div className={cn("flex flex-wrap gap-2 pt-2", centered ? "justify-center" : "justify-start", className)}>
-      {tags.map((tag) => (
+      {visibleTags.map((tag) => (
         <Badge
           key={tag}
           variant="secondary"

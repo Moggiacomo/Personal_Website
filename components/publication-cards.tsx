@@ -9,6 +9,8 @@ import { getExternalLinkIcon, hasUsableLink } from "@/lib/external-links";
 import { cn } from "@/lib/utils";
 import type { Publication } from "@/lib/publications";
 
+const INTERNAL_TAGS = new Set(["Featured in About"]);
+
 interface PublicationCardsProps {
   publications: Publication[];
   layout?: "grid" | "stack";
@@ -592,9 +594,15 @@ function PublicationTagList({
   centered?: boolean;
   className?: string;
 }) {
+  const visibleTags = tags.filter((tag) => !INTERNAL_TAGS.has(tag));
+
+  if (!visibleTags.length) {
+    return null;
+  }
+
   return (
     <div className={cn("flex flex-wrap gap-2 pt-2", centered ? "justify-center" : "justify-start", className)}>
-      {tags.map((tag) => (
+      {visibleTags.map((tag) => (
         <Badge
           key={tag}
           variant="secondary"
