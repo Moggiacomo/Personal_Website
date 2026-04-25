@@ -400,6 +400,24 @@
         "cardPosition": 1
       },
       {
+        "id": "43205103-9bd4-4798-afe3-eebc0110575d",
+        "type": "other",
+        "cardPosition": 2,
+        "period": "12/2024",
+        "startYear": 2024,
+        "endYear": 2024,
+        "title": "Cover illustration for Evolution Letters",
+        "organization": "",
+        "url": "https://academic.oup.com/evlett/issue/8/6",
+        "description": "The focus of this illustration was on the effects of anisogamy in the Darwin–Bateman paradigm",
+        "details": [
+          "Volume 8, Issue 6, December 2024"
+        ],
+        "skills": [],
+        "endMonth": 12,
+        "startMonth": 12
+      },
+      {
         "id": "2",
         "type": "work",
         "period": "07/2023 - 03/2024",
@@ -429,7 +447,39 @@
         ],
         "startMonth": 7,
         "endMonth": 3,
-        "cardPosition": 2
+        "cardPosition": 3
+      },
+      {
+        "id": "51c7d0d8-b508-41e6-b3f5-46881f937636",
+        "type": "other",
+        "cardPosition": 4,
+        "period": "2023",
+        "startYear": 2023,
+        "endYear": 2023,
+        "title": "Published in Nature Communications",
+        "organization": "",
+        "url": "https://www.nature.com/articles/s41467-023-38521-6",
+        "description": "\"Distinct genomic routes underlie transitions to specialised symbiotic lifestyles in deep-sea annelid worms\"",
+        "details": [],
+        "skills": [],
+        "endMonth": 5,
+        "startMonth": 5
+      },
+      {
+        "id": "5a9775d7-d389-4198-af29-03fd42e130a4",
+        "type": "other",
+        "cardPosition": 5,
+        "period": "2023",
+        "startYear": 2023,
+        "endYear": 2023,
+        "title": "Published in Nature",
+        "organization": "",
+        "url": "https://www.nature.com/articles/s41586-022-05636-7",
+        "description": "\"Annelid functional genomics reveal the origins of bilaterian life cycles\"",
+        "details": [],
+        "skills": [],
+        "startMonth": 1,
+        "endMonth": 1
       },
       {
         "id": "3",
@@ -454,7 +504,7 @@
           "AWS",
           "Python"
         ],
-        "cardPosition": 3
+        "cardPosition": 6
       },
       {
         "id": "67f05129-95a4-4ffe-acda-850469da0494",
@@ -485,7 +535,7 @@
         ],
         "startMonth": 9,
         "endMonth": 6,
-        "cardPosition": 4
+        "cardPosition": 7
       },
       {
         "id": "4",
@@ -505,7 +555,7 @@
           "Mentorship",
           "Communication"
         ],
-        "cardPosition": 5
+        "cardPosition": 8
       },
       {
         "id": "2a24c774-de3f-4b46-89df-bf601812be4d",
@@ -532,7 +582,7 @@
           "Adobe Photoshop",
           "Procreate"
         ],
-        "cardPosition": 6
+        "cardPosition": 9
       },
       {
         "id": "5",
@@ -550,7 +600,7 @@
           "Published the paper \"The Future of Origin of Life Research: Bridging Decades-Old Divisions\""
         ],
         "skills": [],
-        "cardPosition": 7,
+        "cardPosition": 10,
         "endMonth": 11,
         "startMonth": 9
       },
@@ -575,7 +625,7 @@
           "Proteomics",
           "NGS"
         ],
-        "cardPosition": 8,
+        "cardPosition": 11,
         "url": "https://www.hhu.de/en/",
         "endMonth": 9,
         "startMonth": 10
@@ -594,11 +644,10 @@
           "Grade: 110/110",
           "Thesis on chemoautotrophic symbioses in hydrothermal vents"
         ],
-        "cardPosition": 9,
+        "cardPosition": 12,
         "endMonth": 7,
         "startMonth": 9
       }
-    ],
-    "documentPath": "/uploads/documents/cv/1777133497788-cv_gm_apr2026_switzerland.pdf"
+    ]
   }
 }
