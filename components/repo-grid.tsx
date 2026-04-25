@@ -21,7 +21,7 @@ export function RepoGrid({ items }: { items: RepoItem[] }) {
                 <img
                   src={item.image}
                   alt={item.alt || item.title || "Repo item preview"}
-                  className="absolute inset-0 h-full w-full rounded-[inherit] object-contain p-3 transition-transform duration-500 ease-out sm:p-4 md:p-4 md:group-hover:scale-[1.04]"
+                  className="absolute inset-0 h-full w-full rounded-[inherit] object-contain px-3 pb-20 pt-3 transition-transform duration-500 ease-out sm:p-4 md:p-4 md:group-hover:scale-[1.04]"
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center px-4 text-center text-xs leading-relaxed text-muted-foreground sm:px-6 sm:text-sm">
@@ -29,27 +29,29 @@ export function RepoGrid({ items }: { items: RepoItem[] }) {
                 </div>
               )}
 
-              <div className="absolute inset-x-3 bottom-3 flex items-start gap-3 rounded-[inherit] px-1 opacity-100 transition-all duration-300 sm:inset-x-4 sm:bottom-4 md:inset-x-0 md:bottom-0 md:translate-y-4 md:flex-col md:gap-2 md:rounded-none md:px-4 md:pb-4 md:pt-8 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100">
-                <div className="min-w-0 flex-1 md:flex-none">
-                  <h3 className="line-clamp-2 text-xs font-semibold leading-tight tracking-tight text-foreground sm:text-sm">
-                    {item.title || "Untitled repo item"}
-                  </h3>
+              <div className="absolute inset-0 flex items-end px-3 pb-3 opacity-100 transition-all duration-300 sm:px-4 sm:pb-4 md:translate-y-4 md:flex-col md:items-start md:justify-end md:px-4 md:pb-4 md:pt-8 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100">
+                <div className="flex w-full items-start gap-3 md:flex-col md:gap-2">
+                  <div className="min-w-0 flex-1 md:flex-none">
+                    <h3 className="line-clamp-2 text-xs font-semibold leading-tight tracking-tight text-foreground sm:text-sm">
+                      {item.title || "Untitled repo item"}
+                    </h3>
+                  </div>
+                  {hasDownload ? (
+                    <Link
+                      href={item.downloadPath}
+                      download
+                      className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-full bg-primary px-2.5 py-1.5 text-[0.7rem] font-medium text-primary-foreground shadow-sm transition-transform duration-200 hover:scale-[1.02] sm:gap-2 sm:px-4 sm:py-2 sm:text-sm md:w-fit md:px-3 md:text-xs"
+                    >
+                      <Download className="size-3.5 sm:size-4" />
+                      {item.downloadLabel || "Download"}
+                    </Link>
+                  ) : (
+                    <span className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-full bg-muted px-2.5 py-1.5 text-[0.7rem] font-medium text-muted-foreground sm:gap-2 sm:px-4 sm:py-2 sm:text-sm md:w-fit md:px-3 md:text-xs">
+                      <Download className="size-3.5 sm:size-4" />
+                      No file yet
+                    </span>
+                  )}
                 </div>
-                {hasDownload ? (
-                  <Link
-                    href={item.downloadPath}
-                    download
-                    className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-full bg-primary px-2.5 py-1.5 text-[0.7rem] font-medium text-primary-foreground shadow-sm transition-transform duration-200 hover:scale-[1.02] sm:gap-2 sm:px-4 sm:py-2 sm:text-sm md:w-fit md:px-3 md:text-xs"
-                  >
-                    <Download className="size-3.5 sm:size-4" />
-                    {item.downloadLabel || "Download"}
-                  </Link>
-                ) : (
-                  <span className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-full bg-muted px-2.5 py-1.5 text-[0.7rem] font-medium text-muted-foreground sm:gap-2 sm:px-4 sm:py-2 sm:text-sm md:w-fit md:px-3 md:text-xs">
-                    <Download className="size-3.5 sm:size-4" />
-                    No file yet
-                  </span>
-                )}
               </div>
             </div>
           </article>
