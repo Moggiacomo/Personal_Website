@@ -379,10 +379,10 @@
         "url": "https://www.eawag.ch/",
         "description": "Lead the research team working on the genomics of host-bacteria interactions in the aphid-hamiltonella model.",
         "details": [
+          "Parasitoid wasps exploit many insect species as hosts by injecting their eggs inside them, allowing the developing larvae to feed on and ultimately kill their hosts. Aphids, however, have evolved a unique strategy to counter parasitoid infections through a facultative symbiosis with the bacteria Hamiltonella defensa. ",
           "NGS, Genome assembly & annotation, Comparative genomics, Symbioses, Functional enrichment",
           "Data science, Machine-Learning, Data visualisation, Scientific outreach",
-          "Developed an innovative interactive Next-based platform to visualise and better understand the biological meaning of a very large set of genomic data",
-          "Mentored junior students and collaborated with cross-functional researchers"
+          "Developed an innovative interactive Next-based platform to visualise and better understand the biological meaning of a very large set of genomic data"
         ],
         "skills": [
           "NGS",
@@ -413,7 +413,7 @@
         "title": "PostDoctoral Researcher",
         "organization": "Max Planck Institute, Bremen, Germany | Laetitia Wilkins Lab.",
         "url": "https://www.mpi-bremen.de/Max-Planck-Institut-fuer-Marine-Mikrobiologie-in-Bremen.html",
-        "description": "Researching genomic basis of symbiosis in Lucinid clams",
+        "description": "This project was focused on the genomic basis of symbioses in Lucinid clams and their impact during the evolution of this Mollusc taxa",
         "details": [
           "NGS, Genome assembly & annotation, Proteomics, Comparative genomics, Symbioses",
           "Data science, Machine-Learning, Data visualisation, Scientific outreach",
@@ -470,9 +470,24 @@
         "title": "PhD Bioinformatics",
         "organization": "Queen Mary University of London, UK | Chema Martin-Duran Lab.",
         "url": "https://www.martinduranlab.com/",
-        "description": "",
-        "details": [],
-        "skills": [],
+        "description": "This project was focused on the genomic basis of symbioses in Siboglinid worms",
+        "details": [
+          "The interactions between this family of annelid worms and bacteria allowed them to colonise extreme deep sea environments such as hydrothermal vents and whale falls",
+          "NGS, Genome assembly & annotation, Comparative genomics, Symbioses",
+          "Data science, Machine-Learning, Data visualisation, Scientific outreach",
+          "My work was published in Nature and in Nature Communications"
+        ],
+        "skills": [
+          "NGS",
+          "Data Science",
+          "Genomics",
+          "Comparative analyses",
+          "Anaconda",
+          "HPC",
+          "Bash",
+          "Python",
+          "R"
+        ],
         "startMonth": 9,
         "endMonth": 6,
         "cardPosition": 4
@@ -498,49 +513,8 @@
         "cardPosition": 5
       },
       {
-        "id": "5",
-        "type": "other",
-        "period": "2019",
-        "startYear": 2019,
-        "endYear": 2019,
-        "title": "Google Summer of Code",
-        "organization": "Open Source Organization",
-        "url": "https://summerofcode.withgoogle.com",
-        "description": "Contributed to an open-source project as part of Google Summer of Code.",
-        "details": [
-          "Developed a new feature for the project core library",
-          "Collaborated with mentors from around the world",
-          "Code merged into main branch and used by 10K+ developers"
-        ],
-        "skills": [
-          "Python",
-          "Open Source",
-          "Git"
-        ],
-        "cardPosition": 6,
-        "endMonth": 3
-      },
-      {
-        "id": "6",
-        "type": "education",
-        "period": "2014 - 2018",
-        "startYear": 2014,
-        "endYear": 2018,
-        "title": "Bachelor of Science in Software Engineering",
-        "organization": "University Name",
-        "url": "https://example.edu",
-        "description": "Foundation in computer science, software development, and engineering principles.",
-        "details": [
-          "GPA: 3.7/4.0",
-          "Dean's List for 6 semesters",
-          "Senior Project: Mobile App for Campus Navigation",
-          "Member of ACM Student Chapter"
-        ],
-        "cardPosition": 7
-      },
-      {
         "id": "2a24c774-de3f-4b46-89df-bf601812be4d",
-        "type": "work",
+        "type": "other",
         "period": "2013 - Present",
         "startYear": 2013,
         "endYear": 2026,
@@ -563,28 +537,71 @@
           "Adobe Photoshop",
           "Procreate"
         ],
-        "cardPosition": 8
+        "cardPosition": 6
+      },
+      {
+        "id": "5",
+        "type": "education",
+        "period": "2016 - 2018",
+        "startYear": 2016,
+        "endYear": 2018,
+        "title": "MSc Biology",
+        "organization": "University of Milan Bicocca, Italy",
+        "url": "https://www.unimib.it/",
+        "description": "Genetics, Molecular biology, Evolution Microbiology, Statistics",
+        "details": [
+          "Grade: 110 cum laudae/110",
+          "Thesis on the role of Iron-Sulfur protein domains in the origin of life",
+          "Published the paper \"The Future of Origin of Life Research: Bridging Decades-Old Divisions\""
+        ],
+        "skills": [],
+        "cardPosition": 7,
+        "endMonth": 11,
+        "startMonth": 9
       },
       {
         "id": "7",
-        "type": "other",
-        "period": "2017",
+        "type": "work",
+        "period": "2017 - 2018",
         "startYear": 2017,
-        "endYear": 2017,
-        "title": "Hackathon Winner",
-        "organization": "TechCrunch Disrupt",
-        "description": "Won first place at TechCrunch Disrupt Hackathon with an AI-powered accessibility tool.",
+        "endYear": 2018,
+        "title": "Bioinformatician",
+        "organization": "H. Heine University, Dusseldorf, Germany | William F. Martin Lab.",
+        "description": "This experience was funded with an ERASMUS + bursary from the European Union & University of Milan Bicocca and was part of my MSc.\n",
         "details": [
-          "Built a prototype in 24 hours with a team of 4",
-          "Presented to panel of judges including VCs and tech leaders",
-          "Featured in TechCrunch article about the event"
+          "Proteomics, Motifs reconstruction",
+          "Python based algorythm to identify and classicy Iron-Sulfur domains in a large datasets of Bacterial and Archaeal proteins",
+          "Published the paper \"The Future of Origin of Life Research: Bridging Decades-Old Divisions\""
         ],
         "skills": [
           "Python",
-          "TensorFlow",
-          "React Native"
+          "Datasets",
+          "HPC",
+          "Proteomics",
+          "NGS"
         ],
-        "cardPosition": 9
+        "cardPosition": 8,
+        "url": "https://www.hhu.de/en/",
+        "endMonth": 9,
+        "startMonth": 10
+      },
+      {
+        "id": "6",
+        "type": "education",
+        "period": "2013 - 2016",
+        "startYear": 2013,
+        "endYear": 2016,
+        "title": "BSc Biological Sciences",
+        "organization": "University of Milan Bicocca, Italy",
+        "url": "https://www.unimib.it/",
+        "description": "Chemistry, Biochemistry, Ecology, Zoology, Cytology",
+        "details": [
+          "Grade: 110/110",
+          "Thesis on chemoautotrophic symbioses in hydrothermal vents"
+        ],
+        "cardPosition": 9,
+        "endMonth": 7,
+        "startMonth": 9
       }
     ]
   }
