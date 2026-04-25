@@ -66,12 +66,7 @@
           "level": "lead"
         }
       ],
-      "cv": [
-        {
-          "text": "An interactive timeline of work, education, and selected milestones, with the latest experience surfaced first.",
-          "level": "lead"
-        }
-      ],
+      "cv": [],
       "contact": [
         {
           "text": "If you would like to collaborate, discuss an opportunity, or simply say hello, you can reach me through the links below.",
@@ -603,6 +598,7 @@
         "endMonth": 7,
         "startMonth": 9
       }
-    ]
+    ],
+    "documentPath": "/uploads/documents/cv/1777133497788-cv_gm_apr2026_switzerland.pdf"
   }
 }

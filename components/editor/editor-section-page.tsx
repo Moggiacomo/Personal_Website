@@ -1,7 +1,7 @@
 "use client";
 
 import type { FormEvent, ReactNode } from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -484,7 +484,11 @@ function FigureRowEditor({
   canMoveDown: boolean;
   onMoveUp: () => void;
   onMoveDown: () => void;
-  onUpdate: (next: { src: string; alt: string }) => void;
+  onUpdate: (
+    next:
+      | { src: string; alt: string }
+      | ((current: { src: string; alt: string }) => { src: string; alt: string })
+  ) => void;
   onRemove: () => void;
   onSelectBase: (src: string) => void;
 }) {
@@ -515,8 +519,9 @@ function FigureRowEditor({
         throw new Error(data.error || "Upload failed");
       }
 
-      onUpdate({ ...figure, src: data.path });
-      setUploadResult(data.path);
+      const uploadedPath = data.path;
+      onUpdate((current) => ({ ...current, src: uploadedPath }));
+      setUploadResult(uploadedPath);
       setUploadFile(null);
     } catch (error) {
       setUploadError(
@@ -549,13 +554,15 @@ function FigureRowEditor({
         </div>
       </div>
       <div className="grid gap-3 lg:grid-cols-[1fr_1fr_auto_auto]">
-        <Field label="Image path">
-          <Input
-            value={figure.src}
-            placeholder={`/uploads/${folder}/image.png`}
-            onChange={(event) => onUpdate({ ...figure, src: event.target.value })}
-          />
-        </Field>
+        <PathUploadField
+          label="Image path"
+          value={figure.src}
+          folder={folder}
+          accept="image/*"
+          placeholder={`/uploads/${folder}/image.png`}
+          uploadLabel="Select image"
+          onChange={(path) => onUpdate((current) => ({ ...current, src: path }))}
+        />
         <Field label="Alt text">
           <Input
             value={figure.alt}
@@ -642,7 +649,11 @@ function FigureListEditor({
   figures: Array<{ src: string; alt: string }>;
   baseImage: string;
   folder: string;
-  onChange: (next: Array<{ src: string; alt: string }>) => void;
+  onChange: (
+    next:
+      | Array<{ src: string; alt: string }>
+      | ((current: Array<{ src: string; alt: string }>) => Array<{ src: string; alt: string }>)
+  ) => void;
   onSelectBase: (src: string) => void;
 }) {
   return (
@@ -668,14 +679,17 @@ function FigureListEditor({
             baseImage={baseImage}
             canMoveUp={index > 0}
             canMoveDown={index < figures.length - 1}
-            onMoveUp={() => onChange(moveItem(figures, index, index - 1))}
-            onMoveDown={() => onChange(moveItem(figures, index, index + 1))}
+            onMoveUp={() => onChange((current) => moveItem(current, index, index - 1))}
+            onMoveDown={() => onChange((current) => moveItem(current, index, index + 1))}
             onUpdate={(nextFigure) => {
-              const next = [...figures];
-              next[index] = nextFigure;
-              onChange(next);
+              onChange((current) => {
+                const next = [...current];
+                next[index] =
+                  typeof nextFigure === "function" ? nextFigure(current[index]) : nextFigure;
+                return next;
+              });
             }}
-            onRemove={() => onChange(figures.filter((_, item) => item !== index))}
+            onRemove={() => onChange((current) => current.filter((_, item) => item !== index))}
             onSelectBase={onSelectBase}
           />
         ))}
@@ -766,6 +780,94 @@ function FileUploadField({
   );
 }
 
+function PathUploadField({
+  label,
+  value,
+  onChange,
+  folder,
+  accept,
+  placeholder,
+  uploadLabel = "Select file",
+}: {
+  label: string;
+  value: string;
+  onChange: (path: string) => void;
+  folder: string;
+  accept?: string;
+  placeholder?: string;
+  uploadLabel?: string;
+}) {
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const [uploadResult, setUploadResult] = useState("");
+
+  async function handleUpload(file: File | null) {
+    if (!file) return;
+
+    setUploadFile(file);
+    setUploading(true);
+    setUploadError("");
+    setUploadResult("");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", folder);
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = (await response.json()) as { path?: string; error?: string };
+      if (!response.ok || !data.path) {
+        throw new Error(data.error || "Upload failed");
+      }
+
+      onChange(data.path);
+      setUploadResult(data.path);
+      setUploadFile(null);
+    } catch (error) {
+      setUploadError(
+        error instanceof Error ? error.message : "Could not upload file."
+      );
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return (
+    <div className="space-y-2">
+      <Field label={label}>
+        <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
+          <Input
+            value={value}
+            placeholder={placeholder}
+            onChange={(event) => onChange(event.target.value)}
+          />
+          <label className="inline-flex cursor-pointer items-center justify-center rounded-md border border-input bg-background px-3 py-2 text-sm transition-colors hover:bg-secondary/50">
+            <input
+              key={uploadResult || uploadFile?.name || folder}
+              type="file"
+              accept={accept}
+              className="hidden"
+              onChange={(event) => void handleUpload(event.target.files?.[0] ?? null)}
+            />
+            {uploading ? "Uploading..." : uploadLabel}
+          </label>
+        </div>
+      </Field>
+      {uploadResult ? (
+        <p className="text-sm text-muted-foreground">
+          Uploaded path: <code>{uploadResult}</code>
+        </p>
+      ) : null}
+      {uploadError ? <p className="text-sm text-red-500">{uploadError}</p> : null}
+    </div>
+  );
+}
+
 function RepoEditorCard({
   item,
   index,
@@ -784,7 +886,7 @@ function RepoEditorCard({
 }: {
   item: RepoItem;
   index: number;
-  onChange: (next: RepoItem) => void;
+  onChange: (next: RepoItem | ((current: RepoItem) => RepoItem)) => void;
   onRemove: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
@@ -853,21 +955,24 @@ function RepoEditorCard({
           />
         </Field>
 
-        <Field label="Image path">
-          <Input
-            value={item.image}
-            onChange={(event) => onChange({ ...item, image: event.target.value })}
-          />
-        </Field>
+        <PathUploadField
+          label="Image path"
+          value={item.image}
+          folder={`repo/${slugify(item.title) || item.id}`}
+          accept="image/*"
+          uploadLabel="Select image"
+          onChange={(path) => onChange((current) => ({ ...current, image: path }))}
+        />
 
-        <Field label="Download file path">
-          <Input
-            value={item.downloadPath}
-            onChange={(event) =>
-              onChange({ ...item, downloadPath: event.target.value })
-            }
-          />
-        </Field>
+        <PathUploadField
+          label="Download file path"
+          value={item.downloadPath}
+          folder={`repo/${slugify(item.title) || item.id}`}
+          uploadLabel="Select file"
+          onChange={(path) =>
+            onChange((current) => ({ ...current, downloadPath: path }))
+          }
+        />
 
         <div className="grid gap-4 md:grid-cols-2">
           <Field label="Download button label">
@@ -891,11 +996,11 @@ function RepoEditorCard({
           accept="image/*"
           folder={`repo/${slugify(item.title) || item.id}`}
           onUploaded={(path) =>
-            onChange({
-              ...item,
+            onChange((current) => ({
+              ...current,
               image: path,
               downloadPath: path,
-            })
+            }))
           }
         />
 
@@ -1028,6 +1133,7 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
   const [loginError, setLoginError] = useState("");
   const [usingDefaultPassword, setUsingDefaultPassword] = useState(false);
   const [draft, setDraft] = useState<SiteContent>(() => cloneContent(baseContent));
+  const draftRef = useRef(draft);
   const [saveState, setSaveState] = useState<Record<SectionKey, SaveState>>({
     site: "idle",
     about: "idle",
@@ -1039,6 +1145,10 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
   const [collapsedCards, setCollapsedCards] = useState<Record<string, boolean>>({});
   const [draggingRepoIndex, setDraggingRepoIndex] = useState<number | null>(null);
   const [dropRepoIndex, setDropRepoIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    draftRef.current = draft;
+  }, [draft]);
 
   useEffect(() => {
     let active = true;
@@ -1108,8 +1218,14 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
     return "";
   }, [saveState, section]);
 
-  function updateSection<K extends SectionKey>(key: K, value: SiteContent[K]) {
-    setDraft((current) => ({ ...current, [key]: value }));
+  function updateSection<K extends SectionKey>(
+    key: K,
+    value: SiteContent[K] | ((current: SiteContent[K]) => SiteContent[K])
+  ) {
+    setDraft((current) => ({
+      ...current,
+      [key]: typeof value === "function" ? value(current[key]) : value,
+    }));
   }
 
   function toggleCard(cardKey: string) {
@@ -1126,7 +1242,7 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
       const response = await fetch("/api/content", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(draft),
+        body: JSON.stringify(draftRef.current),
       });
 
       if (response.status === 401) {
@@ -1256,33 +1372,21 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
         >
           <div className="space-y-6">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <Field label="Brand icon path">
-                <Input
-                  value={draft.site.branding.icon ?? ""}
-                  onChange={(event) =>
-                    updateSection("site", {
-                      ...draft.site,
-                      branding: {
-                        ...draft.site.branding,
-                        icon: event.target.value,
-                      },
-                    })
-                  }
-                  placeholder="/icon.svg"
-                />
-              </Field>
-              <FileUploadField
-                label="Upload brand icon"
-                accept="image/*"
+              <PathUploadField
+                label="Brand icon path"
+                value={draft.site.branding.icon ?? ""}
                 folder="branding"
-                onUploaded={(path) =>
-                  updateSection("site", {
-                    ...draft.site,
+                accept="image/*"
+                placeholder="/icon.svg"
+                uploadLabel="Select icon"
+                onChange={(path) =>
+                  updateSection("site", (current) => ({
+                    ...current,
                     branding: {
-                      ...draft.site.branding,
+                      ...current.branding,
                       icon: path,
                     },
-                  })
+                  }))
                 }
               />
               <Field label="Main title">
@@ -1892,27 +1996,18 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
         >
           <div className="space-y-6">
             <div className="grid gap-4 md:grid-cols-2">
-              <Field label="Background image path">
-                <Input
-                  value={draft.about.backgroundImage ?? ""}
-                  onChange={(event) =>
-                    updateSection("about", {
-                      ...draft.about,
-                      backgroundImage: event.target.value,
-                    })
-                  }
-                  placeholder="/uploads/about/background.png"
-                />
-              </Field>
-              <FileUploadField
-                label="Upload About background"
-                accept="image/*"
+              <PathUploadField
+                label="Background image path"
+                value={draft.about.backgroundImage ?? ""}
                 folder="about"
-                onUploaded={(path) =>
-                  updateSection("about", {
-                    ...draft.about,
+                accept="image/*"
+                placeholder="/uploads/about/background.png"
+                uploadLabel="Select background"
+                onChange={(path) =>
+                  updateSection("about", (current) => ({
+                    ...current,
                     backgroundImage: path,
-                  })
+                  }))
                 }
               />
             </div>
@@ -2035,16 +2130,20 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                       placeholder="Optional"
                     />
                   </Field>
-                  <Field label="Base image path">
-                    <Input
-                      value={project.image}
-                      onChange={(event) => {
-                        const next = [...draft.portfolio];
-                        next[index] = { ...project, image: event.target.value };
-                        updateSection("portfolio", next);
-                      }}
-                    />
-                  </Field>
+                  <PathUploadField
+                    label="Base image path"
+                    value={project.image}
+                    folder={`portfolio/${project.slug || slugify(project.title) || `project-${index + 1}`}`}
+                    accept="image/*"
+                    uploadLabel="Select image"
+                    onChange={(path) =>
+                      updateSection("portfolio", (current) => {
+                        const next = [...current];
+                        next[index] = { ...next[index], image: path };
+                        return next;
+                      })
+                    }
+                  />
                   <Field label="Live URL">
                     <Input
                       value={project.url}
@@ -2094,15 +2193,25 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                   baseImage={project.image}
                   figures={project.figures ?? []}
                   folder={`portfolio/${project.slug || slugify(project.title) || `project-${index + 1}`}`}
-                  onChange={(figures) => {
-                    const next = [...draft.portfolio];
-                    next[index] = { ...project, figures };
-                    updateSection("portfolio", next);
-                  }}
+                  onChange={(figures) =>
+                    updateSection("portfolio", (current) => {
+                      const next = [...current];
+                      next[index] = {
+                        ...next[index],
+                        figures:
+                          typeof figures === "function"
+                            ? figures(next[index].figures ?? [])
+                            : figures,
+                      };
+                      return next;
+                    })
+                  }
                   onSelectBase={(image) => {
-                    const next = [...draft.portfolio];
-                    next[index] = { ...project, image };
-                    updateSection("portfolio", next);
+                    updateSection("portfolio", (current) => {
+                      const next = [...current];
+                      next[index] = { ...next[index], image };
+                      return next;
+                    });
                   }}
                 />
               </CollapsibleEditorCard>
@@ -2151,11 +2260,14 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                   key={item.id}
                   item={item}
                   index={index}
-                  onChange={(nextItem) => {
-                    const next = [...draft.repo];
-                    next[index] = nextItem;
-                    updateSection("repo", next);
-                  }}
+                onChange={(nextItem) => {
+                  updateSection("repo", (current) => {
+                    const next = [...current];
+                    next[index] =
+                      typeof nextItem === "function" ? nextItem(current[index]) : nextItem;
+                    return next;
+                  });
+                }}
                   onRemove={() =>
                     updateSection(
                       "repo",
@@ -2341,16 +2453,20 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                       }}
                     />
                   </Field>
-                  <Field label="Base image path">
-                    <Input
-                      value={publication.image}
-                      onChange={(event) => {
-                        const next = [...draft.publications];
-                        next[index] = { ...publication, image: event.target.value };
-                        updateSection("publications", next);
-                      }}
-                    />
-                  </Field>
+                  <PathUploadField
+                    label="Base image path"
+                    value={publication.image}
+                    folder={`publications/${publication.slug || slugify(publication.title) || `publication-${index + 1}`}`}
+                    accept="image/*"
+                    uploadLabel="Select image"
+                    onChange={(path) =>
+                      updateSection("publications", (current) => {
+                        const next = [...current];
+                        next[index] = { ...next[index], image: path };
+                        return next;
+                      })
+                    }
+                  />
                 </div>
 
                 <Field label="Abstract">
@@ -2404,15 +2520,25 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                   baseImage={publication.image}
                   figures={publication.figures ?? []}
                   folder={`publications/${publication.slug || slugify(publication.title) || `publication-${index + 1}`}`}
-                  onChange={(figures) => {
-                    const next = [...draft.publications];
-                    next[index] = { ...publication, figures };
-                    updateSection("publications", next);
-                  }}
+                  onChange={(figures) =>
+                    updateSection("publications", (current) => {
+                      const next = [...current];
+                      next[index] = {
+                        ...next[index],
+                        figures:
+                          typeof figures === "function"
+                            ? figures(next[index].figures ?? [])
+                            : figures,
+                      };
+                      return next;
+                    })
+                  }
                   onSelectBase={(image) => {
-                    const next = [...draft.publications];
-                    next[index] = { ...publication, image };
-                    updateSection("publications", next);
+                    updateSection("publications", (current) => {
+                      const next = [...current];
+                      next[index] = { ...next[index], image };
+                      return next;
+                    });
                   }}
                 />
               </CollapsibleEditorCard>
@@ -2446,18 +2572,20 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
             />
 
             <div className="grid gap-4 md:grid-cols-2">
-              <Field label="CV document path">
-                <Input
-                  value={draft.cv.documentPath ?? ""}
-                  onChange={(event) =>
-                    updateSection("cv", {
-                      ...draft.cv,
-                      documentPath: event.target.value,
-                    })
-                  }
-                  placeholder="/uploads/documents/cv/cv.pdf"
-                />
-              </Field>
+              <PathUploadField
+                label="CV document path"
+                value={draft.cv.documentPath ?? ""}
+                folder="documents/cv"
+                accept=".pdf,application/pdf"
+                placeholder="/uploads/documents/cv/cv.pdf"
+                uploadLabel="Select PDF"
+                onChange={(path) =>
+                  updateSection("cv", (current) => ({
+                    ...current,
+                    documentPath: path,
+                  }))
+                }
+              />
               <Field label="Download button label">
                 <Input
                   value={draft.cv.documentLabel ?? ""}
@@ -2471,18 +2599,6 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                 />
               </Field>
             </div>
-
-            <FileUploadField
-              label="Upload CV file"
-              accept=".pdf,application/pdf"
-              folder="documents/cv"
-              onUploaded={(path) =>
-                updateSection("cv", {
-                  ...draft.cv,
-                  documentPath: path,
-                })
-              }
-            />
 
             <div className="flex justify-end">
               <Button
