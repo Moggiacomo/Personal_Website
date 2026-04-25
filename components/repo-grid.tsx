@@ -23,7 +23,7 @@ export function RepoGrid({ items }: { items: RepoItem[] }) {
                   src={item.image}
                   alt={item.alt || item.title || "Repo item preview"}
                   fill
-                  className="object-contain px-3 pb-24 pt-3 transition-transform duration-500 ease-out sm:px-4 sm:pb-28 sm:pt-4 md:p-4 md:group-hover:scale-[1.04]"
+                  className="object-contain px-3 pb-28 pt-3 transition-transform duration-500 ease-out sm:px-4 sm:pb-32 sm:pt-4 md:p-4 md:group-hover:scale-[1.04]"
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center px-4 text-center text-xs leading-relaxed text-muted-foreground sm:px-6 sm:text-sm">
@@ -33,7 +33,7 @@ export function RepoGrid({ items }: { items: RepoItem[] }) {
 
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/85 via-background/35 to-transparent opacity-100 transition-opacity duration-300 md:opacity-0 md:group-hover:opacity-100" />
 
-              <div className="absolute inset-x-3 bottom-3 flex translate-y-0 flex-col gap-2 px-3 pb-3 pt-3 opacity-100 transition-all duration-300 sm:inset-x-4 sm:bottom-4 sm:gap-2.5 sm:px-4 sm:pb-4 sm:pt-4 md:inset-x-0 md:bottom-0 md:translate-y-4 md:px-4 md:pb-4 md:pt-8 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100">
+              <div className="absolute inset-x-3 bottom-3 flex translate-y-0 flex-col gap-2 border-t border-border/40 px-3 pb-3 pt-2.5 opacity-100 transition-all duration-300 sm:inset-x-4 sm:bottom-4 sm:gap-2.5 sm:px-4 sm:pb-4 sm:pt-3 md:inset-x-0 md:bottom-0 md:translate-y-4 md:border-t-0 md:px-4 md:pb-4 md:pt-8 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100">
                 <div>
                   <h3 className="line-clamp-2 text-xs font-semibold leading-tight tracking-tight text-foreground sm:text-sm">
                     {item.title || "Untitled repo item"}
