@@ -16,12 +16,12 @@
       "editor": "Editor"
     },
     "social": {
-      "github": "https://github.com",
-      "linkedin": "https://linkedin.com",
-      "twitter": "https://twitter.com",
-      "instagram": "",
+      "github": "https://github.com/Moggiacomo",
+      "linkedin": "https://www.linkedin.com/in/giacomo-moggioli/",
+      "twitter": "",
+      "instagram": "https://www.instagram.com/kelp_art/",
       "youtube": "",
-      "email": "mailto:hello@example.com"
+      "email": "mailto:giacomo.moggioli@gmail.com"
     },
     "footer": {
       "copyrightName": "GiacomoMoggioli",
@@ -30,16 +30,16 @@
     "contact": {
       "sectionTitle": "Contact",
       "headline": "Let's keep in touch",
-      "description": "I'm always interested in hearing about new opportunities, collaborations, or just having a chat about technology and design. Feel free to reach out!",
+      "description": "I'm always interested in hearing about new opportunities, collaborations, commissions or just having a chat. Feel free to reach out!",
       "emailLabel": "Email",
-      "emailValue": "hello@example.com",
-      "emailHref": "mailto:hello@example.com",
+      "emailValue": "giacomo.moggioli@gmail.com",
+      "emailHref": "mailto:giacomo.moggioli@gmail.com",
       "locationLabel": "Location",
-      "locationValue": "San Francisco, CA",
+      "locationValue": "Zurich, CH / London, UK",
       "availabilityLabel": "Availability",
       "availabilityValue": "Open to opportunities",
       "primaryButtonLabel": "Get in Touch",
-      "primaryButtonHref": "mailto:hello@example.com"
+      "primaryButtonHref": "mailto:giacomo.moggioli@gmail.com"
     },
     "headers": {
       "about": "About Me",
