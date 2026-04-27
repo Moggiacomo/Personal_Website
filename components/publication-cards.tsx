@@ -138,7 +138,7 @@ export function PublicationCards({
   };
 
   return (
-    <div className={cn(isGrid ? "grid gap-6 md:grid-cols-2" : "space-y-6")}>
+    <div className={cn("publication-cards-shell", isGrid ? "grid gap-6 md:grid-cols-2" : "space-y-6")}>
       {publications.map((publication, index) => {
         const cardId = idPrefix ? `${idPrefix}-${index}` : publication.title;
         const figures = publication.figures?.length
@@ -282,10 +282,11 @@ function GridPublicationCard({
   const mediaRef = useFlipAnimation<HTMLDivElement>(isExpanded);
 
   return (
-    <div className="flex flex-col p-6">
+    <div className="publication-card-shell flex flex-col p-6">
       <div
         ref={mediaRef}
         className={cn(
+          "publication-card-media",
           "relative overflow-hidden rounded-2xl shadow-none transition-[opacity,border-radius] duration-[1100ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
           isExpanded
             ? "order-2 mt-3 mx-auto aspect-[16/10] w-full max-w-[64%] bg-transparent"
@@ -316,7 +317,7 @@ function GridPublicationCard({
         ) : null}
       </div>
 
-      <div className={cn("order-2 flex flex-1 flex-col", isExpanded && "order-1 text-center")}>
+      <div className={cn("publication-card-copy order-2 flex flex-1 flex-col", isExpanded && "order-1 text-center")}>
         <PublicationHeader publication={publication} expanded={isExpanded} />
         <div
           className={cn(
@@ -371,6 +372,7 @@ function StackPublicationCard({
   return (
     <div
       className={cn(
+        "publication-card-stack",
         "grid w-full gap-5 p-6 transition-[grid-template-columns] duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
         isExpanded ? "grid-cols-1 min-h-full" : "grid-cols-1 md:grid-cols-[16rem_minmax(0,1fr)]"
       )}
@@ -378,6 +380,7 @@ function StackPublicationCard({
       <div
         ref={mediaRef}
         className={cn(
+          "publication-card-media",
           "relative overflow-hidden rounded-xl transition-[border-radius,box-shadow,width] duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
           isExpanded
             ? "order-2 mx-auto aspect-[16/10] w-full max-w-[64%] rounded-[24px] bg-transparent"
@@ -408,7 +411,7 @@ function StackPublicationCard({
         ) : null}
       </div>
 
-      <div className={cn("space-y-2", isExpanded ? "order-1 text-center" : "order-2")}>
+      <div className={cn("publication-card-copy space-y-2", isExpanded ? "order-1 text-center" : "order-2")}>
         <PublicationHeader publication={publication} expanded={isExpanded} />
       </div>
 
@@ -544,7 +547,7 @@ function PublicationHeader({
       <div className={cn(expanded && "text-center")}>
         <h3
           className={cn(
-            "font-medium text-foreground transition-colors group-hover:text-primary group-focus-within:text-primary",
+            "publication-card-title font-medium text-foreground transition-colors group-hover:text-primary group-focus-within:text-primary",
             expanded ? "text-center text-lg font-semibold tracking-tight md:text-2xl" : "text-xl md:text-2xl"
           )}
         >

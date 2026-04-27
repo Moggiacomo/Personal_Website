@@ -141,7 +141,7 @@ export function PortfolioCards({
   };
 
   return (
-    <div className={cn(isGrid ? "grid gap-6 md:grid-cols-2" : "space-y-6")}>
+    <div className={cn("project-cards-shell", isGrid ? "grid gap-6 md:grid-cols-2" : "space-y-6")}>
       {projects.map((project, index) => {
         const cardId = idPrefix ? `${idPrefix}-${index}` : project.title;
         const figures = project.figures?.length
@@ -285,10 +285,11 @@ function GridProjectCard({
   const mediaRef = useFlipAnimation<HTMLDivElement>(isExpanded);
 
   return (
-    <div className="flex flex-col p-6">
+    <div className="project-card-shell flex flex-col p-6">
       <div
         ref={mediaRef}
         className={cn(
+          "project-card-media",
           "relative overflow-hidden rounded-2xl shadow-none transition-[opacity,border-radius] duration-[1100ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
           isExpanded
             ? "order-2 mt-3 mx-auto aspect-[16/10] w-full max-w-[64%] bg-transparent"
@@ -319,7 +320,7 @@ function GridProjectCard({
         ) : null}
       </div>
 
-      <div className={cn("order-2 flex flex-1 flex-col", isExpanded && "order-1 text-center")}>
+      <div className={cn("project-card-copy order-2 flex flex-1 flex-col", isExpanded && "order-1 text-center")}>
         <CardHeader
           title={project.title}
           subtitle={project.subtitle}
@@ -376,6 +377,7 @@ function StackProjectCard({
   return (
     <div
       className={cn(
+        "project-card-stack",
         "grid w-full gap-5 p-6 transition-[grid-template-columns] duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
         isExpanded ? "grid-cols-1 min-h-full" : "grid-cols-1 md:grid-cols-[16rem_minmax(0,1fr)]"
       )}
@@ -383,6 +385,7 @@ function StackProjectCard({
       <div
         ref={mediaRef}
         className={cn(
+          "project-card-media",
           "relative overflow-hidden rounded-xl transition-[border-radius,box-shadow,width] duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
           isExpanded
             ? "order-2 mx-auto aspect-[16/10] w-full max-w-[64%] rounded-[24px] bg-transparent"
@@ -413,7 +416,7 @@ function StackProjectCard({
         ) : null}
       </div>
 
-      <div className={cn("space-y-2", isExpanded ? "order-1 text-center" : "order-2")}>
+      <div className={cn("project-card-copy space-y-2", isExpanded ? "order-1 text-center" : "order-2")}>
         <CardHeader
           title={project.title}
           subtitle={project.subtitle}
@@ -608,7 +611,7 @@ function CardHeader({
       <div className={cn(expanded && "text-center")}>
         <h3
           className={cn(
-            "font-medium text-foreground transition-colors group-hover:text-primary group-focus-within:text-primary",
+            "project-card-title font-medium text-foreground transition-colors group-hover:text-primary group-focus-within:text-primary",
             expanded ? "text-center text-lg font-semibold tracking-tight md:text-2xl" : "text-xl md:text-2xl"
           )}
         >

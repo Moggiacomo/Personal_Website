@@ -97,14 +97,14 @@ export function Sidebar() {
     : null;
 
   return (
-    <aside className="relative z-20 w-full bg-background border-b border-border p-6 lg:p-8">
+    <aside className="site-header-shell relative z-20 w-full bg-background border-b border-border p-6 lg:p-8">
       <div className="max-w-full mx-auto w-full">
-        <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
+        <div className="site-header-layout flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
           {/* Name and Title */}
-          <div className="xl:flex-1">
+          <div className="site-header-branding xl:flex-1">
             <div
               className={cn(
-                "gap-4",
+                "site-branding-row gap-4",
                 isNarrowBranding ? "flex flex-col items-start" : "flex items-start"
               )}
             >
@@ -128,7 +128,7 @@ export function Sidebar() {
                   />
                 </Link>
               ) : null}
-              <div ref={brandingTextRef} className="min-w-0 py-0.5">
+              <div ref={brandingTextRef} className="site-branding-copy min-w-0 py-0.5">
                 <Link href="/">
                   <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-foreground hover:text-primary transition-colors">
                     {content.site.branding.name}
@@ -145,7 +145,7 @@ export function Sidebar() {
           </div>
 
           {/* Navigation and Social Links */}
-          <div className="flex flex-col gap-6 xl:shrink-0 xl:items-end">
+          <div className="site-header-actions flex flex-col gap-6 xl:shrink-0 xl:items-end">
             {/* Navigation */}
             <nav className="flex flex-wrap gap-4 md:gap-6 xl:justify-end">
               {navItems.map((item) => (

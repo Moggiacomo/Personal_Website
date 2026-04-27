@@ -554,7 +554,7 @@ export default function CVPage() {
               </svg>
               
               {/* Cards */}
-              <div ref={cardsStackRef} className="space-y-4">
+              <div ref={cardsStackRef} className="cv-cards-shell space-y-4">
               {filteredCardItems.map((item) => {
                 const config = typeConfig[item.type];
                 const isExpanded = expandedId === item.id;
@@ -572,7 +572,7 @@ export default function CVPage() {
                       onMouseEnter={() => setExpandedId(item.id)}
                       onMouseLeave={() => setExpandedId(null)}
                       className={cn(
-                        "rounded-lg border-2 transition-all text-black",
+                        "cv-card-shell rounded-lg border-2 transition-all text-black",
                         config.borderColor,
                         config.cardBg
                       )}

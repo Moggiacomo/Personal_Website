@@ -56,6 +56,11 @@ export function AboutScrollWords({ words }: { words: string[] }) {
 
   if (!safeWords.length) return null;
 
+  const segmentWeights = safeWords.map((_, index) =>
+    index === safeWords.length - 1 ? 3 : 1
+  );
+  const totalWeight = segmentWeights.reduce((sum, weight) => sum + weight, 0);
+
   return (
     <div ref={sectionRef} className="relative h-[520svh]">
       <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
@@ -64,8 +69,11 @@ export function AboutScrollWords({ words }: { words: string[] }) {
           style={{ perspective: "1400px", transformStyle: "preserve-3d" }}
         >
           {safeWords.map((word, index) => {
-            const segment = 1 / safeWords.length;
-            const start = index * segment;
+            const accumulatedWeight = segmentWeights
+              .slice(0, index)
+              .reduce((sum, weight) => sum + weight, 0);
+            const segment = segmentWeights[index] / totalWeight;
+            const start = accumulatedWeight / totalWeight;
             const isLastWord = index === safeWords.length - 1;
             const holdStart = start + segment * 0.2;
             const holdEnd = isLastWord

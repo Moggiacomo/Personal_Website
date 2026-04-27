@@ -21,14 +21,27 @@ import type { ParagraphLevel, RichParagraph, SiteContent } from "@/lib/content-t
 
 const chalkPalette = ["#9877a2", "#8499c1", "#d990a3", "#96c8c5", "#f2dede"];
 const ABOUT_ENTRY_WINDOW_START = 0.08;
-const ABOUT_ENTRY_WINDOW_END = 0.58;
-const ABOUT_ENTRY_DURATION = 0.16;
+const ABOUT_ENTRY_WINDOW_END = 0.52;
+const ABOUT_ENTRY_DURATION = 0.14;
 const ABOUT_REVEAL_THRESHOLD_OFFSET = 0.15;
 
+type AboutLayoutMode = "mobile" | "short" | "cinematic";
 type SkillHoverState = {
   color: string;
   pulseKey: number;
 };
+
+function getAboutLayoutMode(width: number, height: number): AboutLayoutMode {
+  if (width < 768) {
+    return "mobile";
+  }
+
+  if (width >= 1180 && height >= 820) {
+    return "cinematic";
+  }
+
+  return "short";
+}
 
 function getParagraphClass(level: ParagraphLevel = "body") {
   if (level === "lead") {
@@ -81,29 +94,33 @@ function AboutIntroParagraph({
 export default function HomePage() {
   const router = useRouter();
   const aboutIntroRef = useRef<HTMLDivElement | null>(null);
-  const aboutStickyRef = useRef<HTMLDivElement | null>(null);
-  const aboutHeightBeforeUnlockRef = useRef<number | null>(null);
+  const aboutDesktopRef = useRef<HTMLDivElement | null>(null);
+  const aboutHeightBeforeModeSwitchRef = useRef<number | null>(null);
   const [topBarHeight, setTopBarHeight] = useState(0);
   const [aboutSceneInset, setAboutSceneInset] = useState(32);
-  const [aboutReleaseProgress, setAboutReleaseProgress] = useState(0);
-  const [aboutIntroCompleted, setAboutIntroCompleted] = useState(false);
+  const [aboutLayoutMode, setAboutLayoutMode] = useState<AboutLayoutMode>("mobile");
+  const [aboutAnimationCompleted, setAboutAnimationCompleted] = useState(false);
+  const [aboutUseCompactAfterPlay, setAboutUseCompactAfterPlay] = useState(false);
   const [itemWidth, setItemWidth] = useState(260);
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
   const [skillStates, setSkillStates] = useState<Record<string, SkillHoverState>>({});
   const [revealedParagraphs, setRevealedParagraphs] = useState<boolean[]>([]);
   const { content } = useSiteContent(initialSiteContent as SiteContent);
+  const usingCinematicAbout =
+    aboutLayoutMode === "cinematic" && !aboutUseCompactAfterPlay;
   const { scrollYProgress: aboutImageProgress } = useScroll({
-    target: aboutIntroRef,
+    target: usingCinematicAbout ? aboutIntroRef : undefined,
     offset: ["start start", "end start"],
+    trackContentSize: true,
   });
   const { scrollY } = useScroll();
-  const aboutSceneHeight = aboutIntroCompleted
-    ? "auto"
-    : `${Math.max(620, 460 + content.about.paragraphs.length * 120)}svh`;
+  const aboutSceneHeight = `${Math.max(420, 280 + content.about.paragraphs.length * 84)}svh`;
   const aboutSceneTop = topBarHeight + aboutSceneInset;
-  const aboutImageOpacity = aboutIntroCompleted ? 1 : 1 - aboutReleaseProgress * aboutReleaseProgress;
-  const aboutImageY = aboutIntroCompleted ? 0 : 52 * aboutReleaseProgress;
+  const aboutFigureOffset = aboutSceneInset >= 48 ? "-3rem" : "-1.5rem";
+  const aboutFigureSize = `min(68rem, 100vw, calc(100svh - ${aboutSceneTop}px))`;
+  const aboutImageOpacity = useTransform(aboutImageProgress, [0, 0.76, 1], [1, 1, 0]);
+  const aboutImageY = useTransform(aboutImageProgress, [0, 0.76, 1], [0, 0, 36]);
   const featuredPublications = content.publications.flatMap((publication, index) =>
     publication.featuredInAbout
       ? [{ publication, href: `/publications#publication-${index}` }]
@@ -139,6 +156,7 @@ export default function HomePage() {
     const updateOffsets = () => {
       setTopBarHeight(topBar?.getBoundingClientRect().height ?? 0);
       setAboutSceneInset(window.innerWidth >= 1024 ? 48 : 32);
+      setAboutLayoutMode(getAboutLayoutMode(window.innerWidth, window.innerHeight));
     };
 
     updateOffsets();
@@ -156,37 +174,49 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    aboutHeightBeforeUnlockRef.current = null;
-    setAboutIntroCompleted(false);
+    setAboutAnimationCompleted(false);
+    setAboutUseCompactAfterPlay(false);
+    aboutHeightBeforeModeSwitchRef.current = null;
     setRevealedParagraphs((current) =>
       content.about.paragraphs.map((_, index) => current[index] ?? false)
     );
   }, [content.about.paragraphs]);
 
+  useEffect(() => {
+    if (aboutLayoutMode !== "cinematic") {
+      setAboutUseCompactAfterPlay(false);
+      aboutHeightBeforeModeSwitchRef.current = null;
+    }
+  }, [aboutLayoutMode]);
+
   useLayoutEffect(() => {
-    if (!aboutIntroCompleted) return;
+    if (!aboutUseCompactAfterPlay) return;
 
-    const previousHeight = aboutHeightBeforeUnlockRef.current;
-    const section = aboutIntroRef.current;
-    if (!previousHeight || !section) return;
+    const previousHeight = aboutHeightBeforeModeSwitchRef.current;
+    const nextHeight = aboutDesktopRef.current?.getBoundingClientRect().height;
 
-    const nextHeight = section.getBoundingClientRect().height;
+    if (!previousHeight || !nextHeight) return;
+
     const delta = previousHeight - nextHeight;
-
     if (Math.abs(delta) > 1) {
-      window.scrollTo({ top: window.scrollY - delta });
+      window.scrollTo({
+        top: Math.max(0, window.scrollY - delta),
+        behavior: "auto",
+      });
     }
 
-    aboutHeightBeforeUnlockRef.current = null;
-  }, [aboutIntroCompleted]);
+    aboutHeightBeforeModeSwitchRef.current = null;
+  }, [aboutUseCompactAfterPlay]);
 
   useMotionValueEvent(aboutImageProgress, "change", (latest) => {
+    if (!usingCinematicAbout) return;
+
     const total = content.about.paragraphs.length;
     if (!total) return;
 
-      setRevealedParagraphs((current) => {
-        let changed = false;
-        const next = content.about.paragraphs.map((_, index) => {
+    setRevealedParagraphs((current) => {
+      let changed = false;
+      const next = content.about.paragraphs.map((_, index) => {
         const span = Math.max(total - 1, 1);
         const step = (ABOUT_ENTRY_WINDOW_END - ABOUT_ENTRY_WINDOW_START) / span;
         const start = total === 1 ? 0.12 : ABOUT_ENTRY_WINDOW_START + index * step;
@@ -199,31 +229,29 @@ export default function HomePage() {
           changed = true;
         }
         return revealed;
-        });
-
-        if (next.length > 0 && next.every(Boolean) && !aboutIntroCompleted) {
-          aboutHeightBeforeUnlockRef.current =
-            aboutIntroRef.current?.getBoundingClientRect().height ?? null;
-          setAboutIntroCompleted(true);
-        }
-
-        return changed ? next : current;
       });
+
+      if (next.length > 0 && next.every(Boolean) && !aboutAnimationCompleted) {
+        setAboutAnimationCompleted(true);
+      }
+
+      return changed ? next : current;
+    });
   });
 
-  useMotionValueEvent(scrollY, "change", () => {
-    if (aboutIntroCompleted) return;
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    if (!usingCinematicAbout || !aboutAnimationCompleted || aboutUseCompactAfterPlay) {
+      return;
+    }
 
-    const stickyElement = aboutStickyRef.current;
-    if (!stickyElement) return;
+    const previous = scrollY.getPrevious();
+    if (previous == null) return;
 
-    const rect = stickyElement.getBoundingClientRect();
-    const releaseDelta = Math.max(0, aboutSceneTop - rect.top);
-    const nextProgress = Math.min(releaseDelta / 280, 1);
-
-    setAboutReleaseProgress((current) =>
-      Math.abs(current - nextProgress) > 0.001 ? nextProgress : current
-    );
+    if (latest < previous) {
+      aboutHeightBeforeModeSwitchRef.current =
+        aboutDesktopRef.current?.getBoundingClientRect().height ?? null;
+      setAboutUseCompactAfterPlay(true);
+    }
   });
 
   const handleItemClick = (_item: CoverFlowItem, index: number) => {
@@ -252,7 +280,8 @@ export default function HomePage() {
     <PageLayout>
       <section className="pt-8 pb-12 lg:pt-12 lg:pb-24 px-6 lg:px-12">
         <div className="max-w-full mx-auto w-full">
-          <div className="md:hidden">
+          {aboutLayoutMode === "mobile" ? (
+            <div>
             <h2 className="mb-8 flex items-center gap-4 text-xs uppercase tracking-widest leading-none text-muted-foreground">
               <span className="h-px w-8 bg-muted-foreground" />
               {content.site.headers.about}
@@ -277,76 +306,131 @@ export default function HomePage() {
               ))}
             </div>
           </div>
+          ) : null}
 
-          <div
-            ref={aboutIntroRef}
-            className="relative hidden md:block"
-            style={aboutIntroCompleted ? undefined : { minHeight: aboutSceneHeight }}
-          >
-            <div
-              ref={aboutStickyRef}
-              className={cn("overflow-visible", aboutIntroCompleted ? "relative" : "sticky")}
-              style={{
-                top: aboutIntroCompleted ? undefined : aboutSceneTop,
-                minHeight: `calc(100svh - ${aboutSceneTop}px)`,
-              }}
-            >
+          {aboutLayoutMode !== "mobile" ? (
+            <div ref={aboutDesktopRef}>
+            {usingCinematicAbout ? (
               <div
-                className="relative z-10 flex items-start"
+                ref={aboutIntroRef}
+                className="about-scene-shell relative"
+                style={{ minHeight: aboutSceneHeight }}
+              >
+                <div
+                  className="sticky overflow-visible"
+                  style={{
+                    top: aboutSceneTop,
+                    minHeight: `calc(100svh - ${aboutSceneTop}px)`,
+                  }}
+                >
+                  <div
+                    className="relative z-10 flex items-start"
+                    style={{
+                      minHeight: `calc(100svh - ${aboutSceneTop}px)`,
+                    }}
+                  >
+                    {content.about.backgroundImage ? (
+                    <motion.div
+                      aria-hidden="true"
+                      className="about-scene-figure pointer-events-none absolute bottom-0 z-0"
+                      style={{
+                        opacity: aboutImageOpacity,
+                        y: aboutImageY,
+                        right: aboutFigureOffset,
+                      }}
+                    >
+                      <div
+                        className="relative"
+                        style={{
+                          width: aboutFigureSize,
+                          height: aboutFigureSize,
+                        }}
+                      >
+                          <img
+                            src={content.about.backgroundImage}
+                            alt=""
+                            className="block h-full w-full object-contain object-right-bottom"
+                            style={{
+                              imageRendering: "auto",
+                            }}
+                          />
+                        </div>
+                      </motion.div>
+                    ) : null}
+
+                    <div className="about-scene-copy relative z-20 w-full">
+                      <h2 className="mb-8 flex items-center gap-4 text-xs uppercase tracking-widest leading-none text-muted-foreground">
+                        <span className="h-px w-8 bg-muted-foreground" />
+                        {content.site.headers.about}
+                      </h2>
+                      <div className="space-y-6 text-muted-foreground">
+                        {content.about.paragraphs.map((paragraph, index) => (
+                          <AboutIntroParagraph
+                            key={`about-paragraph-${index}`}
+                            paragraph={paragraph}
+                            index={index}
+                            total={content.about.paragraphs.length}
+                            progress={aboutImageProgress}
+                            revealed={revealedParagraphs[index] ?? false}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="about-scene-short relative">
+              <div
+                className="relative overflow-visible"
                 style={{
-                  minHeight: `calc(100svh - ${aboutSceneTop}px)`,
-                  paddingTop: 0,
+                  minHeight: `max(28rem, calc(100svh - ${aboutSceneTop}px))`,
                 }}
               >
                 {content.about.backgroundImage ? (
-                  <motion.div
+                  <div
                     aria-hidden="true"
-                    className="pointer-events-none absolute bottom-0 right-[-1.5rem] z-0 lg:right-[-3rem]"
-                    style={{
-                      opacity: aboutImageOpacity,
-                      y: aboutImageY,
-                    }}
+                    className="about-scene-short-figure pointer-events-none absolute bottom-0 z-0"
+                    style={{ right: aboutFigureOffset }}
                   >
                     <div
                       className="relative"
                       style={{
-                        width: `min(68rem, 100vw, calc(100svh - ${aboutSceneTop}px))`,
-                        height: `min(68rem, 100vw, calc(100svh - ${aboutSceneTop}px))`,
+                        width: aboutFigureSize,
+                        height: aboutFigureSize,
                       }}
                     >
                       <img
                         src={content.about.backgroundImage}
                         alt=""
                         className="block h-full w-full object-contain object-right-bottom"
-                        style={{
-                          imageRendering: "auto",
-                        }}
+                        style={{ imageRendering: "auto" }}
                       />
                     </div>
-                  </motion.div>
+                  </div>
                 ) : null}
 
-                <div className="relative z-20 w-full max-w-5xl pr-[0vw] md:pr-[4vw] lg:pr-[8vw]">
+                <div className="about-scene-short-copy relative z-20 w-full">
                   <h2 className="mb-8 flex items-center gap-4 text-xs uppercase tracking-widest leading-none text-muted-foreground">
                     <span className="h-px w-8 bg-muted-foreground" />
                     {content.site.headers.about}
                   </h2>
                   <div className="space-y-6 text-muted-foreground">
                     {content.about.paragraphs.map((paragraph, index) => (
-                      <AboutIntroParagraph
-                        key={`about-paragraph-${index}`}
-                        paragraph={paragraph}
-                        index={index}
-                        total={content.about.paragraphs.length}
-                        progress={aboutImageProgress}
-                        revealed={revealedParagraphs[index] ?? false}
-                      />
+                      <p
+                        key={`about-compact-${index}`}
+                        className={cn(getParagraphClass(paragraph.level))}
+                      >
+                        {paragraph.text}
+                      </p>
                     ))}
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+            )}
+            </div>
+          ) : null}
 
           <div className="mt-20">
             <AboutScrollWords words={content.about.morphWords} />

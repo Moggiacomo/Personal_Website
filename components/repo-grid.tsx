@@ -15,9 +15,9 @@ export function RepoGrid({ items }: { items: RepoItem[] }) {
         return (
           <article
             key={item.id}
-            className="group relative aspect-square overflow-hidden rounded-2xl border border-border/50 bg-secondary/40 p-3 transition-all duration-300 ease-out sm:p-4 md:hover:-translate-y-1 md:hover:border-primary/40 md:hover:bg-secondary/60 md:hover:shadow-[0_22px_55px_-26px_rgba(0,0,0,0.6)]"
+            className="repo-card-shell group relative aspect-square overflow-hidden rounded-2xl border border-border/50 bg-secondary/40 p-3 transition-all duration-300 ease-out sm:p-4 md:hover:-translate-y-1 md:hover:border-primary/40 md:hover:bg-secondary/60 md:hover:shadow-[0_22px_55px_-26px_rgba(0,0,0,0.6)]"
           >
-            <div className="relative isolate h-full w-full overflow-hidden rounded-xl bg-background/35">
+            <div className="repo-card-frame relative isolate h-full w-full overflow-hidden rounded-xl bg-background/35">
               {hasImage ? (
                 <MediaAsset
                   src={item.image}
@@ -31,8 +31,8 @@ export function RepoGrid({ items }: { items: RepoItem[] }) {
                 </div>
               )}
 
-              <div className="absolute inset-0 flex items-end px-3 pb-3 opacity-100 transition-all duration-300 sm:px-4 sm:pb-4 md:translate-y-4 md:flex-col md:items-start md:justify-end md:px-4 md:pb-4 md:pt-8 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100">
-                <div className="flex w-full items-start gap-3 md:flex-col md:gap-2">
+              <div className="repo-card-footer absolute inset-0 flex items-end px-3 pb-3 opacity-100 transition-all duration-300 sm:px-4 sm:pb-4 md:translate-y-4 md:flex-col md:items-start md:justify-end md:px-4 md:pb-4 md:pt-8 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100">
+                <div className="repo-card-footer-inner flex w-full items-start gap-3 md:flex-col md:gap-2">
                   <div className="min-w-0 flex-1 md:flex-none">
                     <h3 className="line-clamp-2 text-xs font-semibold leading-tight tracking-tight text-foreground sm:text-sm">
                       {item.title || "Untitled repo item"}
