@@ -112,33 +112,32 @@
   },
   "portfolio": [
     {
-      "title": "Analytics Dashboard",
-      "subtitle": "Data Visualization and KPI Monitoring",
-      "description": "Real-time analytics dashboard for tracking user behavior and business metrics with interactive visualizations.",
-      "image": "/uploads/portfolio/analytics-dashboard/cover.png",
+      "title": "Life cycle of D. latum",
+      "subtitle": "Scientific Illustration for a paper",
+      "description": "Life cycle of the parasitic flatworm (cestode) Diphyllobothrium latum commonly known as the fish tapeworm. The parasite requires intermediate hosts: freshwater crustaceans (first host) and freshwater fish (second host). Adult worms mature in the intestines of humans, bears, and other fish-eating animals, releasing eggs into the stool. \nPublished in ",
+      "image": "/uploads/portfolio/analytics-dashboard/1777301164387-viktor_cycle_v4.2.png",
       "figures": [
         {
-          "src": "/uploads/portfolio/analytics-dashboard/figure-1.png",
-          "alt": "Analytics Dashboard KPI overview"
+          "src": "/uploads/portfolio/analytics-dashboard/1777301164387-viktor_cycle_v4.2.png",
+          "alt": "D. latum"
         },
         {
-          "src": "/uploads/portfolio/analytics-dashboard/figure-2.png",
-          "alt": "Analytics Dashboard alternate figure two"
+          "src": "/uploads/portfolio/life-cycle-of-d-latum/1777301569185-cestoda.png",
+          "alt": "adult"
         },
         {
-          "src": "/uploads/portfolio/analytics-dashboard/figure-3.png",
-          "alt": "Analytics Dashboard alternate figure three"
+          "src": "/uploads/portfolio/life-cycle-of-d-latum/1777301609210-image00009.png",
+          "alt": "larvae"
         }
       ],
-      "url": "https://example.com",
-      "github": "https://github.com",
+      "url": "",
+      "github": "",
       "tags": [
-        "React",
-        "D3.js",
-        "Node.js",
-        "MongoDB"
+        "Scientific Illustration",
+        "Adobe Illustrator",
+        "Procreate"
       ],
-      "slug": "analytics-dashboard"
+      "slug": "life-cycle-of-d-latum"
     },
     {
       "title": "E-Commerce Platform",
@@ -523,6 +522,22 @@
         "cardPosition": 6
       },
       {
+        "id": "eacf7028-7080-405d-9ff5-b5ab97874ee4",
+        "type": "other",
+        "cardPosition": 7,
+        "period": "2021",
+        "startYear": 2021,
+        "endYear": 2021,
+        "title": "Interview SciArt Profiles",
+        "organization": "The Company of Biologists",
+        "url": "https://thenode.biologists.com/sciart-profile-giacomo-moggioli/science-art/",
+        "description": "When Art meet Science. Interview with the SciArt Profiles initiative by The Company of Biologists",
+        "details": [],
+        "skills": [],
+        "startMonth": 10,
+        "endMonth": 10
+      },
+      {
         "id": "67f05129-95a4-4ffe-acda-850469da0494",
         "type": "education",
         "period": "2019 - 2023",
@@ -551,7 +566,7 @@
         ],
         "startMonth": 9,
         "endMonth": 6,
-        "cardPosition": 7
+        "cardPosition": 8
       },
       {
         "id": "4",
@@ -571,7 +586,7 @@
           "Mentorship",
           "Communication"
         ],
-        "cardPosition": 8
+        "cardPosition": 9
       },
       {
         "id": "2a24c774-de3f-4b46-89df-bf601812be4d",
@@ -598,7 +613,7 @@
           "Adobe Photoshop",
           "Procreate"
         ],
-        "cardPosition": 9
+        "cardPosition": 10
       },
       {
         "id": "5",
@@ -616,7 +631,7 @@
           "Published the paper \"The Future of Origin of Life Research: Bridging Decades-Old Divisions\""
         ],
         "skills": [],
-        "cardPosition": 10,
+        "cardPosition": 11,
         "endMonth": 11,
         "startMonth": 9
       },
@@ -641,7 +656,7 @@
           "Proteomics",
           "NGS"
         ],
-        "cardPosition": 11,
+        "cardPosition": 12,
         "url": "https://www.hhu.de/en/",
         "endMonth": 9,
         "startMonth": 10
@@ -660,11 +675,10 @@
           "Grade: 110/110",
           "Thesis on chemoautotrophic symbioses in hydrothermal vents"
         ],
-        "cardPosition": 12,
+        "cardPosition": 13,
         "endMonth": 7,
         "startMonth": 9
       }
-    ],
-    "documentPath": "/uploads/documents/cv/1777135211026-cv_gm_apr2026_switzerland.pdf"
+    ]
   }
 }
