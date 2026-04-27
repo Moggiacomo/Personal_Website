@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Expand, X } from "lucide-react";
+import { MediaAsset } from "@/components/media-asset";
 import { Badge } from "@/components/ui/badge";
 import { getExternalLinkIcon, hasUsableLink } from "@/lib/external-links";
 import { cn } from "@/lib/utils";
@@ -295,7 +295,7 @@ function GridProjectCard({
             : "order-1 -mx-6 -mt-6 mb-6 aspect-square rounded-none bg-muted/20"
         )}
       >
-        <Image
+        <MediaAsset
           src={isExpanded ? (figures[activeFigure]?.src ?? project.image) : project.image}
           alt={isExpanded ? (figures[activeFigure]?.alt ?? project.title) : project.title}
           fill
@@ -389,7 +389,7 @@ function StackProjectCard({
             : "order-1 aspect-square md:row-span-2 bg-muted/20"
         )}
       >
-        <Image
+        <MediaAsset
           src={isExpanded ? (figures[activeFigure]?.src ?? project.image) : project.image}
           alt={isExpanded ? (figures[activeFigure]?.alt ?? project.title) : project.title}
           fill
@@ -492,7 +492,7 @@ function FullscreenFigureViewer({
           <ChevronLeft className="size-5" />
         </button>
         <div className="relative flex-1 self-stretch overflow-hidden rounded-2xl bg-background/30">
-          <Image
+          <MediaAsset
             src={figures[activeIndex]?.src ?? figures[0]?.src ?? ""}
             alt={figures[activeIndex]?.alt ?? title}
             fill
@@ -526,7 +526,7 @@ function FullscreenFigureViewer({
             aria-pressed={index === activeIndex}
           >
             <div className="relative h-full w-full overflow-hidden rounded-lg">
-              <Image src={figure.src} alt={figure.alt} fill className="object-contain" />
+              <MediaAsset src={figure.src} alt={figure.alt} fill className="object-contain" />
             </div>
           </button>
         ))}
@@ -742,7 +742,7 @@ function ProjectFigureGallery({
                 aria-pressed={isActive}
               >
                 <div className="relative h-full w-full overflow-hidden rounded-xl">
-                  <Image
+                  <MediaAsset
                     src={figure.src}
                     alt={figure.alt}
                     fill

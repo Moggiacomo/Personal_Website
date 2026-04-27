@@ -2,10 +2,10 @@
 
 import type { FormEvent, ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import initialSiteContent from "@/content/site-content.json";
+import { MediaAsset } from "@/components/media-asset";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,6 +17,7 @@ import type {
   SiteContent,
   TimelineItem,
 } from "@/lib/content-types";
+import { FIGURE_FILE_ACCEPT } from "@/lib/media";
 import type { Project } from "@/lib/projects";
 import type { Publication } from "@/lib/publications";
 import { cn } from "@/lib/utils";
@@ -453,7 +454,7 @@ function BaseFigurePreview({
       )}
     >
       {src ? (
-        <Image src={src} alt={alt} fill className="object-contain p-1.5" />
+        <MediaAsset src={src} alt={alt} fill className="object-contain p-1.5" />
       ) : (
         <div className="flex h-full items-center justify-center px-2 text-center text-[10px] text-muted-foreground">
           No image
@@ -540,7 +541,7 @@ function FigureRowEditor({
       <div className="flex justify-start">
         <div className="relative flex h-28 w-28 items-center justify-center overflow-hidden rounded-xl border border-border/50 bg-secondary/30">
           {figure.src ? (
-            <Image
+            <MediaAsset
               src={figure.src}
               alt={figure.alt || `Figure ${index + 1} preview`}
               fill
@@ -558,9 +559,9 @@ function FigureRowEditor({
           label="Image path"
           value={figure.src}
           folder={folder}
-          accept="image/*"
-          placeholder={`/uploads/${folder}/image.png`}
-          uploadLabel="Select image"
+          accept={FIGURE_FILE_ACCEPT}
+          placeholder={`/uploads/${folder}/figure.pdf`}
+          uploadLabel="Select figure file"
           onChange={(path) => onUpdate((current) => ({ ...current, src: path }))}
         />
         <Field label="Alt text">
@@ -609,11 +610,11 @@ function FigureRowEditor({
       </div>
 
       <div className="grid gap-3 lg:grid-cols-[1fr_auto]">
-        <Field label="Upload image for this figure">
+        <Field label="Upload figure file">
           <Input
             key={uploadResult || `${folder}-${index}`}
             type="file"
-            accept="image/*"
+            accept={FIGURE_FILE_ACCEPT}
             onChange={(event) => setUploadFile(event.target.files?.[0] ?? null)}
           />
         </Field>
@@ -624,7 +625,7 @@ function FigureRowEditor({
             onClick={handleUpload}
             disabled={!uploadFile || uploading}
           >
-            {uploading ? "Uploading..." : "Upload to figure"}
+            {uploading ? "Uploading..." : "Upload figure file"}
           </Button>
         </div>
       </div>
@@ -936,7 +937,7 @@ function RepoEditorCard({
 
       <div className="relative mb-4 aspect-square overflow-hidden rounded-xl border border-border/50 bg-secondary/30">
         {item.image ? (
-          <Image
+          <MediaAsset
             src={item.image}
             alt={item.alt || item.title || `Repo item ${index + 1}`}
             fill
@@ -944,7 +945,7 @@ function RepoEditorCard({
           />
         ) : (
           <div className="flex h-full items-center justify-center px-6 text-center text-sm text-muted-foreground">
-            Upload an image to preview this repo card
+            Upload a figure file to preview this repo card
           </div>
         )}
       </div>
@@ -961,8 +962,8 @@ function RepoEditorCard({
           label="Image path"
           value={item.image}
           folder={`repo/${slugify(item.title) || item.id}`}
-          accept="image/*"
-          uploadLabel="Select image"
+          accept={FIGURE_FILE_ACCEPT}
+          uploadLabel="Select figure file"
           onChange={(path) => onChange((current) => ({ ...current, image: path }))}
         />
 
@@ -970,6 +971,7 @@ function RepoEditorCard({
           label="Download file path"
           value={item.downloadPath}
           folder={`repo/${slugify(item.title) || item.id}`}
+          accept={FIGURE_FILE_ACCEPT}
           uploadLabel="Select file"
           onChange={(path) =>
             onChange((current) => ({ ...current, downloadPath: path }))
@@ -994,8 +996,8 @@ function RepoEditorCard({
         </div>
 
         <FileUploadField
-          label="Upload downloadable image"
-          accept="image/*"
+          label="Upload preview/download file"
+          accept={FIGURE_FILE_ACCEPT}
           folder={`repo/${slugify(item.title) || item.id}`}
           onUploaded={(path) =>
             onChange((current) => ({
@@ -2176,8 +2178,8 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                     label="Base image path"
                     value={project.image}
                     folder={`portfolio/${project.slug || slugify(project.title) || `project-${index + 1}`}`}
-                    accept="image/*"
-                    uploadLabel="Select image"
+                    accept={FIGURE_FILE_ACCEPT}
+                    uploadLabel="Select figure file"
                     onChange={(path) =>
                       updateSection("portfolio", (current) => {
                         const next = [...current];
@@ -2506,8 +2508,8 @@ export function EditorSectionPage({ section }: { section: EditorView }) {
                     label="Base image path"
                     value={publication.image}
                     folder={`publications/${publication.slug || slugify(publication.title) || `publication-${index + 1}`}`}
-                    accept="image/*"
-                    uploadLabel="Select image"
+                    accept={FIGURE_FILE_ACCEPT}
+                    uploadLabel="Select figure file"
                     onChange={(path) =>
                       updateSection("publications", (current) => {
                         const next = [...current];

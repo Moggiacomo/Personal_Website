@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Download } from "lucide-react";
+import { MediaAsset } from "@/components/media-asset";
 import type { RepoItem } from "@/lib/content-types";
 
 export function RepoGrid({ items }: { items: RepoItem[] }) {
@@ -18,10 +19,11 @@ export function RepoGrid({ items }: { items: RepoItem[] }) {
           >
             <div className="relative isolate h-full w-full overflow-hidden rounded-xl bg-background/35">
               {hasImage ? (
-                <img
+                <MediaAsset
                   src={item.image}
                   alt={item.alt || item.title || "Repo item preview"}
-                  className="absolute inset-0 h-full w-full rounded-[inherit] object-contain px-3 pb-20 pt-3 transition-transform duration-500 ease-out sm:p-4 md:p-4 md:group-hover:scale-[1.04]"
+                  fill
+                  className="rounded-[inherit] object-contain px-3 pb-20 pt-3 transition-transform duration-500 ease-out sm:p-4 md:p-4 md:group-hover:scale-[1.04]"
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center px-4 text-center text-xs leading-relaxed text-muted-foreground sm:px-6 sm:text-sm">

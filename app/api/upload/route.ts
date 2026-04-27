@@ -9,6 +9,10 @@ function sanitizeFilename(filename: string) {
   return filename.replace(/[^a-zA-Z0-9._-]/g, "-").toLowerCase();
 }
 
+function truncateName(filename: string, maxLength = 48) {
+  return filename.length > maxLength ? filename.slice(0, maxLength) : filename;
+}
+
 function sanitizeFolderPath(folder: string) {
   return folder
     .split(/[\\/]+/)
@@ -33,7 +37,7 @@ export async function POST(request: Request) {
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   const ext = path.extname(file.name) || ".png";
-  const safeName = sanitizeFilename(path.basename(file.name, ext));
+  const safeName = truncateName(sanitizeFilename(path.basename(file.name, ext)));
   const safeFolder = sanitizeFolderPath(folder) || "misc";
   const relativeDir = path.join("uploads", safeFolder);
   const absoluteDir = path.join(process.cwd(), "public", relativeDir);

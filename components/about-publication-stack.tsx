@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ExternalLink, FileText } from "lucide-react";
 import StackingCards, {
   StackingCardItem,
 } from "@/components/fancy/blocks/stacking-cards";
+import { MediaAsset } from "@/components/media-asset";
 import type { Publication } from "@/lib/publications";
 import { cn } from "@/lib/utils";
 
@@ -95,7 +95,7 @@ export function AboutPublicationStack({
                 <div className="relative h-full min-h-[22rem] w-full">
                   <div className="absolute inset-0 flex items-center justify-center p-4 md:p-3">
                     <div className="relative aspect-[1/1.4142] w-[min(100%,24rem)]">
-                      <Image
+                      <MediaAsset
                         src={publication.image}
                         alt={publication.title}
                         fill
@@ -135,7 +135,7 @@ export function AboutPublicationStack({
                     ) : null}
                   </div>
 
-                  <p className="max-w-[58ch] text-sm leading-relaxed text-black/75 md:text-base">
+                  <p className="text-sm leading-relaxed text-black/75 md:text-base">
                     {publication.abstract}
                   </p>
                 </div>

@@ -15,6 +15,7 @@ import { AboutPublicationStack } from "@/components/about-publication-stack";
 import { PageLayout } from "@/components/page-layout";
 import { AboutScrollWords } from "@/components/about-scroll-words";
 import { useSiteContent } from "@/hooks/use-site-content";
+import { getMediaPreviewSrc } from "@/lib/media";
 import { cn } from "@/lib/utils";
 import type { ParagraphLevel, RichParagraph, SiteContent } from "@/lib/content-types";
 
@@ -111,7 +112,7 @@ export default function HomePage() {
 
   const coverFlowItems: CoverFlowItem[] = content.portfolio.map((project, index) => ({
     id: index,
-    image: project.image,
+    image: getMediaPreviewSrc(project.image, project.title),
     title: project.title,
   }));
 

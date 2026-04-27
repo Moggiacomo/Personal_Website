@@ -222,101 +222,117 @@
   ],
   "publications": [
     {
-      "title": "Building Scalable React Applications: Best Practices and Patterns",
-      "subtitle": "Component Systems and Performance Architecture",
+      "title": "Distinct genomic routes underlie transitions to specialised symbiotic lifestyles in deep-sea annelid worms",
+      "subtitle": "",
       "featuredInAbout": true,
-      "venue": "Tech Conference 2024",
-      "type": "Conference Paper",
-      "year": "2024",
-      "url": "https://example.com/paper1",
-      "abstract": "An exploration of modern patterns for building maintainable React applications at scale, including state management, component architecture, and performance optimization.",
-      "image": "/uploads/publications/building-scalable-react-applications/cover.svg",
+      "venue": "Nature Communications",
+      "type": "Journal Paper",
+      "year": "2023",
+      "url": "https://www.nature.com/articles/s41467-023-38521-6",
+      "abstract": "Bacterial symbioses allow annelids to colonise extreme ecological niches, such as hydrothermal vents and whale falls. Yet, the genetic principles sustaining these symbioses remain unclear. Here, we show that different genomic adaptations underpin the symbioses of phylogenetically related annelids with distinct nutritional strategies. Genome compaction and extensive gene losses distinguish the heterotrophic symbiosis of the bone-eating worm Osedax frankpressi from the chemoautotrophic symbiosis of deep-sea Vestimentifera. Osedax’s endosymbionts complement many of the host’s metabolic deficiencies, including the loss of pathways to recycle nitrogen and synthesise some amino acids. Osedax’s endosymbionts possess the glyoxylate cycle, which could allow more efficient catabolism of bone-derived nutrients and the production of carbohydrates from fatty acids. Unlike in most Vestimentifera, innate immunity genes are reduced in O. frankpressi, which, however, has an expansion of matrix metalloproteases to digest collagen. Our study supports that distinct nutritional interactions influence host genome evolution differently in highly specialised symbioses.",
+      "image": "/uploads/publications/distinct-genomic-routes-underlie-transitions-to-specialised-symbiotic-lifestyles-in-deep-sea-annelid-worms/1777283721711-distinct-genomic-routes-underlie-transitions-to-specialised-symbiotic-lifestyles-in-deep-sea-annelid-worms-_-enhanced-reader-1_page-0001.jpg",
       "figures": [
         {
-          "src": "/uploads/publications/building-scalable-react-applications/figure-1.svg",
-          "alt": "Publication cover preview for scalable React applications"
+          "src": "/uploads/publications/distinct-genomic-routes-underlie-transitions-to-specialised-symbiotic-lifestyles-in-deep-sea-annelid-worms/1777283721711-distinct-genomic-routes-underlie-transitions-to-specialised-symbiotic-lifestyles-in-deep-sea-annelid-worms-_-enhanced-reader-1_page-0001.jpg",
+          "alt": "Cover"
         },
         {
-          "src": "/uploads/publications/building-scalable-react-applications/figure-2.png",
-          "alt": "Publication detail figure for scalable React applications"
+          "src": "/uploads/publications/distinct-genomic-routes-underlie-transitions-to-specialised-symbiotic-lifestyles-in-deep-sea-annelid-worms/1777282820145-genomes.png",
+          "alt": "The genomic basis and evolution of different nutritional symbioses in Siboglinidae"
+        },
+        {
+          "src": "/uploads/publications/distinct-genomic-routes-underlie-transitions-to-specialised-symbiotic-lifestyles-in-deep-sea-annelid-worms/1777282941159-metabolism.png",
+          "alt": "Osedax’s metabolic adaptations to bone digestion"
+        },
+        {
+          "src": "/uploads/publications/distinct-genomic-routes-underlie-transitions-to-specialised-symbiotic-lifestyles-in-deep-sea-annelid-worms/1777282993300-collagensases.png",
+          "alt": "Matrix metalloproteases experienced lineage-specific expansions in O.frankpressi"
         }
       ],
       "tags": [
-        "Conference Paper",
-        "2024",
-        "React"
+        "Evolutionary Biology",
+        "Genomics",
+        "Symbioses"
       ],
-      "slug": "building-scalable-react-applications"
+      "slug": "distinct-genomic-routes-underlie-transitions-to-specialised-symbiotic-lifestyles-in-deep-sea-annelid-worms"
     },
     {
-      "title": "The Future of Web Development: Trends and Predictions",
+      "title": "Annelid functional genomics reveal the origins of bilaterian life cycles",
       "featuredInAbout": true,
-      "venue": "Web Dev Journal",
+      "venue": "Nature",
       "type": "Journal Article",
       "year": "2023",
-      "url": "https://example.com/paper2",
-      "abstract": "A comprehensive analysis of emerging web technologies and their potential impact on how we build digital experiences in the coming years.",
-      "image": "/uploads/publications/future-of-web-development/cover.svg",
+      "url": "https://www.nature.com/articles/s41586-022-05636-7",
+      "abstract": "Indirect development with an intermediate larva exists in all major animal lineages, which makes larvae central to most scenarios of animal evolution. Yet how larvae evolved remains disputed. Here we show that temporal shifts (that is, heterochronies) in trunk formation underpin the diversification of larvae and bilaterian life cycles. We performed chromosome-scale genome sequencing in the annelid Owenia fusiformis with transcriptomic and epigenomic profiling during the life cycles of this and two other annelids. We found that trunk development is deferred to pre-metamorphic stages in the feeding larva of O. fusiformis but starts after gastrulation in the non-feeding larva with gradual metamorphosis of Capitella teleta and the direct developing embryo of Dimorphilus gyrociliatus. Accordingly, the embryos of O. fusiformis develop first into an enlarged anterior domain that forms larval tissues and the adult head. Notably, this also occurs in the so-called ‘head larvae’ of other bilaterians, with which the O. fusiformis larva shows extensive transcriptomic similarities. Together, our findings suggest that the temporal decoupling of head and trunk formation, as maximally observed in head larvae, facilitated larval evolution in Bilateria. This diverges from prevailing scenarios that propose either co-option or innovation of gene regulatory programmes to explain larva and adult origins.",
+      "image": "/uploads/publications/future-of-web-development/1777284052692-s41586-022-05636-7-1_page-0001.jpg",
       "figures": [
         {
-          "src": "/uploads/publications/future-of-web-development/figure-1.svg",
-          "alt": "Publication cover preview for future web development article"
+          "src": "/uploads/publications/future-of-web-development/1777284052692-s41586-022-05636-7-1_page-0001.jpg",
+          "alt": "Cover"
         },
         {
-          "src": "/uploads/publications/future-of-web-development/figure-2.png",
-          "alt": "Publication detail figure for future web development article"
+          "src": "/uploads/publications/future-of-web-development/1777284045225-owenia.png",
+          "alt": "O. fusiformis has a distinct larva and a conservatively evolving genome.  Heterochronies in gene regulatory programmes underpin annelid life cycle diversification."
         }
       ],
       "tags": [
-        "Journal Article",
-        "2023",
-        "Web Trends"
+        "Evolutionary Biology",
+        "Genomics",
+        "EvoDevo"
       ],
-      "slug": "future-of-web-development"
+      "slug": "annelid-functional-genomics-reveal-the-origins-of-bilaterian-life-cycles"
     },
     {
-      "title": "Optimizing Database Performance in Modern Web Applications",
+      "title": "A dynamic epibiont community associated with the bone-eating polychaete genus Osedax",
       "featuredInAbout": true,
-      "venue": "Database Systems Symposium",
-      "type": "Conference Paper",
+      "venue": "Mbio",
+      "type": "Journal Paper",
       "year": "2023",
-      "url": "https://example.com/paper3",
-      "abstract": "Techniques for improving database query performance and reducing latency in high-traffic web applications through indexing, caching, and query optimization.",
-      "image": "/uploads/publications/optimizing-database-performance/cover.svg",
+      "url": "https://journals.asm.org/doi/full/10.1128/mbio.03140-22",
+      "abstract": "Osedax, the deep-sea annelid found at sunken whalefalls, is known to host Oceanospirillales bacterial endosymbionts intracellularly in specialized roots, which help it feed exclusively on vertebrate bones. Past studies, however, have also made mention of external bacteria on their trunks. During a 14-yr study, we reveal a dynamic, yet persistent, shift of Campylobacterales integrated into the epidermis of Osedax, which change over time as the whale carcass degrades on the sea floor. The Campylobacterales associated with seven species of Osedax, which comprise 67% of the bacterial community on the trunk, appear initially dominated by the genus Arcobacter (at early time points <24 mo), the Sulfurospirillum at intermediate stages (~50 mo), and the Sulfurimonas at later stages (>140 mo) of whale carcass decomposition. Metagenome analysis of the epibiont metabolic capabilities suggests potential for a transition from heterotrophy to autotrophy and differences in their capacity to metabolize oxygen, carbon, nitrogen, and sulfur. Compared to free-living relatives, the Osedax epibiont genomes were enriched in transposable elements, implicating genetic exchange on the host surface, and contained numerous secretions systems with eukaryotic-like protein (ELP) domains, suggesting a long evolutionary history with these enigmatic, yet widely distributed deep-sea worms.",
+      "image": "/uploads/publications/a-dynamic-epibiont-community-associated-with-the-bone-eating-polychaete-genus-osedax/1777285998724-goffredi-et-al-2023-a-dynamic-epibiont-community-associated-with-the-bone-eating-polychaete-genus-osedax-1_page-0001.jpg",
       "figures": [
         {
-          "src": "/uploads/publications/optimizing-database-performance/figure-1.svg",
-          "alt": "Publication cover preview for database performance paper"
+          "src": "/uploads/publications/a-dynamic-epibiont-community-associated-with-the-bone-eating-polychaete-genus-osedax/1777285998724-goffredi-et-al-2023-a-dynamic-epibiont-community-associated-with-the-bone-eating-polychaete-genus-osedax-1_page-0001.jpg",
+          "alt": "Cover"
+        },
+        {
+          "src": "/uploads/publications/a-dynamic-epibiont-community-associated-with-the-bone-eating-polychaete-genus-osedax/1777286143229-goffredi.png",
+          "alt": "whalefalls off of northern California"
         }
       ],
       "tags": [
-        "Conference Paper",
-        "2023",
-        "Databases"
+        "Microbiology",
+        "Symbiosis",
+        "Extreme Environments"
       ],
-      "slug": "optimizing-database-performance"
+      "slug": "a-dynamic-epibiont-community-associated-with-the-bone-eating-polychaete-genus-osedax"
     },
     {
-      "title": "Accessibility in Design Systems: A Practical Guide",
+      "title": "The Future of Origin of Life Research: Bridging Decades-Old Divisions",
       "featuredInAbout": true,
-      "venue": "UX Design Magazine",
-      "type": "Article",
-      "year": "2022",
-      "url": "https://example.com/paper4",
-      "abstract": "Guidelines for integrating accessibility considerations into design system components, ensuring inclusive digital experiences for all users.",
-      "image": "/uploads/publications/accessibility-in-design-systems/cover.svg",
+      "venue": "Life",
+      "type": "Conference Paper",
+      "year": "2020",
+      "url": "https://www.mdpi.com/2075-1729/10/3/20",
+      "abstract": "Research on the origin of life is highly heterogeneous. After a peculiar historical development, it still includes strongly opposed views which potentially hinder progress. In the 1st Interdisciplinary Origin of Life Meeting, early-career researchers gathered to explore the commonalities between theories and approaches, critical divergence points, and expectations for the future. We find that even though classical approaches and theories—e.g., bottom-up and top-down, RNA world vs. metabolism-first—have been prevalent in origin of life research, they are ceasing to be mutually exclusive and they can and should feed integrating approaches. Here we focus on pressing questions and recent developments that bridge the classical disciplines and approaches, and highlight expectations for future endeavours in origin of life research.",
+      "image": "/uploads/publications/the-future-of-origin-of-life-research-bridging-decades-old-divisions/cover.jpg",
       "figures": [
         {
-          "src": "/uploads/publications/accessibility-in-design-systems/figure-1.svg",
-          "alt": "Publication cover preview for accessibility in design systems article"
+          "src": "/uploads/publications/the-future-of-origin-of-life-research-bridging-decades-old-divisions/cover.jpg",
+          "alt": "Cover"
+        },
+        {
+          "src": "/uploads/publications/the-future-of-origin-of-life-research-bridging-decades-old-divisions/1777286581468-luca.png",
+          "alt": "Current central questions in origin of life (OoL) research"
         }
       ],
       "tags": [
-        "Article",
-        "2022",
-        "Accessibility"
+        "Origin of Life",
+        "LUCA",
+        "Abiogenesis"
       ],
-      "slug": "accessibility-in-design-systems"
+      "slug": "the-future-of-origin-of-life-research-bridging-decades-old-divisions"
     }
   ],
   "repo": [

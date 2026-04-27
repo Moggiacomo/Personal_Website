@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Expand, FileText, X } from "lucide-react";
+import { MediaAsset } from "@/components/media-asset";
 import { Badge } from "@/components/ui/badge";
 import { getExternalLinkIcon, hasUsableLink } from "@/lib/external-links";
 import { cn } from "@/lib/utils";
@@ -292,7 +292,7 @@ function GridPublicationCard({
             : "order-1 -mx-6 -mt-6 mb-6 aspect-[1/1.4142] rounded-none bg-muted/20"
         )}
       >
-        <Image
+        <MediaAsset
           src={isExpanded ? (figures[activeFigure]?.src ?? publication.image) : publication.image}
           alt={isExpanded ? (figures[activeFigure]?.alt ?? publication.title) : publication.title}
           fill
@@ -384,7 +384,7 @@ function StackPublicationCard({
             : "order-1 aspect-[1/1.4142] md:row-span-2 bg-muted/20"
         )}
       >
-        <Image
+        <MediaAsset
           src={isExpanded ? (figures[activeFigure]?.src ?? publication.image) : publication.image}
           alt={isExpanded ? (figures[activeFigure]?.alt ?? publication.title) : publication.title}
           fill
@@ -481,7 +481,7 @@ function FullscreenFigureViewer({
           <ChevronLeft className="size-5" />
         </button>
         <div className="relative flex-1 self-stretch overflow-hidden rounded-2xl bg-background/30">
-          <Image
+          <MediaAsset
             src={figures[activeIndex]?.src ?? figures[0]?.src ?? ""}
             alt={figures[activeIndex]?.alt ?? title}
             fill
@@ -515,7 +515,7 @@ function FullscreenFigureViewer({
             aria-pressed={index === activeIndex}
           >
             <div className="relative h-full w-full overflow-hidden rounded-lg">
-              <Image src={figure.src} alt={figure.alt} fill className="object-contain" />
+              <MediaAsset src={figure.src} alt={figure.alt} fill className="object-contain" />
             </div>
           </button>
         ))}
@@ -556,7 +556,7 @@ function PublicationHeader({
             expanded ? "text-center md:text-base" : "md:text-base"
           )}
         >
-          {publication.venue}
+          {[publication.venue, publication.year].filter(Boolean).join(" · ")}
         </p>
       </div>
       <div
@@ -669,7 +669,7 @@ function PublicationFigureGallery({
               aria-pressed={isActive}
             >
               <div className="relative h-full w-full overflow-hidden rounded-xl">
-                <Image
+                <MediaAsset
                   src={figure.src}
                   alt={figure.alt}
                   fill
