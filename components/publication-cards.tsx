@@ -289,7 +289,7 @@ function GridPublicationCard({
           "relative overflow-hidden rounded-2xl shadow-none transition-[opacity,border-radius] duration-[1100ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
           isExpanded
             ? "order-2 mt-3 mx-auto aspect-[16/10] w-full max-w-[64%] bg-transparent"
-            : "order-1 -mx-6 -mt-6 mb-6 aspect-[1/1.4142] rounded-none bg-muted/20"
+            : "order-1 -mx-6 -mt-6 mb-6 aspect-[1/1.4142] rounded-[1.35rem] bg-muted/20"
         )}
       >
         <MediaAsset
@@ -298,7 +298,7 @@ function GridPublicationCard({
           fill
           className={cn(
             "opacity-80 transition-all duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)] group-hover:opacity-100",
-            isExpanded ? "object-contain" : "object-contain"
+            isExpanded ? "object-contain" : "object-cover object-center"
           )}
         />
         {isExpanded ? (
@@ -381,7 +381,7 @@ function StackPublicationCard({
           "relative overflow-hidden rounded-xl transition-[border-radius,box-shadow,width] duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
           isExpanded
             ? "order-2 mx-auto aspect-[16/10] w-full max-w-[64%] rounded-[24px] bg-transparent"
-            : "order-1 aspect-[1/1.4142] md:row-span-2 bg-muted/20"
+            : "order-1 aspect-[1/1.4142] rounded-[1.35rem] md:row-span-2 bg-muted/20"
         )}
       >
         <MediaAsset
@@ -390,7 +390,7 @@ function StackPublicationCard({
           fill
           className={cn(
             "opacity-80 transition-all duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)] group-hover:opacity-100",
-            isExpanded ? "object-contain" : "object-contain"
+            isExpanded ? "object-contain" : "object-cover object-center"
           )}
         />
         {isExpanded ? (
