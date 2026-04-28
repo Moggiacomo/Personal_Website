@@ -140,6 +140,54 @@
       ]
     },
     {
+      "slug": "poster-for-uk-evodevo-2025",
+      "title": "Poster for UK EvoDevo 2025",
+      "subtitle": "Conference Poster",
+      "description": "The idea for this illustration came from mixing the very British tea with concepts from developmental biology.\nThe UK EvoDevo meeting is a one-day conference that brings together the UK-based community in evolutionary developmental biology. ",
+      "image": "/uploads/portfolio/poster-for-uk-evodevo/1777383147416-ukevodevo_1.jpg",
+      "figures": [
+        {
+          "src": "/uploads/portfolio/poster-for-uk-evodevo/1777383147416-ukevodevo_1.jpg",
+          "alt": "UKEvoDevo squared"
+        },
+        {
+          "src": "/uploads/portfolio/poster-for-uk-evodevo/1777383169421-ukevodevo_2.jpg",
+          "alt": "UKEvoDevo full"
+        }
+      ],
+      "url": "https://www.seresearch.qmul.ac.uk/cefg/events/4939/uk-evodevo/",
+      "github": "",
+      "tags": [
+        "Poster",
+        "Scientific Illustration",
+        "Procreate"
+      ]
+    },
+    {
+      "slug": "poster-for-the-film-rasputin-s-shadow",
+      "title": "Poster for the film \"Rasputin's shadow\"",
+      "subtitle": "Movie Poster",
+      "description": "Poster for the film \"Rasputin's shadow\" by Pietro Francesco Pingitore. \nA hunter, a veterinarian, and a nurse gather around an operating table, performing surgery on a wild boar. Their differing notions of care intersect within an ecology shaped and exploited by human enterprise. This sensorial inquiry examines conservation practices as infrastructures that insulate domestic spaces from wildlife across the plains surrounding Piacenza. The landscapes emerge through dialogues between humans, nonhuman actors, and systems of control.\nThe movie was screened in many movie festivals around the world including Freiburger Filmforum (Germany), IAFFF – International Animal Future Film Festival (London, UK), Ethnofest – Athens Ethnographic Film Festival (Greece)",
+      "image": "/uploads/portfolio/project-f03b3e63/1777383910338-rasputin.jpg",
+      "figures": [
+        {
+          "src": "/uploads/portfolio/project-f03b3e63/1777383910338-rasputin.jpg",
+          "alt": "Rasputin squared"
+        },
+        {
+          "src": "/uploads/portfolio/poster-for-the-film-rasputin-s-shadow/1777384454762-rasputin_shadow.jpg",
+          "alt": "Rasputin full"
+        }
+      ],
+      "url": "https://www.ethnofest.gr/film/lombra-di-rasputin/",
+      "github": "",
+      "tags": [
+        "Poster",
+        "Movie",
+        "Procreate"
+      ]
+    },
+    {
       "title": "Life cycle of D. latum",
       "subtitle": "Scientific Illustration for a paper",
       "description": "Life cycle of the parasitic flatworm (cestode) Diphyllobothrium latum commonly known as the fish tapeworm. The parasite requires intermediate hosts: freshwater crustaceans (first host) and freshwater fish (second host). Adult worms mature in the intestines of humans, bears, and other fish-eating animals, releasing eggs into the stool. \nPublished in ",
@@ -206,22 +254,114 @@
     {
       "slug": "eawag-aquatic-ecology",
       "title": "EAWAG Aquatic Ecology",
-      "subtitle": "",
-      "description": "",
+      "subtitle": "Apparel Design",
+      "description": "T-shirt design for the Aquatic Ecology department at EAWAG",
       "image": "/uploads/portfolio/project-e129979c/1777379840187-acquatic_eco.jpg",
       "figures": [
         {
           "src": "/uploads/portfolio/project-e129979c/1777379840187-acquatic_eco.jpg",
-          "alt": "Acquatic Eco background"
+          "alt": "Aquatic Eco background"
         },
         {
           "src": "/uploads/portfolio/project-e129979c/1777379876517-aeco_artwork_final.png",
+          "alt": "Aquatic Eco"
+        }
+      ],
+      "url": "https://www.eawag.ch/en/department/eco/",
+      "github": "",
+      "tags": [
+        "Design",
+        "Procreate"
+      ]
+    },
+    {
+      "slug": "wormshop-logo",
+      "title": "Wormshop Logo",
+      "subtitle": "Conference Logo",
+      "description": "Logo for the conference \"Symposium on triploidy in parasitic worms 2026\". \nThe worm in the logo is assembling the third pair of chromosomes to symbolise the triploidy documented in some species of parasitic worms.",
+      "image": "/uploads/portfolio/project-7d40cb86/1777385149661-wormshop.jpg",
+      "figures": [
+        {
+          "src": "/uploads/portfolio/project-7d40cb86/1777385149661-wormshop.jpg",
+          "alt": "Wormshop"
+        }
+      ],
+      "url": "https://www.pathogenevolution.ch/symposium-on-triploidy",
+      "github": "",
+      "tags": [
+        "Logo",
+        "Conference",
+        "Procreate"
+      ]
+    },
+    {
+      "slug": "insects-illustrations",
+      "title": "Insects Illustrations",
+      "subtitle": "Scientific Illustration for PhD thesis",
+      "description": "Collection of scientific illustrations for two PhD thesis at QMUL both related to insect biology",
+      "image": "/uploads/portfolio/project-b8e9991b/1777383536324-ant_life.jpg",
+      "figures": [
+        {
+          "src": "/uploads/portfolio/project-b8e9991b/1777383536324-ant_life.jpg",
+          "alt": ""
+        },
+        {
+          "src": "/uploads/portfolio/project-b8e9991b/1777383555357-ant_queen.jpg",
+          "alt": ""
+        },
+        {
+          "src": "/uploads/portfolio/project-b8e9991b/1777383570176-telopsis_dalmanni_female_squared.jpg",
+          "alt": ""
+        },
+        {
+          "src": "/uploads/portfolio/project-b8e9991b/1777383580319-telopsis_dalmanni_male_squared.jpg",
           "alt": ""
         }
       ],
       "url": "",
       "github": "",
-      "tags": []
+      "tags": [
+        "Scientific Illustration",
+        "Procreate"
+      ]
+    },
+    {
+      "slug": "fumagalli-s-lab-logo",
+      "title": "Fumagalli's Lab Logo",
+      "subtitle": "Logo for a Lab",
+      "description": "Logo for a Fumagalli's lab at QMUL.\nTheir research combine different machine-learning techniques to disentangle the evolution of pathogens",
+      "image": "/uploads/portfolio/project-276a2881/1777385588931-fumagalli.jpg",
+      "figures": [
+        {
+          "src": "/uploads/portfolio/project-276a2881/1777385588931-fumagalli.jpg",
+          "alt": "Fumagalli's Lab"
+        }
+      ],
+      "url": "https://mfumagalli.github.io/",
+      "github": "",
+      "tags": [
+        "Logo"
+      ]
+    },
+    {
+      "slug": "edsbs-logo",
+      "title": "eDSBS Logo",
+      "subtitle": "Conference Logo",
+      "description": "Logo for the conference \"eDSBS: Deep-Sea Biology Society 2020\".\nThe logo represents the ocean’s layered depth zones and the strange encounters found in its deepest realms.",
+      "image": "/uploads/portfolio/edsbs-logo/1777385971571-edsbs.jpg",
+      "figures": [
+        {
+          "src": "/uploads/portfolio/edsbs-logo/1777385971571-edsbs.jpg",
+          "alt": ""
+        }
+      ],
+      "url": "https://dsbsoc.org/conferences/edsbs/",
+      "github": "",
+      "tags": [
+        "Logo",
+        "Conference",
+        "Procreate"
+      ]
     }
   ],
   "publications": [
