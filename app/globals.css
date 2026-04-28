@@ -199,6 +199,7 @@
   padding-inline: clamp(0.75rem, 5cqi, 1rem) !important;
   padding-top: clamp(0.75rem, 5cqi, 1rem) !important;
   padding-bottom: var(--repo-footer-reserve) !important;
+  object-position: center calc(50% + (var(--repo-footer-reserve) / 2));
 }
 
 .repo-card-footer {
