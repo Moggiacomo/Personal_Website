@@ -114,7 +114,7 @@
     {
       "slug": "cover-illustration-for-evolution-letters",
       "title": "Cover illustration for Evolution Letters",
-      "subtitle": "",
+      "subtitle": "Scientific Illustration for a journal cover",
       "description": "Cover illustration for Evolutuion Letters Volume 8, Issue 6, December 2024\nThe focus of this illustration was on the effects of anisogamy in the Darwin–Bateman paradigm",
       "image": "/uploads/portfolio/project-6c294e58/1777375845244-evolution_letters_cover_squared.jpg",
       "figures": [
@@ -143,8 +143,12 @@
       "title": "Life cycle of D. latum",
       "subtitle": "Scientific Illustration for a paper",
       "description": "Life cycle of the parasitic flatworm (cestode) Diphyllobothrium latum commonly known as the fish tapeworm. The parasite requires intermediate hosts: freshwater crustaceans (first host) and freshwater fish (second host). Adult worms mature in the intestines of humans, bears, and other fish-eating animals, releasing eggs into the stool. \nPublished in ",
-      "image": "/uploads/portfolio/analytics-dashboard/1777301164387-viktor_cycle_v4.2.png",
+      "image": "/uploads/portfolio/life-cycle-of-d-latum/1777379772157-viktor_cycle.jpg",
       "figures": [
+        {
+          "src": "/uploads/portfolio/life-cycle-of-d-latum/1777379772157-viktor_cycle.jpg",
+          "alt": "D. latum background"
+        },
         {
           "src": "/uploads/portfolio/analytics-dashboard/1777301164387-viktor_cycle_v4.2.png",
           "alt": "D. latum"
@@ -168,47 +172,56 @@
       "slug": "life-cycle-of-d-latum"
     },
     {
-      "title": "Task Management App",
-      "description": "A collaborative task management application with real-time updates, drag-and-drop functionality, and team features.",
-      "image": "/uploads/portfolio/task-management-app/cover.png",
+      "slug": "parasitic-worms",
+      "title": "Parasitic worms",
+      "subtitle": "Scientific Illustration for a paper",
+      "description": "Summary of the main findings for each taxonomic group of parasitic worms\nPublished in \"Systematic review of triploidy among parasitic worms\"",
+      "image": "/uploads/portfolio/parasitic-worms/1777380350608-viktor_cards.jpg",
       "figures": [
         {
-          "src": "/uploads/portfolio/task-management-app/figure-1.png",
-          "alt": "Task Management App board view"
+          "src": "/uploads/portfolio/parasitic-worms/1777380350608-viktor_cards.jpg",
+          "alt": "Parasitic worms"
         },
         {
-          "src": "/uploads/portfolio/task-management-app/figure-2.png",
-          "alt": "Task Management App alternate figure two"
+          "src": "/uploads/portfolio/parasitic-worms/1777380694671-monogenea.png",
+          "alt": "Monogenea"
+        },
+        {
+          "src": "/uploads/portfolio/parasitic-worms/1777380713468-nematoda.png",
+          "alt": "Nematoda"
+        },
+        {
+          "src": "/uploads/portfolio/parasitic-worms/1777380731687-trematoda.png",
+          "alt": "Trematoda"
         }
       ],
-      "url": "https://example.com",
-      "github": "https://github.com",
+      "url": "https://www.cambridge.org/core/journals/parasitology/article/systematic-review-of-triploidy-among-parasitic-worms/348EA192B95A662ED36BF7F9C6CE2905",
+      "github": "",
       "tags": [
-        "Vue.js",
-        "Firebase",
-        "Tailwind CSS"
-      ],
-      "slug": "task-management-app"
+        "Scientific Illustration",
+        "Adobe Illustrator",
+        "Procreate"
+      ]
     },
     {
-      "title": "AI Content Generator",
-      "description": "An AI-powered content generation tool that helps marketers create engaging copy for various platforms.",
-      "image": "/uploads/portfolio/ai-content-generator/cover.png",
+      "slug": "eawag-aquatic-ecology",
+      "title": "EAWAG Aquatic Ecology",
+      "subtitle": "",
+      "description": "",
+      "image": "/uploads/portfolio/project-e129979c/1777379840187-acquatic_eco.jpg",
       "figures": [
         {
-          "src": "/uploads/portfolio/ai-content-generator/figure-1.png",
-          "alt": "AI Content Generator prompt workspace"
+          "src": "/uploads/portfolio/project-e129979c/1777379840187-acquatic_eco.jpg",
+          "alt": "Acquatic Eco background"
+        },
+        {
+          "src": "/uploads/portfolio/project-e129979c/1777379876517-aeco_artwork_final.png",
+          "alt": ""
         }
       ],
-      "url": "https://example.com",
-      "github": "https://github.com",
-      "tags": [
-        "Python",
-        "OpenAI",
-        "FastAPI",
-        "React"
-      ],
-      "slug": "ai-content-generator"
+      "url": "",
+      "github": "",
+      "tags": []
     }
   ],
   "publications": [
