@@ -194,6 +194,7 @@
 .repo-card-frame {
   --repo-footer-reserve: clamp(4.2rem, 24cqi, 5.4rem);
   --repo-media-pad: clamp(0.75rem, 5cqi, 1rem);
+  --repo-footer-pad: clamp(0.75rem, 5cqi, 1rem);
 }
 
 .repo-card-media {
@@ -204,8 +205,8 @@
 }
 
 .repo-card-footer {
-  padding-inline: clamp(0.75rem, 5cqi, 1rem);
-  padding-bottom: clamp(0.75rem, 5cqi, 1rem);
+  padding-inline: var(--repo-footer-pad);
+  padding-bottom: var(--repo-footer-pad);
 }
 
 .repo-card-title {
@@ -282,13 +283,13 @@
 
 @container (max-width: 18rem) {
   .repo-card-frame {
-    --repo-footer-reserve: clamp(4.75rem, 30cqi, 6rem);
+    --repo-footer-reserve: clamp(4.2rem, 26cqi, 5.25rem);
   }
 }
 
 @container (max-width: 15rem) {
   .repo-card-frame {
-    --repo-footer-reserve: clamp(5.4rem, 38cqi, 6.8rem);
+    --repo-footer-reserve: clamp(4.3rem, 30cqi, 5.5rem);
   }
 }
 

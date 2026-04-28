@@ -79,7 +79,7 @@ function RepoCard({ item }: { item: RepoItem }) {
     <article
       className="repo-card-shell group relative aspect-square overflow-hidden rounded-2xl border border-border/50 bg-secondary/40 transition-all duration-300 ease-out md:hover:-translate-y-1 md:hover:border-primary/40 md:hover:bg-secondary/60 md:hover:shadow-[0_22px_55px_-26px_rgba(0,0,0,0.6)]"
       style={{
-        padding: `${0.5 + 0.5 * footerScale}rem`,
+        padding: `${0.28 + 0.52 * footerScale}rem`,
       }}
     >
       <div
@@ -88,6 +88,9 @@ function RepoCard({ item }: { item: RepoItem }) {
         style={{
           ["--repo-footer-reserve" as string]: `${footerReserve}px`,
           ["--repo-footer-scale" as string]: footerScale.toString(),
+          ["--repo-footer-pad" as string]: `${0.32 + 0.52 * footerScale}rem`,
+          ["--repo-footer-gap" as string]: `${0.14 + 0.3 * footerScale}rem`,
+          ["--repo-media-pad" as string]: `${0.32 + 0.52 * footerScale}rem`,
         }}
       >
         {hasImage ? (
@@ -113,14 +116,14 @@ function RepoCard({ item }: { item: RepoItem }) {
             ref={footerInnerRef}
             className="repo-card-footer-inner flex w-full flex-wrap items-end justify-between md:flex md:flex-col md:items-start md:justify-end md:gap-2"
             style={{
-              gap: `${0.4 + 0.35 * footerScale}rem`,
+              gap: `var(--repo-footer-gap)`,
             }}
           >
             <div className="min-w-0 flex-1 md:flex-none">
               <h3
                 className="repo-card-title line-clamp-2 whitespace-normal font-semibold leading-tight tracking-tight text-foreground md:whitespace-normal"
                 style={{
-                  fontSize: `${0.6 + 0.3 * footerScale}rem`,
+                  fontSize: `${0.42 + 0.48 * footerScale}rem`,
                 }}
               >
                 {item.title || "Untitled repo item"}
@@ -133,17 +136,17 @@ function RepoCard({ item }: { item: RepoItem }) {
                 className="repo-card-button inline-flex w-fit shrink-0 items-center rounded-full bg-primary font-medium text-primary-foreground shadow-sm transition-transform duration-200 hover:scale-[1.02] md:w-fit"
                 aria-label={item.downloadLabel || "Download"}
                 style={{
-                  gap: `${0.15 + 0.22 * footerScale}rem`,
-                  paddingInline: `${0.38 + 0.4 * footerScale}rem`,
-                  paddingBlock: `${0.22 + 0.25 * footerScale}rem`,
-                  fontSize: `${0.52 + 0.22 * footerScale}rem`,
+                  gap: `${0.08 + 0.2 * footerScale}rem`,
+                  paddingInline: `${0.2 + 0.5 * footerScale}rem`,
+                  paddingBlock: `${0.14 + 0.24 * footerScale}rem`,
+                  fontSize: `${0.36 + 0.36 * footerScale}rem`,
                 }}
               >
                 <Download
                   className="shrink-0"
                   style={{
-                    width: `${0.7 + 0.2 * footerScale}rem`,
-                    height: `${0.7 + 0.2 * footerScale}rem`,
+                    width: `${0.46 + 0.34 * footerScale}rem`,
+                    height: `${0.46 + 0.34 * footerScale}rem`,
                   }}
                 />
                 {item.downloadLabel || "Download"}
@@ -152,17 +155,17 @@ function RepoCard({ item }: { item: RepoItem }) {
               <span
                 className="repo-card-button inline-flex w-fit shrink-0 items-center rounded-full bg-muted font-medium text-muted-foreground md:w-fit"
                 style={{
-                  gap: `${0.15 + 0.22 * footerScale}rem`,
-                  paddingInline: `${0.38 + 0.4 * footerScale}rem`,
-                  paddingBlock: `${0.22 + 0.25 * footerScale}rem`,
-                  fontSize: `${0.52 + 0.22 * footerScale}rem`,
+                  gap: `${0.08 + 0.2 * footerScale}rem`,
+                  paddingInline: `${0.2 + 0.5 * footerScale}rem`,
+                  paddingBlock: `${0.14 + 0.24 * footerScale}rem`,
+                  fontSize: `${0.36 + 0.36 * footerScale}rem`,
                 }}
               >
                 <Download
                   className="shrink-0"
                   style={{
-                    width: `${0.7 + 0.2 * footerScale}rem`,
-                    height: `${0.7 + 0.2 * footerScale}rem`,
+                    width: `${0.46 + 0.34 * footerScale}rem`,
+                    height: `${0.46 + 0.34 * footerScale}rem`,
                   }}
                 />
                 No file yet
