@@ -191,6 +191,31 @@
   container-type: inline-size;
 }
 
+.repo-card-frame {
+  --repo-footer-reserve: clamp(4.2rem, 24cqi, 5.4rem);
+}
+
+.repo-card-media {
+  padding-inline: clamp(0.75rem, 5cqi, 1rem) !important;
+  padding-top: clamp(0.75rem, 5cqi, 1rem) !important;
+  padding-bottom: var(--repo-footer-reserve) !important;
+}
+
+.repo-card-footer {
+  padding-inline: clamp(0.75rem, 5cqi, 1rem);
+  padding-bottom: clamp(0.75rem, 5cqi, 1rem);
+}
+
+.repo-card-title {
+  font-size: clamp(0.72rem, 4.2cqi, 0.92rem);
+}
+
+.repo-card-button {
+  padding-inline: clamp(0.62rem, 3.8cqi, 0.95rem);
+  padding-block: clamp(0.38rem, 2.2cqi, 0.58rem);
+  font-size: clamp(0.62rem, 3.3cqi, 0.78rem);
+}
+
 @container (max-width: 70rem) {
   .site-header-layout {
     flex-direction: column;
@@ -224,13 +249,13 @@
 }
 
 @container (max-width: 44rem) {
-  .project-card-shell,
-  .publication-card-shell {
+  .project-card-shell-collapsed,
+  .publication-card-shell-collapsed {
     padding: 1.1rem;
   }
 
-  .project-card-media,
-  .publication-card-media {
+  .project-card-media-collapsed,
+  .publication-card-media-collapsed {
     margin-left: -1.1rem;
     margin-right: -1.1rem;
     margin-top: -1.1rem;
@@ -244,8 +269,8 @@
 }
 
 @container (max-width: 58rem) {
-  .project-card-stack,
-  .publication-card-stack {
+  .project-card-stack-collapsed,
+  .publication-card-stack-collapsed {
     grid-template-columns: 1fr;
   }
 
@@ -256,55 +281,35 @@
 }
 
 @container (max-width: 18rem) {
-  .repo-card-media {
-    padding-inline: 0.7rem !important;
-    padding-top: 0.7rem !important;
-    padding-bottom: 4.4rem !important;
-  }
-
-  .repo-card-footer {
-    padding-left: 0.7rem;
-    padding-right: 0.7rem;
-    padding-bottom: 0.7rem;
+  .repo-card-frame {
+    --repo-footer-reserve: clamp(4.75rem, 30cqi, 6rem);
   }
 
   .repo-card-footer-inner {
     gap: 0.5rem;
-    align-items: flex-end;
-  }
-
-  .repo-card-title {
-    font-size: 0.68rem;
-    line-height: 1.15;
-  }
-
-  .repo-card-button {
-    font-size: 0.62rem;
-    padding-inline: 0.55rem;
-    padding-block: 0.35rem;
   }
 }
 
 @container (max-width: 15rem) {
-  .repo-card-media {
-    padding-bottom: 4.9rem !important;
+  .repo-card-frame {
+    --repo-footer-reserve: clamp(5.4rem, 38cqi, 6.8rem);
   }
 
   .repo-card-footer-inner {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     align-items: flex-start;
     justify-content: flex-end;
   }
 
   .repo-card-title {
-    font-size: 0.64rem;
+    white-space: normal;
+    font-size: 0.66rem;
     line-height: 1.12;
   }
 
   .repo-card-button {
-    font-size: 0.58rem;
-    padding-inline: 0.5rem;
-    padding-block: 0.32rem;
+    justify-self: start;
+    font-size: 0.6rem;
   }
 }
 

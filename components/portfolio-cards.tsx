@@ -285,15 +285,20 @@ function GridProjectCard({
   const mediaRef = useFlipAnimation<HTMLDivElement>(isExpanded);
 
   return (
-    <div className="project-card-shell flex flex-col p-6">
+    <div
+      className={cn(
+        "project-card-shell flex flex-col p-6",
+        isExpanded ? "project-card-shell-expanded" : "project-card-shell-collapsed"
+      )}
+    >
       <div
         ref={mediaRef}
         className={cn(
           "project-card-media",
           "relative overflow-hidden rounded-2xl shadow-none transition-[opacity,border-radius] duration-[1100ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
           isExpanded
-            ? "order-2 mt-3 mx-auto aspect-[16/10] w-full max-w-[64%] bg-transparent"
-            : "order-1 -mx-6 -mt-6 mb-6 aspect-square rounded-none bg-muted/20"
+            ? "project-card-media-expanded order-2 mt-3 mx-auto aspect-[16/10] w-full max-w-[64%] rounded-none bg-transparent"
+            : "project-card-media-collapsed order-1 -mx-6 -mt-6 mb-6 aspect-square rounded-none bg-muted/20"
         )}
       >
         <MediaAsset
@@ -378,6 +383,7 @@ function StackProjectCard({
     <div
       className={cn(
         "project-card-stack",
+        isExpanded ? "project-card-stack-expanded" : "project-card-stack-collapsed",
         "grid w-full gap-5 p-6 transition-[grid-template-columns] duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
         isExpanded ? "grid-cols-1 min-h-full" : "grid-cols-1 md:grid-cols-[16rem_minmax(0,1fr)]"
       )}
@@ -388,8 +394,8 @@ function StackProjectCard({
           "project-card-media",
           "relative overflow-hidden rounded-xl transition-[border-radius,box-shadow,width] duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
           isExpanded
-            ? "order-2 mx-auto aspect-[16/10] w-full max-w-[64%] rounded-[24px] bg-transparent"
-            : "order-1 aspect-square md:row-span-2 bg-muted/20"
+            ? "project-card-media-expanded order-2 mx-auto aspect-[16/10] w-full max-w-[64%] rounded-none bg-transparent"
+            : "project-card-media-collapsed order-1 aspect-square md:row-span-2 bg-muted/20"
         )}
       >
         <MediaAsset
@@ -701,7 +707,7 @@ function ProjectFigureGallery({
   onSelect: (index: number) => void;
 }) {
   return (
-    <div className="flex items-center justify-center gap-3">
+    <div className="mx-auto grid w-full max-w-[min(100%,42rem)] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3">
         <button
           type="button"
           onClick={() => onSelect((activeIndex - 1 + figures.length) % figures.length)}
@@ -712,7 +718,7 @@ function ProjectFigureGallery({
           <ChevronLeft className="size-4" />
         </button>
 
-        <div className="relative flex min-h-20 max-w-[24rem] flex-1 items-center justify-center overflow-x-auto px-2 py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="relative flex min-h-24 w-full items-center justify-center overflow-hidden px-4 py-2">
           {figures.map((figure, index) => {
             const offset = index - activeIndex;
             const clampedOffset = Math.max(-2, Math.min(2, offset));
@@ -724,7 +730,7 @@ function ProjectFigureGallery({
                 type="button"
                 onClick={() => onSelect(index)}
                 className={cn(
-                  "relative h-16 w-20 shrink-0 rounded-2xl border border-border/40 bg-transparent p-1.5 transition-all duration-500 ease-[cubic-bezier(0.18,0.9,0.2,1)]",
+                  "relative h-16 w-20 shrink-0 rounded-none border border-border/40 bg-transparent p-1.5 transition-all duration-500 ease-[cubic-bezier(0.18,0.9,0.2,1)]",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
                   figures.length === 1
                     ? "z-10"
@@ -744,10 +750,10 @@ function ProjectFigureGallery({
                 aria-label={`Show figure ${index + 1}`}
                 aria-pressed={isActive}
               >
-                <div className="relative h-full w-full overflow-hidden rounded-xl">
-                  <MediaAsset
-                    src={figure.src}
-                    alt={figure.alt}
+              <div className="relative h-full w-full overflow-hidden rounded-none">
+                <MediaAsset
+                  src={figure.src}
+                  alt={figure.alt}
                     fill
                     className="object-contain"
                   />
