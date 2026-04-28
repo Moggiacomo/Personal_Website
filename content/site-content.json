@@ -337,33 +337,33 @@
   "repo": [
     {
       "id": "repo-3",
-      "title": "Task Board Preview",
-      "image": "/uploads/repo/task-board-preview/figure-1.png",
-      "downloadPath": "/uploads/repo/task-board-preview/figure-1.png",
+      "title": "Drosophila melanogaster",
+      "image": "/uploads/repo/task-board-preview/1777367256108-drosophila_melanogaster.png",
+      "downloadPath": "/uploads/repo/task-board-preview/1777367256108-drosophila_melanogaster.png",
       "downloadLabel": "Download PNG",
-      "alt": "Task board illustration preview"
+      "alt": "Drosophila melanogaster"
     },
     {
       "id": "repo-2",
-      "title": "Analytics Illustration",
-      "image": "/uploads/repo/analytics-illustration/figure-1.png",
-      "downloadPath": "/uploads/repo/analytics-illustration/figure-1.png",
+      "title": "Caenorhabditis elegans",
+      "image": "/uploads/repo/analytics-illustration/1777367570570-caenorhabditis_elegans.png",
+      "downloadPath": "/uploads/repo/analytics-illustration/1777367570570-caenorhabditis_elegans.png",
       "downloadLabel": "Download PNG",
-      "alt": "Analytics illustration preview"
+      "alt": ""
     },
     {
       "id": "repo-4",
-      "title": "AI Workspace",
-      "image": "/uploads/repo/ai-workspace/figure-1.png",
-      "downloadPath": "/uploads/repo/ai-workspace/figure-1.png",
+      "title": "Danio rerio",
+      "image": "/uploads/repo/ai-workspace/1777367639722-danio_rerio.png",
+      "downloadPath": "/uploads/repo/ai-workspace/1777367639722-danio_rerio.png",
       "downloadLabel": "Download PNG",
       "alt": "AI workspace illustration preview"
     },
     {
       "id": "219aaa78-61c8-4bef-aac2-d5250525e9fc",
-      "title": "",
-      "image": "",
-      "downloadPath": "",
+      "title": "Schisostoma mansoni",
+      "image": "/uploads/repo/219aaa78-61c8-4bef-aac2-d5250525e9fc/1777367772739-schisostoma_mansoni.png",
+      "downloadPath": "/uploads/repo/219aaa78-61c8-4bef-aac2-d5250525e9fc/1777367772739-schisostoma_mansoni.png",
       "downloadLabel": "Download",
       "alt": ""
     },
@@ -374,6 +374,14 @@
       "downloadPath": "/uploads/repo/e-commerce-artwork/cover.png",
       "downloadLabel": "Download PNG",
       "alt": "E-Commerce artwork preview"
+    },
+    {
+      "id": "f4e6cc9b-b1f5-4c9e-abdb-4968acb8ca78",
+      "title": "",
+      "image": "",
+      "downloadPath": "",
+      "downloadLabel": "Download",
+      "alt": ""
     }
   ],
   "cv": {

@@ -958,25 +958,43 @@ function RepoEditorCard({
           />
         </Field>
 
-        <PathUploadField
-          label="Image path"
-          value={item.image}
-          folder={`repo/${slugify(item.title) || item.id}`}
+        <FileUploadField
+          label="Upload preview + download file"
           accept={FIGURE_FILE_ACCEPT}
-          uploadLabel="Select figure file"
-          onChange={(path) => onChange((current) => ({ ...current, image: path }))}
-        />
-
-        <PathUploadField
-          label="Download file path"
-          value={item.downloadPath}
           folder={`repo/${slugify(item.title) || item.id}`}
-          accept={FIGURE_FILE_ACCEPT}
-          uploadLabel="Select file"
-          onChange={(path) =>
-            onChange((current) => ({ ...current, downloadPath: path }))
+          onUploaded={(path) =>
+            onChange((current) => ({
+              ...current,
+              image: path,
+              downloadPath: path,
+            }))
           }
         />
+
+        <p className="text-sm text-muted-foreground">
+          Uploading a repo file sets both the preview image path and the download path automatically.
+          You can still override them manually below if needed.
+        </p>
+
+        <Field label="Image path">
+          <Input
+            value={item.image}
+            placeholder={`/uploads/repo/${slugify(item.title) || item.id}/preview.png`}
+            onChange={(event) =>
+              onChange((current) => ({ ...current, image: event.target.value }))
+            }
+          />
+        </Field>
+
+        <Field label="Download file path">
+          <Input
+            value={item.downloadPath}
+            placeholder={`/uploads/repo/${slugify(item.title) || item.id}/file.png`}
+            onChange={(event) =>
+              onChange((current) => ({ ...current, downloadPath: event.target.value }))
+            }
+          />
+        </Field>
 
         <div className="grid gap-4 md:grid-cols-2">
           <Field label="Download button label">
@@ -994,19 +1012,6 @@ function RepoEditorCard({
             />
           </Field>
         </div>
-
-        <FileUploadField
-          label="Upload preview/download file"
-          accept={FIGURE_FILE_ACCEPT}
-          folder={`repo/${slugify(item.title) || item.id}`}
-          onUploaded={(path) =>
-            onChange((current) => ({
-              ...current,
-              image: path,
-              downloadPath: path,
-            }))
-          }
-        />
 
         <div className="flex flex-wrap gap-2">
           <Button type="button" variant="ghost" size="sm" disabled={!canMoveUp} onClick={onMoveUp}>
