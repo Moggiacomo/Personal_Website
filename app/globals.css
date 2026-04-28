@@ -209,13 +209,11 @@
 }
 
 .repo-card-title {
-  font-size: clamp(0.68rem, 3.8cqi, 0.9rem);
+  line-height: 1.15;
 }
 
 .repo-card-button {
-  padding-inline: clamp(0.56rem, 3.4cqi, 0.9rem);
-  padding-block: clamp(0.34rem, 2cqi, 0.56rem);
-  font-size: clamp(0.58rem, 3cqi, 0.76rem);
+  line-height: 1;
 }
 
 @container (max-width: 70rem) {
@@ -286,32 +284,11 @@
   .repo-card-frame {
     --repo-footer-reserve: clamp(4.75rem, 30cqi, 6rem);
   }
-
-  .repo-card-footer-inner {
-    gap: 0.5rem;
-  }
 }
 
 @container (max-width: 15rem) {
   .repo-card-frame {
     --repo-footer-reserve: clamp(5.4rem, 38cqi, 6.8rem);
-  }
-
-  .repo-card-footer-inner {
-    grid-template-columns: 1fr;
-    align-items: flex-start;
-    justify-content: flex-end;
-  }
-
-  .repo-card-title {
-    white-space: normal;
-    font-size: 0.66rem;
-    line-height: 1.12;
-  }
-
-  .repo-card-button {
-    justify-self: start;
-    font-size: 0.6rem;
   }
 }
 
