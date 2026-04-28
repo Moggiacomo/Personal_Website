@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Download } from "lucide-react";
 import { MediaAsset } from "@/components/media-asset";
 import type { RepoItem } from "@/lib/content-types";
+import { cn } from "@/lib/utils";
 
 export function RepoGrid({ items }: { items: RepoItem[] }) {
   const visibleItems = items.filter(
@@ -30,6 +31,7 @@ function RepoCard({ item }: { item: RepoItem }) {
   const footerRef = useRef<HTMLDivElement>(null);
   const footerInnerRef = useRef<HTMLDivElement>(null);
   const [footerReserve, setFooterReserve] = useState<number>(96);
+  const [sizeMode, setSizeMode] = useState<"normal" | "compact" | "tight">("normal");
 
   useLayoutEffect(() => {
     const frame = frameRef.current;
@@ -40,6 +42,9 @@ function RepoCard({ item }: { item: RepoItem }) {
     }
 
     const updateReserve = () => {
+      const frameWidth = frame.clientWidth;
+      setSizeMode(frameWidth <= 176 ? "tight" : frameWidth <= 228 ? "compact" : "normal");
+
       const footerStyles = window.getComputedStyle(footer);
       const paddingBottom = Number.parseFloat(footerStyles.paddingBottom) || 0;
       const footerInnerStyles = window.getComputedStyle(footerInner);
@@ -70,7 +75,10 @@ function RepoCard({ item }: { item: RepoItem }) {
 
   return (
     <article
-      className="repo-card-shell group relative aspect-square overflow-hidden rounded-2xl border border-border/50 bg-secondary/40 p-3 transition-all duration-300 ease-out sm:p-4 md:hover:-translate-y-1 md:hover:border-primary/40 md:hover:bg-secondary/60 md:hover:shadow-[0_22px_55px_-26px_rgba(0,0,0,0.6)]"
+      className={cn(
+        "repo-card-shell group relative aspect-square overflow-hidden rounded-2xl border border-border/50 bg-secondary/40 transition-all duration-300 ease-out md:hover:-translate-y-1 md:hover:border-primary/40 md:hover:bg-secondary/60 md:hover:shadow-[0_22px_55px_-26px_rgba(0,0,0,0.6)]",
+        sizeMode === "tight" ? "p-2" : sizeMode === "compact" ? "p-2.5" : "p-3 sm:p-4"
+      )}
     >
       <div
         ref={frameRef}
@@ -100,10 +108,26 @@ function RepoCard({ item }: { item: RepoItem }) {
         >
           <div
             ref={footerInnerRef}
-            className="repo-card-footer-inner grid w-full grid-cols-[minmax(0,1fr)_auto] items-end gap-3 md:flex md:flex-col md:items-start md:justify-end md:gap-2"
+            className={cn(
+              "repo-card-footer-inner w-full items-end md:flex md:flex-col md:items-start md:justify-end md:gap-2",
+              sizeMode === "tight"
+                ? "grid grid-cols-1 gap-1.5"
+                : sizeMode === "compact"
+                  ? "grid grid-cols-1 gap-2"
+                  : "grid grid-cols-[minmax(0,1fr)_auto] gap-3"
+            )}
           >
             <div className="min-w-0 flex-1 md:flex-none">
-              <h3 className="repo-card-title truncate font-semibold leading-tight tracking-tight text-foreground md:whitespace-normal">
+              <h3
+                className={cn(
+                  "repo-card-title font-semibold leading-tight tracking-tight text-foreground md:whitespace-normal",
+                  sizeMode === "tight"
+                    ? "line-clamp-2 whitespace-normal"
+                    : sizeMode === "compact"
+                      ? "line-clamp-2 whitespace-normal"
+                      : "truncate"
+                )}
+              >
                 {item.title || "Untitled repo item"}
               </h3>
             </div>
@@ -111,15 +135,32 @@ function RepoCard({ item }: { item: RepoItem }) {
               <Link
                 href={item.downloadPath}
                 download
-                className="repo-card-button inline-flex shrink-0 items-center gap-1.5 justify-self-end rounded-full bg-primary font-medium text-primary-foreground shadow-sm transition-transform duration-200 hover:scale-[1.02] md:w-fit md:justify-self-auto"
+                className={cn(
+                  "repo-card-button inline-flex items-center rounded-full bg-primary font-medium text-primary-foreground shadow-sm transition-transform duration-200 hover:scale-[1.02] md:w-fit md:justify-self-auto",
+                  sizeMode === "tight"
+                    ? "w-fit justify-self-start gap-1 px-2 py-1"
+                    : sizeMode === "compact"
+                      ? "w-fit justify-self-start gap-1.5"
+                      : "shrink-0 justify-self-end gap-1.5"
+                )}
+                aria-label={item.downloadLabel || "Download"}
               >
-                <Download className="size-3.5 sm:size-4" />
-                {item.downloadLabel || "Download"}
+                <Download className={cn(sizeMode === "tight" ? "size-3" : "size-3.5 sm:size-4")} />
+                {sizeMode === "tight" ? "Get" : item.downloadLabel || "Download"}
               </Link>
             ) : (
-              <span className="repo-card-button inline-flex shrink-0 items-center gap-1.5 justify-self-end rounded-full bg-muted font-medium text-muted-foreground md:w-fit md:justify-self-auto">
-                <Download className="size-3.5 sm:size-4" />
-                No file yet
+              <span
+                className={cn(
+                  "repo-card-button inline-flex items-center rounded-full bg-muted font-medium text-muted-foreground md:w-fit md:justify-self-auto",
+                  sizeMode === "tight"
+                    ? "w-fit justify-self-start gap-1 px-2 py-1"
+                    : sizeMode === "compact"
+                      ? "w-fit justify-self-start gap-1.5"
+                      : "shrink-0 justify-self-end gap-1.5"
+                )}
+              >
+                <Download className={cn(sizeMode === "tight" ? "size-3" : "size-3.5 sm:size-4")} />
+                {sizeMode === "tight" ? "File" : "No file yet"}
               </span>
             )}
           </div>
