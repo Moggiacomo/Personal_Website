@@ -209,13 +209,13 @@
 }
 
 .repo-card-title {
-  font-size: clamp(0.72rem, 4.2cqi, 0.92rem);
+  font-size: clamp(0.68rem, 3.8cqi, 0.9rem);
 }
 
 .repo-card-button {
-  padding-inline: clamp(0.62rem, 3.8cqi, 0.95rem);
-  padding-block: clamp(0.38rem, 2.2cqi, 0.58rem);
-  font-size: clamp(0.62rem, 3.3cqi, 0.78rem);
+  padding-inline: clamp(0.56rem, 3.4cqi, 0.9rem);
+  padding-block: clamp(0.34rem, 2cqi, 0.56rem);
+  font-size: clamp(0.58rem, 3cqi, 0.76rem);
 }
 
 @container (max-width: 70rem) {

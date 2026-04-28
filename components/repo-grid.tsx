@@ -43,7 +43,7 @@ function RepoCard({ item }: { item: RepoItem }) {
 
     const updateReserve = () => {
       const frameWidth = frame.clientWidth;
-      setSizeMode(frameWidth <= 176 ? "tight" : frameWidth <= 228 ? "compact" : "normal");
+      setSizeMode(frameWidth <= 240 ? "tight" : frameWidth <= 360 ? "compact" : "normal");
 
       const footerStyles = window.getComputedStyle(footer);
       const paddingBottom = Number.parseFloat(footerStyles.paddingBottom) || 0;
@@ -75,10 +75,10 @@ function RepoCard({ item }: { item: RepoItem }) {
 
   return (
     <article
-      className={cn(
-        "repo-card-shell group relative aspect-square overflow-hidden rounded-2xl border border-border/50 bg-secondary/40 transition-all duration-300 ease-out md:hover:-translate-y-1 md:hover:border-primary/40 md:hover:bg-secondary/60 md:hover:shadow-[0_22px_55px_-26px_rgba(0,0,0,0.6)]",
-        sizeMode === "tight" ? "p-2" : sizeMode === "compact" ? "p-2.5" : "p-3 sm:p-4"
-      )}
+        className={cn(
+          "repo-card-shell group relative aspect-square overflow-hidden rounded-2xl border border-border/50 bg-secondary/40 transition-all duration-300 ease-out md:hover:-translate-y-1 md:hover:border-primary/40 md:hover:bg-secondary/60 md:hover:shadow-[0_22px_55px_-26px_rgba(0,0,0,0.6)]",
+          sizeMode === "tight" ? "p-2" : sizeMode === "compact" ? "p-2.25" : "p-3 sm:p-4"
+        )}
     >
       <div
         ref={frameRef}
@@ -140,13 +140,13 @@ function RepoCard({ item }: { item: RepoItem }) {
                   sizeMode === "tight"
                     ? "w-fit justify-self-start gap-1 px-2 py-1"
                     : sizeMode === "compact"
-                      ? "w-fit justify-self-start gap-1.5"
+                      ? "w-fit justify-self-start gap-1 px-2.5 py-1.25"
                       : "shrink-0 justify-self-end gap-1.5"
                 )}
                 aria-label={item.downloadLabel || "Download"}
               >
-                <Download className={cn(sizeMode === "tight" ? "size-3" : "size-3.5 sm:size-4")} />
-                {sizeMode === "tight" ? "Get" : item.downloadLabel || "Download"}
+                <Download className={cn(sizeMode === "tight" ? "size-3" : sizeMode === "compact" ? "size-3.5" : "size-3.5 sm:size-4")} />
+                {sizeMode === "tight" ? "Get" : sizeMode === "compact" ? "Download" : item.downloadLabel || "Download"}
               </Link>
             ) : (
               <span
@@ -155,12 +155,12 @@ function RepoCard({ item }: { item: RepoItem }) {
                   sizeMode === "tight"
                     ? "w-fit justify-self-start gap-1 px-2 py-1"
                     : sizeMode === "compact"
-                      ? "w-fit justify-self-start gap-1.5"
+                      ? "w-fit justify-self-start gap-1 px-2.5 py-1.25"
                       : "shrink-0 justify-self-end gap-1.5"
                 )}
               >
-                <Download className={cn(sizeMode === "tight" ? "size-3" : "size-3.5 sm:size-4")} />
-                {sizeMode === "tight" ? "File" : "No file yet"}
+                <Download className={cn(sizeMode === "tight" ? "size-3" : sizeMode === "compact" ? "size-3.5" : "size-3.5 sm:size-4")} />
+                {sizeMode === "tight" ? "File" : sizeMode === "compact" ? "File" : "No file yet"}
               </span>
             )}
           </div>
