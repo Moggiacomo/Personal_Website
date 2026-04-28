@@ -335,8 +335,8 @@ function GridProjectCard({
         />
         <div
           className={cn(
-            "overflow-hidden transition-all duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
-            isExpanded ? "mt-0 max-h-[760px] opacity-100" : "mt-4 max-h-40 opacity-100"
+            "transition-all duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
+            isExpanded ? "mt-0 max-h-none overflow-visible opacity-100" : "mt-4 max-h-40 overflow-hidden opacity-100"
           )}
         >
           {isExpanded ? (
@@ -434,8 +434,8 @@ function StackProjectCard({
 
       <div
         className={cn(
-          "overflow-hidden transition-all duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
-          isExpanded ? "order-3 max-h-[820px] opacity-100" : "order-3 mt-1 max-h-56 opacity-100"
+          "transition-all duration-[1200ms] ease-[cubic-bezier(0.18,0.9,0.2,1)]",
+          isExpanded ? "order-3 max-h-none overflow-visible opacity-100" : "order-3 mt-1 max-h-56 overflow-hidden opacity-100"
         )}
       >
         {isExpanded ? (

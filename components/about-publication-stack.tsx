@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ExternalLink, FileText } from "lucide-react";
 import StackingCards, {
@@ -88,7 +88,7 @@ export function AboutPublicationStack({
             >
               <div
                 className={cn(
-                  "relative overflow-hidden rounded-[1.5rem]",
+                  "relative overflow-hidden rounded-none",
                   mediaFirst ? "md:order-1" : "md:order-2"
                 )}
               >
@@ -112,7 +112,7 @@ export function AboutPublicationStack({
                   mediaFirst ? "md:order-2" : "md:order-1"
                 )}
               >
-                <div className="space-y-4">
+                <div className="flex min-h-0 flex-1 flex-col">
                   <div className="flex items-center gap-3 text-xs uppercase tracking-[0.18em] text-black/65">
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-background/30 px-3 py-1">
                       <FileText className="size-3" />
@@ -121,7 +121,7 @@ export function AboutPublicationStack({
                     <span>{publication.year}</span>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="mt-4 space-y-2">
                     <h4 className="text-2xl font-semibold tracking-tight text-black md:text-3xl">
                       {publication.title}
                     </h4>
@@ -135,9 +135,9 @@ export function AboutPublicationStack({
                     ) : null}
                   </div>
 
-                  <p className="text-sm leading-relaxed text-black/75 md:text-base">
+                  <MeasuredClampParagraph className="text-sm leading-relaxed text-black/75 md:text-base">
                     {publication.abstract}
-                  </p>
+                  </MeasuredClampParagraph>
                 </div>
 
                 <div className="mt-6 flex items-center gap-3 text-sm font-medium text-black">
@@ -152,5 +152,74 @@ export function AboutPublicationStack({
         </StackingCardItem>
       ))}
     </StackingCards>
+  );
+}
+
+function MeasuredClampParagraph({
+  children,
+  className,
+}: {
+  children: string;
+  className?: string;
+}) {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const [lineClamp, setLineClamp] = useState<number | null>(null);
+
+  useLayoutEffect(() => {
+    const element = ref.current;
+    if (!element) {
+      return;
+    }
+
+    const updateClamp = () => {
+      const computedStyle = window.getComputedStyle(element);
+      const lineHeight = Number.parseFloat(computedStyle.lineHeight);
+      const availableHeight = element.clientHeight;
+
+      if (!Number.isFinite(lineHeight) || lineHeight <= 0 || availableHeight <= 0) {
+        setLineClamp(null);
+        return;
+      }
+
+      const visibleLines = Math.max(1, Math.floor(availableHeight / lineHeight));
+      setLineClamp(visibleLines);
+    };
+
+    updateClamp();
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateClamp();
+    });
+
+    resizeObserver.observe(element);
+    if (element.parentElement) {
+      resizeObserver.observe(element.parentElement);
+    }
+
+    window.addEventListener("resize", updateClamp);
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", updateClamp);
+    };
+  }, [children]);
+
+  return (
+    <div className="mt-4 min-h-0 flex-1">
+      <p
+        ref={ref}
+        className={cn("h-full overflow-hidden text-ellipsis", className)}
+        style={
+          lineClamp
+            ? {
+                display: "-webkit-box",
+                WebkitBoxOrient: "vertical",
+                WebkitLineClamp: lineClamp,
+              }
+            : undefined
+        }
+      >
+        {children}
+      </p>
+    </div>
   );
 }
