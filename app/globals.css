@@ -116,6 +116,10 @@
   display: none;
 }
 
+.about-coverflow {
+  overflow: hidden !important;
+}
+
 .about-coverflow img {
   width: 100% !important;
   height: 100% !important;

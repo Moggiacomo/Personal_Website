@@ -126,6 +126,10 @@ export default function HomePage() {
       ? [{ publication, href: `/publications#publication-${index}` }]
       : []
   );
+  const coverFlowTitleSpacing =
+    itemWidth < 360 ? "mt-1" : itemWidth < 500 ? "mt-2" : itemWidth < 620 ? "mt-3" : "mt-4";
+  const coverFlowTitleSize =
+    itemWidth < 360 ? "text-base" : itemWidth < 500 ? "text-lg" : itemWidth < 620 ? "text-xl" : "text-2xl";
 
   const coverFlowItems: CoverFlowItem[] = content.portfolio.map((project, index) => ({
     id: index,
@@ -136,13 +140,13 @@ export default function HomePage() {
   useEffect(() => {
     const updateItemWidth = () => {
       const width = window.innerWidth;
-      if (width < 640) {
-        setItemWidth(400);
-      } else if (width < 1024) {
-        setItemWidth(640);
-      } else {
-        setItemWidth(700);
-      }
+      const horizontalGutter =
+        width < 640 ? 72 : width < 1024 ? 120 : width < 1440 ? 220 : 280;
+      const availableWidth = Math.max(220, width - horizontalGutter);
+      const preferredWidth =
+        width < 640 ? 320 : width < 1024 ? 440 : width < 1440 ? 560 : 700;
+
+      setItemWidth(Math.min(preferredWidth, availableWidth));
     };
 
     updateItemWidth();
@@ -493,8 +497,8 @@ export default function HomePage() {
               <span className="h-px w-8 bg-muted-foreground" />
               {content.site.headers.featuredProjects}
             </h3>
-            <div className="w-full">
-              <div className="h-[620px] w-full sm:h-[700px] lg:h-[820px]">
+            <div className="w-full overflow-hidden">
+              <div className="h-[540px] w-full overflow-hidden sm:h-[620px] lg:h-[760px]">
                 <CoverFlow
                   items={coverFlowItems}
                   itemWidth={itemWidth}
@@ -508,8 +512,8 @@ export default function HomePage() {
                   className="about-coverflow w-full"
                 />
               </div>
-              <div className="mt-2 text-center sm:mt-3 md:mt-4">
-                <h4 className="text-lg font-semibold tracking-tight text-foreground sm:text-xl md:text-2xl">
+              <div className={cn(coverFlowTitleSpacing, "text-center")}>
+                <h4 className={cn("font-semibold tracking-tight text-foreground", coverFlowTitleSize)}>
                   {coverFlowItems[activeProjectIndex]?.title}
                 </h4>
               </div>
