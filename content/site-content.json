@@ -112,6 +112,34 @@
   },
   "portfolio": [
     {
+      "slug": "cover-illustration-for-evolution-letters",
+      "title": "Cover illustration for Evolution Letters",
+      "subtitle": "",
+      "description": "Cover illustration for Evolutuion Letters Volume 8, Issue 6, December 2024\nThe focus of this illustration was on the effects of anisogamy in the Darwin–Bateman paradigm",
+      "image": "/uploads/portfolio/project-6c294e58/1777375845244-evolution_letters_cover_squared.jpg",
+      "figures": [
+        {
+          "src": "/uploads/portfolio/project-6c294e58/1777375845244-evolution_letters_cover_squared.jpg",
+          "alt": "Evolution letters cover squared cover"
+        },
+        {
+          "src": "/uploads/portfolio/project-6c294e58/1777375762876-evolution_letters_cover.jpg",
+          "alt": "Evolution letters cover"
+        },
+        {
+          "src": "/uploads/portfolio/project-6c294e58/1777375880669-evolution_letters_cover_full.jpg",
+          "alt": "Evolution letters full cover"
+        }
+      ],
+      "url": "https://academic.oup.com/evlett/issue/8/6",
+      "github": "",
+      "tags": [
+        "Scientific illustration",
+        "Cover illustration",
+        "Procreate"
+      ]
+    },
+    {
       "title": "Life cycle of D. latum",
       "subtitle": "Scientific Illustration for a paper",
       "description": "Life cycle of the parasitic flatworm (cestode) Diphyllobothrium latum commonly known as the fish tapeworm. The parasite requires intermediate hosts: freshwater crustaceans (first host) and freshwater fish (second host). Adult worms mature in the intestines of humans, bears, and other fish-eating animals, releasing eggs into the stool. \nPublished in ",
@@ -138,42 +166,6 @@
         "Procreate"
       ],
       "slug": "life-cycle-of-d-latum"
-    },
-    {
-      "title": "E-Commerce Platform",
-      "subtitle": "Commerce Systems and Checkout Design",
-      "description": "A full-stack e-commerce solution with real-time inventory management, payment processing, and an intuitive admin dashboard.",
-      "image": "/uploads/portfolio/ecommerce-platform/cover.png",
-      "figures": [
-        {
-          "src": "/uploads/portfolio/ecommerce-platform/cover.png",
-          "alt": "ECO department"
-        },
-        {
-          "src": "/uploads/portfolio/ecommerce-platform/figure-1.png",
-          "alt": "E-Commerce Platform storefront interface"
-        },
-        {
-          "src": "/uploads/portfolio/ecommerce-platform/figure-2.png",
-          "alt": "E-Commerce Platform alternate figure two"
-        },
-        {
-          "src": "/uploads/portfolio/ecommerce-platform/figure-3.png",
-          "alt": "E-Commerce Platform alternate figure three"
-        },
-        {
-          "src": "/uploads/portfolio/ecommerce-platform/figure-4.svg",
-          "alt": "E-Commerce Platform blue square test figure"
-        },
-        {
-          "src": "/uploads/portfolio/ecommerce-platform/figure-5.svg",
-          "alt": "E-Commerce Platform tall rectangle test figure"
-        }
-      ],
-      "url": "https://example.com",
-      "github": "https://github.com",
-      "tags": [],
-      "slug": "ecommerce-platform"
     },
     {
       "title": "Task Management App",
@@ -652,6 +644,38 @@
       "title": "Gymnopleurus sparsus",
       "image": "/uploads/repo/a8971fba-2629-4249-8306-786a563286b8/1777371488366-gymnopleurus_sparsus.png",
       "downloadPath": "/uploads/repo/a8971fba-2629-4249-8306-786a563286b8/1777371488366-gymnopleurus_sparsus.png",
+      "downloadLabel": "Download",
+      "alt": ""
+    },
+    {
+      "id": "6f4f94df-64a8-43b7-9aa6-81aa566d7037",
+      "title": "Coccinella septempunctata",
+      "image": "/uploads/repo/6f4f94df-64a8-43b7-9aa6-81aa566d7037/1777374844592-coccinella_septempunctata.png",
+      "downloadPath": "/uploads/repo/6f4f94df-64a8-43b7-9aa6-81aa566d7037/1777374844592-coccinella_septempunctata.png",
+      "downloadLabel": "Download",
+      "alt": ""
+    },
+    {
+      "id": "ca58b216-a1d4-4000-a149-c553838d2e65",
+      "title": "Lasius niger",
+      "image": "/uploads/repo/lasius-niger-png/1777374862874-lasius_niger.png",
+      "downloadPath": "/uploads/repo/lasius-niger-png/1777374862874-lasius_niger.png",
+      "downloadLabel": "Download",
+      "alt": ""
+    },
+    {
+      "id": "17881091-799d-4064-a3c9-6911ef040f12",
+      "title": "Bubalus depressicornis",
+      "image": "/uploads/repo/17881091-799d-4064-a3c9-6911ef040f12/1777374879090-bubalus_depressicornis.png",
+      "downloadPath": "/uploads/repo/17881091-799d-4064-a3c9-6911ef040f12/1777374879090-bubalus_depressicornis.png",
+      "downloadLabel": "Download",
+      "alt": ""
+    },
+    {
+      "id": "d680088f-aa31-421b-919c-458cc44691f0",
+      "title": "Buru babirusa",
+      "image": "/uploads/repo/buru-babirusa/1777374925518-buru_babirusa.png",
+      "downloadPath": "/uploads/repo/buru-babirusa/1777374925518-buru_babirusa.png",
       "downloadLabel": "Download",
       "alt": ""
     }
