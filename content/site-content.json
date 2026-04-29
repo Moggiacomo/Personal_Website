@@ -24,7 +24,7 @@
       "email": "mailto:giacomo.moggioli@gmail.com"
     },
     "footer": {
-      "copyrightName": "GiacomoMoggioli",
+      "copyrightName": "Giacomo Moggioli",
       "builtWith": "Built with Next.js & Tailwind CSS"
     },
     "contact": {
@@ -53,20 +53,34 @@
       "contact": "Contact"
     },
     "pageIntro": {
-      "portfolio": [],
+      "portfolio": [
+        {
+          "text": "A collection of illustration and design projects where science meets visual communication, from journal covers and posters to logos and commissioned artwork",
+          "level": "lead"
+        }
+      ],
       "publications": [
         {
-          "text": "Research papers, articles, and written work focused on design systems, accessibility, and modern web practice.",
+          "text": "A selection of my peer-reviewed publications in genomics and evolutionary biology, focused on host–microbe interactions and large-scale comparative analyses",
           "level": "lead"
         }
       ],
       "repo": [
         {
-          "text": "A downloadable library of illustrations and visual assets collected in one place for quick browsing and reuse.",
+          "text": "A collection of icons for research, teaching, and communication",
+          "level": "lead"
+        },
+        {
+          "text": "© Giacomo Moggioli, 2026.\nIcons and visual assets are licensed under the Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0).\nFree for non-commercial use with attribution. For commercial use, please contact me.",
+          "level": "body"
+        }
+      ],
+      "cv": [
+        {
+          "text": "Summary of my academic background and professional experience across bioinformatics, data analysis, and scientific communication",
           "level": "lead"
         }
       ],
-      "cv": [],
       "contact": [
         {
           "text": "Let’s turn data into insight — and ideas into something tangible.\n\nI’m available for collaborations, consulting, and commissioned work in bioinformatics, data visualization, and scientific illustration.\n\nFeel free to reach out.",
@@ -120,7 +134,7 @@
       "slug": "cover-illustration-for-evolution-letters",
       "title": "Cover illustration for Evolution Letters",
       "subtitle": "Scientific Illustration for a journal cover",
-      "description": "Cover illustration for Evolutuion Letters Volume 8, Issue 6, December 2024\nThe focus of this illustration was on the effects of anisogamy in the Darwin–Bateman paradigm",
+      "description": "Cover illustration for Evolutuion Letters Volume 8, Issue 6, December 2024. The focus of this illustration was on the effects of anisogamy in the Darwin–Bateman paradigm",
       "image": "/uploads/portfolio/project-6c294e58/1777375845244-evolution_letters_cover_squared.jpg",
       "figures": [
         {
@@ -148,7 +162,7 @@
       "slug": "poster-for-uk-evodevo-2025",
       "title": "Poster for UK EvoDevo 2025",
       "subtitle": "Conference Poster",
-      "description": "The idea for this illustration came from mixing the very British tea with concepts from developmental biology.\nThe UK EvoDevo meeting is a one-day conference that brings together the UK-based community in evolutionary developmental biology. ",
+      "description": "The idea for this illustration came from mixing the very British tea with concepts from developmental biology. The UK EvoDevo meeting is a one-day conference that brings together the UK-based community in evolutionary developmental biology. ",
       "image": "/uploads/portfolio/poster-for-uk-evodevo/1777383147416-ukevodevo_1.jpg",
       "figures": [
         {
@@ -172,7 +186,7 @@
       "slug": "poster-for-the-film-rasputin-s-shadow",
       "title": "Poster for the film \"Rasputin's shadow\"",
       "subtitle": "Movie Poster",
-      "description": "Poster for the film \"Rasputin's shadow\" by Pietro Francesco Pingitore. \nA hunter, a veterinarian, and a nurse gather around an operating table, performing surgery on a wild boar. Their differing notions of care intersect within an ecology shaped and exploited by human enterprise. This sensorial inquiry examines conservation practices as infrastructures that insulate domestic spaces from wildlife across the plains surrounding Piacenza. The landscapes emerge through dialogues between humans, nonhuman actors, and systems of control.\nThe movie was screened in many movie festivals around the world including Freiburger Filmforum (Germany), IAFFF – International Animal Future Film Festival (London, UK), Ethnofest – Athens Ethnographic Film Festival (Greece)",
+      "description": "Poster for the film \"Rasputin's shadow\" by Pietro Francesco Pingitore.  A hunter, a veterinarian, and a nurse gather around an operating table, performing surgery on a wild boar. Their differing notions of care intersect within an ecology shaped and exploited by human enterprise. This sensorial inquiry examines conservation practices as infrastructures that insulate domestic spaces from wildlife across the plains surrounding Piacenza. The landscapes emerge through dialogues between humans, nonhuman actors, and systems of control. The movie was screened in many movie festivals around the world including Freiburger Filmforum (Germany), IAFFF – International Animal Future Film Festival (London, UK), Ethnofest – Athens Ethnographic Film Festival (Greece)",
       "image": "/uploads/portfolio/project-f03b3e63/1777383910338-rasputin.jpg",
       "figures": [
         {
@@ -195,7 +209,7 @@
     {
       "title": "Life cycle of D. latum",
       "subtitle": "Scientific Illustration for a paper",
-      "description": "Life cycle of the parasitic flatworm (cestode) Diphyllobothrium latum commonly known as the fish tapeworm. The parasite requires intermediate hosts: freshwater crustaceans (first host) and freshwater fish (second host). Adult worms mature in the intestines of humans, bears, and other fish-eating animals, releasing eggs into the stool. \nPublished in ",
+      "description": "Life cycle of the parasitic flatworm (cestode) Diphyllobothrium latum commonly known as the fish tapeworm. The parasite requires intermediate hosts: freshwater crustaceans (first host) and freshwater fish (second host). Adult worms mature in the intestines of humans, bears, and other fish-eating animals, releasing eggs into the stool. Published in ",
       "image": "/uploads/portfolio/life-cycle-of-d-latum/1777379772157-viktor_cycle.jpg",
       "figures": [
         {
@@ -228,7 +242,7 @@
       "slug": "parasitic-worms",
       "title": "Parasitic worms",
       "subtitle": "Scientific Illustration for a paper",
-      "description": "Summary of the main findings for each taxonomic group of parasitic worms\nPublished in \"Systematic review of triploidy among parasitic worms\"",
+      "description": "Summary of the main findings for each taxonomic group of parasitic worms. Published in \"Systematic review of triploidy among parasitic worms\"",
       "image": "/uploads/portfolio/parasitic-worms/1777380350608-viktor_cards.jpg",
       "figures": [
         {
@@ -283,7 +297,7 @@
       "slug": "wormshop-logo",
       "title": "Wormshop Logo",
       "subtitle": "Conference Logo",
-      "description": "Logo for the conference \"Symposium on triploidy in parasitic worms 2026\". \nThe worm in the logo is assembling the third pair of chromosomes to symbolise the triploidy documented in some species of parasitic worms.",
+      "description": "Logo for the conference \"Symposium on triploidy in parasitic worms 2026\". The worm in the logo is assembling the third pair of chromosomes to symbolise the triploidy documented in some species of parasitic worms.",
       "image": "/uploads/portfolio/project-7d40cb86/1777385149661-wormshop.jpg",
       "figures": [
         {
@@ -334,7 +348,7 @@
       "slug": "fumagalli-s-lab-logo",
       "title": "Fumagalli's Lab Logo",
       "subtitle": "Logo for a Lab",
-      "description": "Logo for a Fumagalli's lab at QMUL.\nTheir research combine different machine-learning techniques to disentangle the evolution of pathogens",
+      "description": "Logo for a Fumagalli's lab at QMUL. Their research combine different machine-learning techniques to disentangle the evolution of pathogens",
       "image": "/uploads/portfolio/project-276a2881/1777385588931-fumagalli.jpg",
       "figures": [
         {
@@ -352,7 +366,7 @@
       "slug": "edsbs-logo",
       "title": "eDSBS Logo",
       "subtitle": "Conference Logo",
-      "description": "Logo for the conference \"eDSBS: Deep-Sea Biology Society 2020\".\nThe logo represents the ocean’s layered depth zones and the strange encounters found in its deepest realms.",
+      "description": "Logo for the conference \"eDSBS: Deep-Sea Biology Society 2020\". The logo represents the ocean’s layered depth zones and the strange encounters found in its deepest realms.",
       "image": "/uploads/portfolio/edsbs-logo/1777385971571-edsbs.jpg",
       "figures": [
         {
