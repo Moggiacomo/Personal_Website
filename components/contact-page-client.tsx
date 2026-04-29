@@ -30,7 +30,7 @@ export function ContactPageClient() {
             <h3 className="text-3xl md:text-4xl font-bold text-foreground text-balance">
               {contact.headline}
             </h3>
-            <p className="text-muted-foreground mt-4 leading-relaxed">
+            <p className="text-muted-foreground mt-4 whitespace-pre-line text-justify leading-relaxed">
               {contact.description}
             </p>
           </div>

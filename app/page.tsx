@@ -45,14 +45,14 @@ function getAboutLayoutMode(width: number, height: number): AboutLayoutMode {
 
 function getParagraphClass(level: ParagraphLevel = "body") {
   if (level === "lead") {
-    return "text-lg leading-relaxed text-foreground md:text-xl";
+    return "text-justify text-lg leading-relaxed text-foreground md:text-xl";
   }
 
   if (level === "highlight") {
-    return "text-base font-semibold leading-relaxed text-foreground md:text-lg";
+    return "text-justify text-base font-semibold leading-relaxed text-foreground md:text-lg";
   }
 
-  return "leading-relaxed text-muted-foreground md:text-[1.02rem]";
+  return "text-justify leading-relaxed text-muted-foreground md:text-[1.02rem]";
 }
 
 function AboutIntroParagraph({
@@ -79,7 +79,7 @@ function AboutIntroParagraph({
 
   return (
     <motion.p
-      className={cn(getParagraphClass(paragraph.level))}
+      className={cn("whitespace-pre-line", getParagraphClass(paragraph.level))}
       style={{
         x: revealed ? 0 : rawX,
         opacity: revealed ? 1 : rawOpacity,
@@ -304,7 +304,10 @@ export default function HomePage() {
 
             <div className="space-y-6 text-muted-foreground">
               {content.about.paragraphs.map((paragraph, index) => (
-                <p key={`about-mobile-${index}`} className={cn(getParagraphClass(paragraph.level))}>
+                <p
+                  key={`about-mobile-${index}`}
+                  className={cn("whitespace-pre-line", getParagraphClass(paragraph.level))}
+                >
                   {paragraph.text}
                 </p>
               ))}
@@ -423,7 +426,7 @@ export default function HomePage() {
                     {content.about.paragraphs.map((paragraph, index) => (
                       <p
                         key={`about-compact-${index}`}
-                        className={cn(getParagraphClass(paragraph.level))}
+                        className={cn("whitespace-pre-line", getParagraphClass(paragraph.level))}
                       >
                         {paragraph.text}
                       </p>

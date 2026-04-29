@@ -129,13 +129,13 @@ export function AboutPublicationStack({
                       {publication.venue}
                     </p>
                     {publication.subtitle ? (
-                      <p className="text-sm leading-relaxed text-black/70 md:text-base">
+                      <p className="whitespace-pre-line text-justify text-sm leading-relaxed text-black/70 md:text-base">
                         {publication.subtitle}
                       </p>
                     ) : null}
                   </div>
 
-                  <MeasuredClampParagraph className="text-sm leading-relaxed text-black/75 md:text-base">
+                  <MeasuredClampParagraph className="whitespace-pre-line text-justify text-sm leading-relaxed text-black/75 md:text-base">
                     {publication.abstract}
                   </MeasuredClampParagraph>
                 </div>

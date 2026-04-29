@@ -5,14 +5,14 @@ import { cn } from "@/lib/utils";
 
 function getParagraphClass(level: ParagraphLevel = "body") {
   if (level === "lead") {
-    return "text-lg leading-relaxed text-foreground";
+    return "text-justify text-lg leading-relaxed text-foreground";
   }
 
   if (level === "highlight") {
-    return "text-base font-semibold leading-relaxed text-foreground";
+    return "text-justify text-base font-semibold leading-relaxed text-foreground";
   }
 
-  return "leading-relaxed text-muted-foreground";
+  return "text-justify leading-relaxed text-muted-foreground";
 }
 
 export function PageIntro({
@@ -27,11 +27,13 @@ export function PageIntro({
   return (
     <div className={cn("space-y-6 text-muted-foreground", className)}>
       {paragraphs.map((paragraph, index) => (
-        <p key={`paragraph-${index}`} className={getParagraphClass(paragraph.level)}>
+        <p
+          key={`paragraph-${index}`}
+          className={cn("whitespace-pre-line", getParagraphClass(paragraph.level))}
+        >
           {paragraph.text}
         </p>
       ))}
     </div>
   );
 }
-

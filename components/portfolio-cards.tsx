@@ -346,12 +346,12 @@ function GridProjectCard({
                 activeIndex={activeFigure}
                 onSelect={onSelectFigure}
               />
-              <p className="mx-auto max-w-[42ch] text-sm leading-relaxed text-muted-foreground md:text-base">
+              <p className="mx-auto w-full max-w-[min(100%,68ch)] whitespace-pre-line text-justify text-sm leading-relaxed text-muted-foreground md:text-base">
                 {project.description}
               </p>
             </div>
           ) : (
-            <p className="text-base leading-relaxed text-muted-foreground">
+            <p className="whitespace-pre-line text-justify text-base leading-relaxed text-muted-foreground">
               {project.description}
             </p>
           )}
@@ -445,14 +445,14 @@ function StackProjectCard({
               activeIndex={activeFigure}
               onSelect={onSelectFigure}
             />
-            <p className="mx-auto max-w-[48ch] leading-relaxed text-muted-foreground md:text-lg/7">
+            <p className="mx-auto w-full max-w-[min(100%,72ch)] whitespace-pre-line text-justify leading-relaxed text-muted-foreground md:text-lg/7">
               {project.description}
             </p>
             <TagList tags={project.tags} />
           </div>
         ) : (
           <div className="flex min-h-full flex-col">
-            <p className="text-base leading-relaxed text-muted-foreground">{project.description}</p>
+            <p className="whitespace-pre-line text-justify text-base leading-relaxed text-muted-foreground">{project.description}</p>
             <TagList tags={project.tags} centered={false} className="mt-auto pt-6" />
           </div>
         )}
@@ -624,12 +624,12 @@ function CardHeader({
           {title}
         </h3>
         {subtitle && (
-          <p
-            className={cn(
-              "mt-1 text-sm leading-relaxed text-muted-foreground",
-              expanded ? "text-center md:text-base" : "md:text-base"
-            )}
-          >
+            <p
+              className={cn(
+                "mt-1 whitespace-pre-line text-justify text-sm leading-relaxed text-muted-foreground",
+                expanded ? "text-center md:text-base" : "md:text-base"
+              )}
+            >
             {subtitle}
           </p>
         )}

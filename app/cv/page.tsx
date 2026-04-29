@@ -609,17 +609,17 @@ export default function CVPage() {
                       >
                         <div className="mt-0 border-t border-border/30 px-3 pb-3 pt-0 sm:px-4 sm:pb-4">
                           <div className="pt-3 sm:pt-4">
-                            <p className="text-xs sm:text-sm text-black leading-relaxed">
-                              {item.description}
-                            </p>
+                              <p className="whitespace-pre-line text-justify text-xs sm:text-sm text-black leading-relaxed">
+                                {item.description}
+                              </p>
 
-                            {item.details && (
-                              <ul className="mt-3 space-y-2 sm:mt-4">
-                                {item.details.map((detail, index) => (
-                                  <li
-                                    key={index}
-                                    className="flex items-start gap-2 text-xs text-black sm:text-sm"
-                                  >
+                              {item.details && (
+                                <ul className="mt-3 space-y-2 sm:mt-4">
+                                  {item.details.map((detail, index) => (
+                                    <li
+                                      key={index}
+                                      className="flex items-start gap-2 whitespace-pre-line text-xs text-black sm:text-sm"
+                                    >
                                     <span className={cn("size-1.5 rounded-full mt-1.5 flex-shrink-0", config.bgColor)} />
                                     {detail}
                                   </li>

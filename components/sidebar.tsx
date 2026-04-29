@@ -137,7 +137,7 @@ export function Sidebar() {
                 <p className="mt-1 text-base font-medium text-primary sm:text-lg md:text-xl">
                   {content.site.branding.title}
                 </p>
-                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base">
+                <p className="mt-2 max-w-2xl whitespace-pre-line text-justify text-sm leading-relaxed text-muted-foreground md:text-base">
                   {content.site.branding.description}
                 </p>
               </div>

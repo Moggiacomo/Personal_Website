@@ -337,12 +337,12 @@ function GridPublicationCard({
                 activeIndex={activeFigure}
                 onSelect={onSelectFigure}
               />
-              <p className="mx-auto max-w-[42ch] text-sm leading-relaxed text-muted-foreground md:text-base">
+              <p className="mx-auto w-full max-w-[min(100%,68ch)] whitespace-pre-line text-justify text-sm leading-relaxed text-muted-foreground md:text-base">
                 {publication.abstract}
               </p>
             </div>
           ) : (
-            <p className="text-base leading-relaxed text-muted-foreground">
+            <p className="whitespace-pre-line text-justify text-base leading-relaxed text-muted-foreground">
               {publication.abstract}
             </p>
           )}
@@ -434,14 +434,14 @@ function StackPublicationCard({
               activeIndex={activeFigure}
               onSelect={onSelectFigure}
             />
-            <p className="mx-auto max-w-[48ch] leading-relaxed text-muted-foreground md:text-lg/7">
+            <p className="mx-auto w-full max-w-[min(100%,72ch)] whitespace-pre-line text-justify leading-relaxed text-muted-foreground md:text-lg/7">
               {publication.abstract}
             </p>
             <PublicationTagList tags={publication.tags} />
           </div>
         ) : (
           <div className="flex min-h-full flex-col">
-            <p className="text-base leading-relaxed text-muted-foreground">{publication.abstract}</p>
+            <p className="whitespace-pre-line text-justify text-base leading-relaxed text-muted-foreground">{publication.abstract}</p>
             <PublicationTagList tags={publication.tags} centered={false} className="mt-auto pt-6" />
           </div>
         )}
@@ -559,12 +559,12 @@ function PublicationHeader({
         >
           {publication.title}
         </h3>
-        <p
-          className={cn(
-            "mt-1 text-sm leading-relaxed text-muted-foreground",
-            expanded ? "text-center md:text-base" : "md:text-base"
-          )}
-        >
+          <p
+            className={cn(
+              "mt-1 whitespace-pre-line text-justify text-sm leading-relaxed text-muted-foreground",
+              expanded ? "text-center md:text-base" : "md:text-base"
+            )}
+          >
           {[publication.venue, publication.year].filter(Boolean).join(" · ")}
         </p>
       </div>

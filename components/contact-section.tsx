@@ -26,7 +26,7 @@ export function ContactSection() {
             <h3 className="text-3xl font-bold text-balance text-foreground md:text-4xl">
               {contact.headline}
             </h3>
-            <p className="mt-4 leading-relaxed text-muted-foreground">
+            <p className="mt-4 whitespace-pre-line text-justify leading-relaxed text-muted-foreground">
               {contact.description}
             </p>
           </div>
