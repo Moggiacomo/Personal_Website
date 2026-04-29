@@ -60,6 +60,8 @@ export function AboutScrollWords({ words }: { words: string[] }) {
     index === safeWords.length - 1 ? 3 : 1
   );
   const totalWeight = segmentWeights.reduce((sum, weight) => sum + weight, 0);
+  const longestWordLength = Math.max(...safeWords.map((word) => word.length), 1);
+  const sharedViewportFontSize = `${Math.max(18, 138 / longestWordLength)}vw`;
 
   return (
     <div ref={sectionRef} className="relative h-[520svh]">
@@ -81,6 +83,10 @@ export function AboutScrollWords({ words }: { words: string[] }) {
               : start + segment * 0.82;
             const end = start + segment;
             const characters = [...word];
+            const horizontalFit = Math.max(
+              0.62,
+              Math.min(1.26, longestWordLength / Math.max(word.length, 1))
+            );
 
             return (
               <motion.div
@@ -88,10 +94,11 @@ export function AboutScrollWords({ words }: { words: string[] }) {
                 className="absolute inset-0 flex items-center justify-center px-4 text-center [transform-style:preserve-3d]"
               >
                 <span
-                  className="flex flex-wrap justify-center text-[24vw] font-black uppercase leading-[0.88] tracking-[-0.02em] sm:text-[20vw] lg:text-[15vw] [font-family:var(--font-display-rounded)]"
+                  className="inline-flex max-w-full flex-nowrap justify-center whitespace-nowrap font-black uppercase leading-[0.88] tracking-[-0.03em] [font-family:var(--font-display-rounded)]"
                   style={{
+                    fontSize: `clamp(4.4rem, ${sharedViewportFontSize}, 16rem)`,
                     color: wordColors[index] ?? "rgba(255,255,255,0.95)",
-                    transform: "scaleX(0.92)",
+                    transform: `scaleX(${0.92 * horizontalFit})`,
                     transformOrigin: "center center",
                     WebkitTextStroke: "0.45px currentColor",
                   }}

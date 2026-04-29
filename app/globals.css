@@ -196,7 +196,6 @@
 }
 
 .repo-card-frame {
-  --repo-footer-reserve: clamp(4.2rem, 24cqi, 5.4rem);
   --repo-media-pad: clamp(0.75rem, 5cqi, 1rem);
   --repo-footer-pad: clamp(0.75rem, 5cqi, 1rem);
 }
@@ -208,9 +207,14 @@
   object-position: center center;
 }
 
+.repo-card-preview {
+  min-height: 0;
+}
+
 .repo-card-footer {
   padding-inline: var(--repo-footer-pad);
   padding-bottom: var(--repo-footer-pad);
+  padding-top: calc(var(--repo-footer-pad) * 0.75);
 }
 
 .repo-card-title {
@@ -286,14 +290,8 @@
 }
 
 @container (max-width: 18rem) {
-  .repo-card-frame {
-    --repo-footer-reserve: clamp(4.2rem, 26cqi, 5.25rem);
-  }
-}
-
-@container (max-width: 15rem) {
-  .repo-card-frame {
-    --repo-footer-reserve: clamp(4.3rem, 30cqi, 5.5rem);
+  .repo-card-footer {
+    padding-top: calc(var(--repo-footer-pad) * 0.55);
   }
 }
 
