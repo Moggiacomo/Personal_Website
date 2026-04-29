@@ -381,6 +381,42 @@
         "Conference",
         "Procreate"
       ]
+    },
+    {
+      "slug": "darwin-of-life",
+      "title": "Darwin of Life",
+      "subtitle": "Art&Science contest at UNIMIB",
+      "description": "A portrait of Charles Darwin emerges from a multitude of organisms, each carefully drawn and arranged along the branches of the tree of life. From the origins of life embedded in the lower contours of the composition, evolution unfolds upward—microbes giving way to plants, fungi, invertebrates, and vertebrates—until the collective diversity of life resolves into the face of the scientist who first described its underlying logic. Rather than depicting Darwin as an isolated figure, this work dissolves the boundary between observer and subject: he is not separate from nature, but composed of it. Each organism contributes to the portrait, reflecting the interconnectedness of life and the gradual transitions that define evolutionary history. The composition invites the viewer to follow the evolution organism by organism upward, tracing the continuity of life through form and detail. The piece functions both as a visual narrative and a scientific map, where taxonomy becomes structure and evolution becomes geometry. Groups are arranged according to their evolutionary relationships, creating a layered reading: from a distance, a recognizable human figure; up close, a dense archive of biodiversity. This duality mirrors the essence of evolutionary theory—simple principles giving rise to immense complexity. Ultimately, the work is an exploration of scale and perspective: the individual and the collective, the scientist and the system, the portrait and the process. It transforms the tree of life into a human face, reminding us that our understanding of nature is itself rooted within it.",
+      "image": "/uploads/portfolio/darwin-of-life/1777470118405-artboard-1.png",
+      "figures": [
+        {
+          "src": "/uploads/portfolio/darwin-of-life/1777470118405-artboard-1.png",
+          "alt": "Darwin 1"
+        },
+        {
+          "src": "/uploads/portfolio/darwin-of-life/1777470156626-fullartboard-1.png",
+          "alt": "Darwin 2"
+        },
+        {
+          "src": "/uploads/portfolio/darwin-of-life/1777470182749-aartboard-1.png",
+          "alt": "Darwin 3"
+        },
+        {
+          "src": "/uploads/portfolio/darwin-of-life/1777470203842-bartboard-1.png",
+          "alt": "Darwin 4"
+        },
+        {
+          "src": "/uploads/portfolio/darwin-of-life/1777470225429-cartboard-1.png",
+          "alt": "Darwin 5"
+        }
+      ],
+      "url": "",
+      "github": "",
+      "tags": [
+        "Scientific Illustration",
+        "Art",
+        "Tree of Life"
+      ]
     }
   ],
   "publications": [
