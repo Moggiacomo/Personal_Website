@@ -609,8 +609,8 @@ export default function CVPage() {
                       >
                         <div className="mt-0 border-t border-border/30 px-3 pb-3 pt-0 sm:px-4 sm:pb-4">
                           <div className="pt-3 sm:pt-4">
-                              <p className="whitespace-pre-line text-justify text-xs sm:text-sm text-black leading-relaxed">
-                                {item.description}
+                              <p className="line-clamp-5 break-words text-xs sm:text-sm text-black leading-relaxed">
+                                {item.description.replace(/\s*\n+\s*/g, " ").trim()}
                               </p>
 
                               {item.details && (
@@ -621,7 +621,7 @@ export default function CVPage() {
                                       className="flex items-start gap-2 whitespace-pre-line text-xs text-black sm:text-sm"
                                     >
                                     <span className={cn("size-1.5 rounded-full mt-1.5 flex-shrink-0", config.bgColor)} />
-                                    {detail}
+                                    <span className="line-clamp-2 break-words">{detail.replace(/\s*\n+\s*/g, " ").trim()}</span>
                                   </li>
                                 ))}
                               </ul>

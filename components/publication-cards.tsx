@@ -11,6 +11,10 @@ import type { Publication } from "@/lib/publications";
 
 const INTERNAL_TAGS = new Set(["Featured in About"]);
 
+function normalizeClampedText(value: string) {
+  return value.replace(/\s*\n+\s*/g, " ").trim();
+}
+
 interface PublicationCardsProps {
   publications: Publication[];
   layout?: "grid" | "stack";
@@ -342,8 +346,8 @@ function GridPublicationCard({
               </p>
             </div>
           ) : (
-            <p className="whitespace-pre-line text-justify text-base leading-relaxed text-muted-foreground">
-              {publication.abstract}
+            <p className="line-clamp-4 break-words text-base leading-relaxed text-muted-foreground">
+              {normalizeClampedText(publication.abstract)}
             </p>
           )}
         </div>
@@ -441,7 +445,7 @@ function StackPublicationCard({
           </div>
         ) : (
           <div className="flex min-h-full flex-col">
-            <p className="whitespace-pre-line text-justify text-base leading-relaxed text-muted-foreground">{publication.abstract}</p>
+            <p className="line-clamp-5 break-words text-base leading-relaxed text-muted-foreground">{normalizeClampedText(publication.abstract)}</p>
             <PublicationTagList tags={publication.tags} centered={false} className="mt-auto pt-6" />
           </div>
         )}
@@ -561,8 +565,8 @@ function PublicationHeader({
         </h3>
           <p
             className={cn(
-              "mt-1 whitespace-pre-line text-justify text-sm leading-relaxed text-muted-foreground",
-              expanded ? "text-center md:text-base" : "md:text-base"
+              "mt-1 text-sm leading-relaxed text-muted-foreground",
+              expanded ? "text-center md:text-base" : "line-clamp-2 md:text-base"
             )}
           >
           {[publication.venue, publication.year].filter(Boolean).join(" · ")}

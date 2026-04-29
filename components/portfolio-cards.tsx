@@ -11,6 +11,10 @@ import { cn } from "@/lib/utils";
 const INTERNAL_TAGS = new Set(["Featured in About"]);
 import type { Project } from "@/lib/projects";
 
+function normalizeClampedText(value: string) {
+  return value.replace(/\s*\n+\s*/g, " ").trim();
+}
+
 interface PortfolioCardsProps {
   projects: Project[];
   layout?: "grid" | "stack";
@@ -351,8 +355,8 @@ function GridProjectCard({
               </p>
             </div>
           ) : (
-            <p className="whitespace-pre-line text-justify text-base leading-relaxed text-muted-foreground">
-              {project.description}
+            <p className="line-clamp-4 break-words text-base leading-relaxed text-muted-foreground">
+              {normalizeClampedText(project.description)}
             </p>
           )}
         </div>
@@ -452,7 +456,7 @@ function StackProjectCard({
           </div>
         ) : (
           <div className="flex min-h-full flex-col">
-            <p className="whitespace-pre-line text-justify text-base leading-relaxed text-muted-foreground">{project.description}</p>
+            <p className="line-clamp-5 break-words text-base leading-relaxed text-muted-foreground">{normalizeClampedText(project.description)}</p>
             <TagList tags={project.tags} centered={false} className="mt-auto pt-6" />
           </div>
         )}
@@ -625,12 +629,12 @@ function CardHeader({
         </h3>
         {subtitle && (
             <p
-              className={cn(
-                "mt-1 whitespace-pre-line text-justify text-sm leading-relaxed text-muted-foreground",
-                expanded ? "text-center md:text-base" : "md:text-base"
+            className={cn(
+                "mt-1 text-sm leading-relaxed text-muted-foreground",
+                expanded ? "text-center md:text-base" : "line-clamp-2 md:text-base"
               )}
             >
-            {subtitle}
+            {expanded ? subtitle : normalizeClampedText(subtitle)}
           </p>
         )}
       </div>

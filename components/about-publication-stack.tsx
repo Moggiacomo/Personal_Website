@@ -12,6 +12,10 @@ import { cn } from "@/lib/utils";
 
 const CHALK_PALETTE = ["#9877a2", "#8499c1", "#d990a3", "#96c8c5", "#f2dede"];
 
+function normalizeClampedText(value: string) {
+  return value.replace(/\s*\n+\s*/g, " ").trim();
+}
+
 function pickBalancedPaletteColors(total: number) {
   const counts = new Map<string, number>(
     CHALK_PALETTE.map((color) => [color, 0])
@@ -108,11 +112,11 @@ export function AboutPublicationStack({
 
               <div
                 className={cn(
-                  "flex min-h-full flex-col justify-between",
+                  "flex min-h-full flex-col",
                   mediaFirst ? "md:order-2" : "md:order-1"
                 )}
               >
-                <div className="flex min-h-0 flex-1 flex-col">
+                <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
                   <div className="flex items-center gap-3 text-xs uppercase tracking-[0.18em] text-black/65">
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-background/30 px-3 py-1">
                       <FileText className="size-3" />
@@ -129,18 +133,18 @@ export function AboutPublicationStack({
                       {publication.venue}
                     </p>
                     {publication.subtitle ? (
-                      <p className="whitespace-pre-line text-justify text-sm leading-relaxed text-black/70 md:text-base">
-                        {publication.subtitle}
+                      <p className="line-clamp-2 break-words text-sm leading-relaxed text-black/70 md:text-base">
+                        {normalizeClampedText(publication.subtitle)}
                       </p>
                     ) : null}
                   </div>
 
-                  <MeasuredClampParagraph className="whitespace-pre-line text-justify text-sm leading-relaxed text-black/75 md:text-base">
+                  <MeasuredClampParagraph className="text-justify text-sm leading-relaxed text-black/75 md:text-base">
                     {publication.abstract}
                   </MeasuredClampParagraph>
                 </div>
 
-                <div className="mt-6 flex items-center gap-3 text-sm font-medium text-black">
+                <div className="mt-6 shrink-0 flex items-center gap-3 text-sm font-medium text-black">
                   <span>Open in Publications</span>
                   <ExternalLink className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
                 </div>
@@ -162,64 +166,83 @@ function MeasuredClampParagraph({
   children: string;
   className?: string;
 }) {
-  const ref = useRef<HTMLParagraphElement>(null);
-  const [lineClamp, setLineClamp] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const measureRef = useRef<HTMLParagraphElement>(null);
+  const [displayText, setDisplayText] = useState("");
+  const normalizedText = normalizeClampedText(children);
 
   useLayoutEffect(() => {
-    const element = ref.current;
-    if (!element) {
+    const container = containerRef.current;
+    const measure = measureRef.current;
+    if (!container || !measure) {
       return;
     }
 
-    const updateClamp = () => {
-      const computedStyle = window.getComputedStyle(element);
-      const lineHeight = Number.parseFloat(computedStyle.lineHeight);
-      const availableHeight = element.clientHeight;
-
-      if (!Number.isFinite(lineHeight) || lineHeight <= 0 || availableHeight <= 0) {
-        setLineClamp(null);
+    const updateText = () => {
+      const availableHeight = container.clientHeight;
+      if (availableHeight <= 0) {
+        setDisplayText(normalizedText);
         return;
       }
 
-      const visibleLines = Math.max(1, Math.floor(availableHeight / lineHeight));
-      setLineClamp(visibleLines);
+      const fits = (value: string) => {
+        measure.textContent = value;
+        return measure.scrollHeight <= availableHeight + 1;
+      };
+
+      if (fits(normalizedText)) {
+        setDisplayText(normalizedText);
+        return;
+      }
+
+      let low = 0;
+      let high = normalizedText.length;
+      let best = "...";
+
+      while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        const candidate = `${normalizedText.slice(0, mid).trimEnd()}...`;
+
+        if (fits(candidate)) {
+          best = candidate;
+          low = mid + 1;
+        } else {
+          high = mid - 1;
+        }
+      }
+
+      setDisplayText(best);
     };
 
-    updateClamp();
+    updateText();
 
     const resizeObserver = new ResizeObserver(() => {
-      updateClamp();
+      updateText();
     });
 
-    resizeObserver.observe(element);
-    if (element.parentElement) {
-      resizeObserver.observe(element.parentElement);
+    resizeObserver.observe(container);
+    if (container.parentElement) {
+      resizeObserver.observe(container.parentElement);
     }
 
-    window.addEventListener("resize", updateClamp);
+    window.addEventListener("resize", updateText);
     return () => {
       resizeObserver.disconnect();
-      window.removeEventListener("resize", updateClamp);
+      window.removeEventListener("resize", updateText);
     };
-  }, [children]);
+  }, [normalizedText]);
 
   return (
-    <div className="mt-4 min-h-0 flex-1">
+    <div ref={containerRef} className="relative mt-4 min-h-0 flex-1 overflow-hidden">
+      <p className={cn("overflow-hidden break-words", className)}>{displayText}</p>
       <p
-        ref={ref}
-        className={cn("h-full overflow-hidden text-ellipsis", className)}
-        style={
-          lineClamp
-            ? {
-                display: "-webkit-box",
-                WebkitBoxOrient: "vertical",
-                WebkitLineClamp: lineClamp,
-              }
-            : undefined
-        }
-      >
-        {children}
-      </p>
+        ref={measureRef}
+        aria-hidden="true"
+        className={cn(
+          "pointer-events-none absolute inset-x-0 top-0 -z-10 invisible break-words",
+          className
+        )}
+      />
     </div>
   );
 }
