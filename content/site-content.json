@@ -4,7 +4,7 @@
       "icon": "/icon.svg",
       "name": "Dr. Giacomo Moggioli",
       "title": "from data to understanding",
-      "description": "I build elegant digital experiences that blend thoughtful design with robust engineering."
+      "description": "PhD in Bioinformatics and a strong passion for illustration and data visualisation"
     },
     "navigation": {
       "about": "About",
@@ -30,7 +30,7 @@
     "contact": {
       "sectionTitle": "Contact",
       "headline": "Let's keep in touch",
-      "description": "I'm always interested in hearing about new opportunities, collaborations, commissions or just having a chat. Feel free to reach out!",
+      "description": "",
       "emailLabel": "Email",
       "emailValue": "giacomo.moggioli@gmail.com",
       "emailHref": "mailto:giacomo.moggioli@gmail.com",
@@ -69,7 +69,7 @@
       "cv": [],
       "contact": [
         {
-          "text": "If you would like to collaborate, discuss an opportunity, or simply say hello, you can reach me through the links below.",
+          "text": "Let’s turn data into insight — and ideas into something tangible.\n\nI’m available for collaborations, consulting, and commissioned work in bioinformatics, data visualization, and scientific illustration.\n\nFeel free to reach out.",
           "level": "lead"
         }
       ]
@@ -79,30 +79,35 @@
     "backgroundImage": "/placeholder-user.jpg",
     "paragraphs": [
       {
-        "text": "I'm a passionate professional focused on creating accessible, pixel-perfect digital experiences. My work lies at the intersection of design and development.",
+        "text": "I am a bioinformatician and data scientist working at the intersection of biology and computation. My work focuses on extracting meaningful insights from complex genomic and multi-omics datasets. I completed my PhD in Bioinformatics at Queen Mary University of London and have since worked at institutions such as the Max Planck Institute for Marine Microbiology and EAWAG Zurich",
         "level": "lead"
       },
       {
-        "text": "Creating experiences that not only look great but are meticulously built for performance and usability has always been my goal. I believe that great software should feel invisible, seamlessly integrating into people's lives while solving real problems.",
+        "text": "I design and implement scalable analytical pipelines for high-throughput sequencing data, combining technologies such as Illumina, PacBio, and RNA-seq. Using Python, R, and HPC environments, I build reproducible workflows to assemble genomes, annotate gene functions, and explore evolutionary patterns in large datasets",
         "level": "body"
       },
       {
-        "text": "Currently, I'm working on innovative projects that push the boundaries of what's possible on the web. I specialize in building scalable applications that deliver exceptional user experiences.",
+        "text": "I am particularly interested in making data accessible and intuitive. I developed an interactive platform using Java and React that allows users to explore and compare proteomes through visual tools, including KEGG pathway completeness and gene family analyses. My goal is to turn complex data into clear, actionable insights",
         "level": "body"
       },
       {
-        "text": "In my spare time, I enjoy contributing to open-source projects, writing technical articles, and exploring new technologies. I believe in continuous learning and sharing knowledge with the community.",
+        "text": "Alongside my scientific work, I pursue a strong interest in visual communication. I create scientific illustrations and logos through commissioned work, combining design and data to communicate ideas in a clear and engaging way. This artistic perspective complements my research by improving how complex concepts are shared and understood",
         "level": "body"
       }
     ],
     "skills": [
-      "JavaScript / TypeScript",
-      "React / Next.js",
+      "Genomics",
+      "Data Science",
+      "Software Engineering",
+      "Illustration",
+      "Pipeline Managment",
+      "Next Generation Sequencing",
+      "Database Architect",
+      "Big Data",
       "Node.js",
-      "Python",
-      "UI/UX Design",
-      "Cloud Services",
-      "Illustration"
+      "Bash/Shell",
+      "HPC",
+      "Python"
     ],
     "morphWords": [
       "SCIENCE",
