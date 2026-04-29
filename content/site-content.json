@@ -90,7 +90,7 @@
     }
   },
   "about": {
-    "backgroundImage": "/placeholder-user.jpg",
+    "backgroundImage": "/uploads/about/1777455458956-artboard-1.png",
     "paragraphs": [
       {
         "text": "I am a bioinformatician and data scientist working at the intersection of biology and computation. My work focuses on extracting meaningful insights from complex genomic and multi-omics datasets. I completed my PhD in Bioinformatics at Queen Mary University of London and have since worked at institutions such as the Max Planck Institute for Marine Microbiology and EAWAG Zurich",
